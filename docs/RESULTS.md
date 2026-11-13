@@ -204,11 +204,11 @@ The run generated:
 - `outputs/logs/denominator_diagnostic.log`
 - `data/processed/denominator_components_panel.dta`
 
-The execution log confirms separate exports and both graph names in memory. It does not establish that the figures are visually publication-ready. The new component-model bootstrap tests have not yet been run.
+The execution log confirms separate exports and both graph names in memory. It does not establish that the figures are visually publication-ready. The component-model bootstrap tests have now been completed; their results are reported in Section 6.
 
 ## 9. Next empirical steps
 
-1. **Independently validate the reconstructed nominal-GDP denominator.** Compare the BIS-implied four-quarter denominator with World Bank GDP in current local currency (NY.GDP.MKTP.CN). Evaluate level ratios within each country, annual log-growth differences, coverage, and source-vintage dates. The validation must not treat nominal LCU levels as directly comparable across countries.
+1. **Cross-source validate the reconstructed nominal-GDP denominator.** Compare the BIS-implied four-quarter denominator with World Bank GDP in current local currency (NY.GDP.MKTP.CN). Evaluate level ratios within each country, annual log-growth differences, coverage, and source-vintage dates. The validation must not treat nominal LCU levels as directly comparable across countries. The World Bank series is a separately published WDI series, but its underlying national-accounts inputs may overlap with those used by the BIS; this is a cross-source consistency check, not proof of fully independent underlying measurement.
 2. **Review the validation results before interpreting the component model.** If the implied denominator and independently published GDP growth diverge materially, investigate source definitions, national-account revisions, currency redenominations, and BIS/World Bank vintage differences before adding further regressions.
 3. **Inspect all six PNG figures.** Review the four main-analysis figures and two denominator-diagnostic figures for legibility, scales, confidence intervals, country coverage, and consistency with the numerical tables.
 4. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
