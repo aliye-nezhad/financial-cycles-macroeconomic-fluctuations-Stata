@@ -2,13 +2,14 @@
 
 ## Source files
 
-The main analysis uses three public source datasets. The optional denominator diagnostic adds four supplementary BIS series, documented below:
+The main analysis uses three public source datasets. The optional denominator diagnostic adds four supplementary BIS series, and the independent denominator-validation diagnostic adds one World Bank nominal-GDP series:
 
 | Local file | Source | Series |
 |---|---|---|
 | bis_credit_gap.csv | Bank for International Settlements (BIS) | WS_CREDIT_GAP |
 | wb_gdp_growth.zip | World Bank, World Development Indicators | NY.GDP.MKTP.KD.ZG |
 | wb_cpi_inflation.zip | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
+| wb_gdp_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN (supplementary validation) |
 
 The source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. The Actions workflow commits the downloaded archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. Existing local raw archives are not overwritten unless the refresh option in the Stata download script is enabled.
 
@@ -144,6 +145,26 @@ https://api.worldbank.org/v2/country/all/indicator/FP.CPI.TOTL.ZG?source=2&downl
 The World Bank API documentation is available at https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures.
 
 The WDI files are distributed in wide format, with country identifiers followed by annual columns. Stata reshapes the 1989–2024 columns into country-year observations. The 1989 GDP-growth observation is retained solely to construct the one-year lag for the first predictor year (1990); the analytical panel itself remains restricted to 1990–2024. The ISO3 country code is used for merging.
+
+## Independent nominal-GDP validation
+
+The supplementary `replication/validate_nominal_gdp.do` script compares the BIS-implied four-quarter nominal-GDP denominator with World Bank GDP in current local currency (WDI indicator `NY.GDP.MKTP.CN`). The World Bank defines this as GDP at current prices, expressed in local currency units; it is an annual nominal series and is not adjusted for price changes.
+
+Source/API endpoint:
+
+`https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CN?source=2&downloadformat=csv`
+
+On Windows, `replication/download_nominal_gdp.ps1` downloads and validates the WDI CSV archive, retains the archive and a canonical extracted CSV, and records retrieval date, the World Bank last-updated date when present, and SHA-256 hashes in `data/raw/wb_gdp_current_lcu_metadata.txt`. The Stata script retains 1989–2024, using 1989 to calculate the first available annual log change, and matches the WDI series to the project's 43-country BIS panel by ISO3 code.
+
+The validation reports country-year coverage, within-country ratios between the BIS-implied and WDI GDP levels, annual log-growth differences, mean absolute error, root mean squared error, and the correlation between the two growth series. Raw LCU level ratios are reported by country because currency units are not comparable across countries. A country-specific median scale factor is used to assess whether the level ratio is stable over time; it is not used to alter either source series.
+
+The validation uses a separately retrieved WDI vintage. Its retrieval date and source update date must be considered when interpreting differences from the GDP-growth series used in the main regressions. It does not overwrite the original GDP-growth or CPI source archives.
+
+Official references:
+
+- [World Bank indicator definition: GDP (current LCU), NY.GDP.MKTP.CN](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN)
+- [World Bank Indicators API documentation](https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation)
+- [World Bank API basic call structures](https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures)
 
 ## Annual construction
 
