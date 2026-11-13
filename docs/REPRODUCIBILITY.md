@@ -37,7 +37,7 @@ The analysis script imports and filters the source data, constructs the country 
 
 ## 4. Data integrity
 
-After downloading source files, calculate SHA-256 checksums from the repository root.
+After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
 
 Linux or macOS:
 
@@ -52,6 +52,8 @@ Windows PowerShell:
 Get-FileHash .\data\raw\bis_credit_gap.csv -Algorithm SHA256
 Get-FileHash .\data\raw\wb_gdp_growth.zip -Algorithm SHA256
 Get-FileHash .\data\raw\wb_cpi_inflation.zip -Algorithm SHA256
+Get-ChildItem .\data\raw\API_NY.GDP.MKTP.KD.ZG*.csv | Get-FileHash -Algorithm SHA256
+Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA256
 ```
 
 The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
@@ -68,7 +70,7 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
 | outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
 | outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
-| outputs/figures/mean_credit_gap_by_year.png | Credit-gap series by country |
+| outputs/figures/mean_credit_gap_by_year.png | Unweighted mean credit gap across available economies by year |
 | outputs/figures/credit_gap_gdp_scatter.png | Credit gap and subsequent GDP growth |
 | outputs/logs/analysis.log | Main execution log |
 
