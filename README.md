@@ -75,7 +75,8 @@ Source documentation, download instructions, transformations, and attribution re
     ├── download_linked_nominal_gdp.ps1
     ├── inference_diagnostics.do
     ├── run_analysis.do
-    └── validate_nominal_gdp.do
+    ├── validate_nominal_gdp.do
+    └── validate_nominal_gdp_linked.do
 ```
 
 ## Reproducing the project
