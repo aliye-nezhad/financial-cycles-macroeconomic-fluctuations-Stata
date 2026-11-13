@@ -6,7 +6,7 @@
 - Internet access is needed only if source files are missing or a new data vintage is requested. The current repository includes the downloaded source files.
 - A working directory set to the repository root.
 
-The analysis uses built-in Stata commands. No user-written ado packages are required.
+The main analysis uses built-in Stata commands only. The optional wild cluster bootstrap diagnostic requires David Roodman's user-written `boottest` package; it is not needed to reproduce the main regressions.
 
 ## 1. Obtain the repository
 
@@ -37,9 +37,17 @@ do replication/run_analysis.do
 
 The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs. It assigns each figure a distinct Stata graph name, exports each figure to its own PNG file, and also saves an editable `.gph` copy. The built-in `s1mono` scheme and explicit grayscale options give both figures a consistent white, black and gray publication style. Re-running the analysis replaces only the corresponding version of each figure; the two figures do not overwrite one another.
 
-## 4. Optional wild cluster bootstrap inference (Stata 18+)
+## 4. Optional wild cluster bootstrap inference (Stata 15.1+)
 
-The main analysis remains compatible with Stata 15.1 and uses built-in commands only. For an additional finite-cluster inference check, Stata 18 or later provides the built-in `wildbootstrap` command for fixed-effects panel regressions.
+The main analysis remains compatible with Stata 15.1 and uses built-in commands only. The optional finite-cluster inference diagnostic uses David Roodman's user-written `boottest` package. The package supports Stata 11.2 and later and works after `xtreg, fe`; Stata 13 or later is recommended. See the [official package repository](https://github.com/droodman/boottest) and Roodman, MacKinnon, Nielsen and Webb (2019), *Fast and wild: Bootstrap inference in Stata using boottest*, *The Stata Journal*, 19(1), 4–60.
+
+Install the package from Stata when the SSC connection is available:
+
+```stata
+ssc install boottest, replace
+```
+
+If the SSC installer fails in a local Windows environment, obtain a single tagged release from the official repository and install its files together. Do not mix `boottest.ado`, `boottest.mata` and `lboottest.mlib` from different releases. The diagnostic checks for these files and loads the installed Mata source before estimating the models. This order matters: loading the Mata source after estimation can remove the active estimation results.
 
 After running `replication/run_analysis.do`, execute:
 
@@ -47,9 +55,9 @@ After running `replication/run_analysis.do`, execute:
 do replication/inference_diagnostics.do
 ```
 
-The supplementary script reloads the saved processed panel, reconstructs the one-year-ahead outcome and positive/negative gap components, and applies wild cluster bootstrap inference at the country level. It reports bootstrap inference for the baseline credit-gap coefficient and for the positive-gap, negative-gap and slope-equality hypotheses. The script uses a fixed random seed and 10,000 replications.
+The supplementary script reloads the processed panel and estimates the baseline and asymmetric one-year-ahead fixed-effects models. It applies 9,999 Rademacher wild cluster bootstrap replications at the country level to (i) the baseline credit-gap coefficient, (ii) the positive-gap coefficient, (iii) the negative-gap coefficient, and (iv) the equality of the positive- and negative-gap slopes. Fixed random seeds are recorded in the do-file.
 
-This diagnostic is optional and does not alter the main estimates or the Stata 15.1-compatible workflow. On Stata versions earlier than 18, the script exits with an explanatory message. The output is written to `outputs/tables/wild_cluster_bootstrap.txt`. The wild-bootstrap results should be reported alongside, not substituted silently for, the conventional country-clustered estimates.
+This diagnostic is optional and does not alter the main estimates or the Stata 15.1-compatible workflow. The output is written to `outputs/tables/wild_cluster_bootstrap.txt`. Report bootstrap results alongside, not as a silent replacement for, the conventional country-clustered estimates.
 
 ## 5. Data integrity
 
@@ -86,7 +94,7 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
 | outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
 | outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
-| outputs/tables/wild_cluster_bootstrap.txt | Optional wild cluster bootstrap inference (Stata 18+) |
+| outputs/tables/wild_cluster_bootstrap.txt | Optional wild cluster bootstrap inference using boottest (Stata 15.1+) |
 | outputs/figures/mean_credit_gap_by_year.png | Monochrome PNG of the unweighted mean credit gap by year |
 | outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
 | outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
