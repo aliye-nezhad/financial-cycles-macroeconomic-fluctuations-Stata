@@ -183,7 +183,17 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
 | outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
 | outputs/figures/credit_gap_gdp_scatter.gph | Editable Stata graph for the credit-gap/GDP-growth scatter figure |
+| outputs/figures/fe_horizon_coefficients.png | Fixed-effects credit-gap coefficients across one-, two- and three-year horizons |
+| outputs/figures/fe_horizon_coefficients.gph | Editable Stata graph for the horizon coefficient plot |
+| outputs/figures/asymmetric_gap_coefficients.png | Positive- and negative-gap coefficients with 95% confidence intervals |
+| outputs/figures/asymmetric_gap_coefficients.gph | Editable Stata graph for the asymmetric coefficient plot |
 | outputs/logs/analysis.log | Main execution log |
+| outputs/tables/denominator_decomposition.txt | Optional source-alignment and credit/GDP component summary |
+| outputs/tables/denominator_component_models.txt | Optional matched-sample component regressions |
+| outputs/figures/ratio_component_growth.png and .gph | Optional annual growth decomposition figure |
+| outputs/figures/ratio_component_coefficients.png and .gph | Optional component-model coefficient plot |
+| outputs/logs/denominator_diagnostic.log | Optional denominator-diagnostic execution log |
+| data/processed/denominator_components_panel.dta | Optional matched panel with reconstructed GDP denominator |
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
