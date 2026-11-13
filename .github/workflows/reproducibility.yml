@@ -135,10 +135,14 @@ jobs:
           grep -Fq "NY.GDP.MKTP.CN" replication/validate_nominal_gdp.do
           grep -Fq "download_nominal_gdp.ps1" replication/validate_nominal_gdp.do
           grep -Fq "NY.GDP.MKTP.CN" replication/download_nominal_gdp.ps1
+          grep -Fq "Select-String" replication/download_nominal_gdp.ps1
+          grep -Fq "Test-WbArchive" replication/download_nominal_gdp.ps1
           grep -Fq "NY.GDP.MKTP.CN.AD" replication/download_linked_nominal_gdp.ps1
           grep -Fq "Indicator Code" replication/download_linked_nominal_gdp.ps1
           grep -Fq "Archive SHA-256" replication/download_linked_nominal_gdp.ps1
           grep -Fq "CSV SHA-256" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "Select-String" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "Test-WbArchive" replication/download_linked_nominal_gdp.ps1
           grep -Fq "NY.GDP.MKTP.CN.AD" replication/validate_nominal_gdp_linked.do
           grep -Fq "download_linked_nominal_gdp.ps1" replication/validate_nominal_gdp_linked.do
           grep -Fq 'trim(v4) != "NY.GDP.MKTP.CN.AD"' replication/validate_nominal_gdp_linked.do
