@@ -282,6 +282,7 @@ label variable year "Calendar year"
 label variable credit_gap_q4 "BIS credit-to-GDP gap, fourth quarter (percentage points of GDP)"
 label variable credit_gap_average "BIS credit-to-GDP gap, annual average (percentage points of GDP)"
 label variable gdp_growth "Real GDP growth (annual percent)"
+label variable gdp_growth_lag1 "Previous-year real GDP growth (annual percent)"
 label variable inflation "CPI inflation (annual percent)"
 label variable matched_gdp "Current GDP observation matched"
 label variable matched_gdp_lag1 "Previous-year GDP observation matched"
@@ -338,7 +339,7 @@ log close coverage_log
 log using "outputs/tables/descriptive_statistics.txt", ///
     replace text name(descriptive_log)
 
-summarize credit_gap_q4 credit_gap_average gdp_growth inflation
+summarize credit_gap_q4 credit_gap_average gdp_growth gdp_growth_lag1 inflation
 summarize credit_gap_q4 gdp_growth inflation if complete_baseline == 1
 
 log close descriptive_log
@@ -385,17 +386,17 @@ log using "outputs/tables/baseline_models.txt", ///
     replace text name(baseline_log)
 
 display as text "Horizon 1: next-year GDP growth"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store H1
 
 display as text "Horizon 2: GDP growth two years ahead"
-xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h2, fe vce(cluster panel_id)
 estimates store H2
 
 display as text "Horizon 3: GDP growth three years ahead"
-xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h3, fe vce(cluster panel_id)
 estimates store H3
 
@@ -412,7 +413,7 @@ log using "outputs/tables/asymmetric_model.txt", ///
     replace text name(asymmetric_log)
 
 xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
-    c.gdp_growth gdp_growth_lag1 c.inflation i.outcome_year_h1, ///
+    c.gdp_growth c.gdp_growth_lag1 c.inflation i.outcome_year_h1, ///
     fe vce(cluster panel_id)
 estimates store ASYM
 
@@ -431,12 +432,12 @@ log using "outputs/tables/robustness_models.txt", ///
     replace text name(robustness_log)
 
 display as text "Annual-average gap, requiring four quarterly observations"
-xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store AVG_GAP
 
 display as text "Fourth-quarter gap, excluding outcome years 2020 and 2021"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1 if !inlist(outcome_year_h1, 2020, 2021), ///
     fe vce(cluster panel_id)
 estimates store NO_PANDEMIC
@@ -448,7 +449,7 @@ xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
 estimates store NO_LAG
 
 display as text "Expanded sample omitting CPI inflation control"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store NO_INFLATION
 
@@ -465,19 +466,19 @@ log using "outputs/tables/influence_sensitivity.txt", ///
     replace text name(influence_log)
 
 display as text "Exclude Ireland"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1 if iso3c != "IRL", ///
     fe vce(cluster panel_id)
 estimates store NO_IRL
 
 display as text "Exclude Luxembourg"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1 if iso3c != "LUX", ///
     fe vce(cluster panel_id)
 estimates store NO_LUX
 
 display as text "Exclude Ireland and Luxembourg jointly"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1 if !inlist(iso3c, "IRL", "LUX"), ///
     fe vce(cluster panel_id)
 estimates store NO_IRL_LUX
