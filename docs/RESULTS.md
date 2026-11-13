@@ -104,10 +104,23 @@ The displayed value 0.0000 is rounded output, not a probability literally equal 
 
 **Reproducibility qualification:** the execution log reports `boottest.ado` version 4.1.0 and `boottest.mata` version 4.0.3. These are mismatched package components. The tests completed, but the results remain provisional until the components are replaced by one consistent tagged release and all four tests are rerun. The bootstrap does not change the point estimates or identify a causal effect.
 
-## 7. Next empirical steps
+## 7. Figures and quantitative presentation
+
+The analysis exports four distinct figures, each to its own PNG and editable Stata `.gph` file:
+
+1. **Mean credit-to-GDP gap over time.** Describes the annual unweighted mean across available economies. The country coverage varies by year, so the figure is descriptive rather than a balanced-panel aggregate.
+2. **Pooled credit-gap scatter.** Shows the unconditional country-year association between the credit gap and next-year GDP growth. Its fitted line is not the two-way fixed-effects estimate and should not be used as a visual substitute for the adjusted model.
+3. **Fixed-effects coefficients across horizons.** Plots the baseline credit-gap coefficients for GDP growth in (t+1), (t+2), and (t+3), with country-clustered 95% confidence intervals. This is the primary figure for communicating the central quantitative result. The estimated coefficients are -0.0228, -0.0290, and -0.0268, respectively.
+4. **Asymmetric fixed-effects coefficients.** Plots the positive- and negative-gap slopes from the one-year-ahead asymmetric model, with country-clustered 95% confidence intervals. It makes the difference between the above-trend and below-trend components directly visible.
+
+The first two figures provide descriptive context. Figures 3 and 4 communicate the adjusted estimates and asymmetry that are central to the empirical analysis. The figures do not establish causality.
+
+The active Stata Graph window shows one graph at a time. This is a display behavior, not evidence that the exported files overwrite one another. The do-file explicitly exports and saves each named graph separately and checks for all eight figure files at the end of execution. Open the PNG files in separate image windows to compare them simultaneously. The exported PNGs still require visual inspection before being treated as final presentation outputs.
+
+## 8. Next empirical steps
 
 1. Install a consistent release of `boottest` and rerun [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do) to validate the provisional bootstrap results.
-2. Visually inspect the two exported PNG figures and reconcile them with the logged commands.
+2. Visually inspect all four exported PNG figures and reconcile them with the logged commands.
 3. Investigate the GDP-denominator channel directly by comparing the gap with movements in the underlying credit numerator and GDP denominator. This is the next substantive research question, not an invitation to add unrelated controls.
 4. After these checks, decide whether a real-credit-growth or other alternative financial-cycle measure is justified.
 
