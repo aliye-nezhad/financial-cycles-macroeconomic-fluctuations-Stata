@@ -32,7 +32,7 @@ The baseline therefore controls for current GDP growth and its one-year lag, in 
 
 ## Data and sample
 
-The provisional outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving at most 43 country units. The preliminary source-data audit confirms 43 individual economies and 1,377 Q4 country-year observations. The panel is unbalanced: 31 countries have Q4 observations for all years from 1990 through 2024, while 12 begin later. The one-year-ahead complete-case sample has 1,310 observations across all 43 countries; the two- and three-year-ahead samples have 1,267 and 1,224 observations, respectively. See docs/DATA_AUDIT.md for country coverage, missingness, data distributions and pre-estimation sample counts.
+The outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving at most 43 country units. The preliminary source-data audit confirms 43 individual economies and 1,377 Q4 country-year observations. The panel is unbalanced: 31 countries have Q4 observations for all years from 1990 through 2024, while 12 begin later. The one-year-ahead complete-case sample has 1,310 observations across all 43 countries; the two- and three-year-ahead samples have 1,267 and 1,224 observations, respectively. See docs/DATA_AUDIT.md for country coverage, missingness, data distributions and pre-estimation sample counts.
 
 ### Main variables
 
@@ -48,7 +48,7 @@ The BIS measure covers borrowing by the private non-financial sector from all do
 
 ## Hypotheses
 
-- **H1 (predictive association):** A higher credit-to-GDP gap is associated with lower subsequent real GDP growth, conditional on current growth, inflation, country fixed effects and outcome-year fixed effects.
+- **H1 (predictive association):** A higher credit-to-GDP gap is associated with lower subsequent real GDP growth, conditional on current and previous-year growth, inflation, country fixed effects and outcome-year fixed effects.
 - **H2 (asymmetry):** The relationship between the credit gap and subsequent growth differs between observations above and below the estimated credit-to-GDP trend. The sign and magnitude of the below-trend slope are treated as empirical questions rather than assumed to be the mirror image of the above-trend slope.
 - **H3 (horizon):** The predictive association may differ across one-, two- and three-year-ahead growth outcomes.
 
@@ -122,12 +122,12 @@ The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators
 6. **Inference.** Country clustering is appropriate for within-country dependence, but the effective number of clusters and sample composition must be reported. Robustness of inference should be discussed rather than assumed.
 7. **Outcome scope.** The main outcome is real GDP growth. The title refers to macroeconomic fluctuations broadly, but the empirical analysis does not claim to measure every dimension of macroeconomic volatility.
 
-## Decisions to be finalized after the data audit
+## Remaining implementation checks
 
-- Exact country-year sample for each horizon.
-- Whether the 1990–2024 window provides adequate common coverage.
-- Whether the 2020–2021 exclusion materially changes sample composition.
-- Final treatment of observations flagged by BIS as provisional or subject to breaks.
-- Whether the annual-average gap robustness measure has enough complete quarterly observations.
+- Execute the Stata do-file and reconcile its sample counts with docs/DATA_AUDIT.md.
+- Inspect the baseline coefficients, clustered standard errors and the test of equal slopes.
+- Review the pandemic, CPI-missingness and country-influence sensitivities.
+- Inspect all logs and exported tables before writing an interpretation.
+- Decide whether a supplementary real-credit-growth measure is worth adding only if the baseline results or referee-style diagnostics make it necessary.
 
-No empirical result or finding should be written until the raw files have been downloaded, the merge has been validated, and the Stata do-file has been executed.
+No empirical result or finding should be written until the Stata do-file has been executed and its output reconciled with the source-data audit.
