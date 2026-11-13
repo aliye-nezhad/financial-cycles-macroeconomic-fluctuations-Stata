@@ -126,15 +126,32 @@ if _rc {
 * Retain the ISO3 code and the 1989-2024 year columns only.
 * The first remaining CSV row is the column header, not a country.
 * Drop it explicitly before converting the annual values to numeric.
-keep v2 v34-v69
+keep v2 v4 v34-v69
 
-count if trim(v2) == "Country Code"
+count if trim(v2) == "Country Code" & trim(v4) == "Indicator Code"
 if r(N) != 1 {
     display as error "Expected exactly one World Bank CSV header row; found " r(N) "."
     log close validation_main_log
     exit 459
 }
+
+count if trim(v2) != "Country Code" & !missing(v2) ///
+    & trim(v4) != "NY.GDP.MKTP.CN"
+if r(N) > 0 {
+    display as error "The nominal-GDP CSV contains rows with an unexpected indicator code."
+    log close validation_main_log
+    exit 459
+}
+
+count if trim(v4) == "NY.GDP.MKTP.CN"
+if r(N) == 0 {
+    display as error "No country rows for NY.GDP.MKTP.CN were found in the CSV."
+    log close validation_main_log
+    exit 459
+}
+
 drop if trim(v2) == "Country Code"
+drop v4
 
 rename v2 iso3c
 drop if missing(iso3c)
