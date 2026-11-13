@@ -3,7 +3,7 @@
 **Audit date:** 13 November 2026  
 **Source vintage:** World Bank WDI files last updated 11 November 2026; BIS series downloaded 13 November 2026. Exact file hashes are stored in data/raw.sha256.
 
-This audit was computed from the downloaded source CSV files before Stata estimation. The first complete Stata run on 13 November 2026 reproduced the expected horizon-specific sample counts exactly. The baseline estimates and the initial robustness results have been reviewed; additional influence checks for the asymmetric specification remain outstanding.
+This audit was computed from the downloaded source CSV files before Stata estimation. The complete Stata execution on 13 November 2026 reproduced the expected horizon-specific sample counts exactly. The baseline, asymmetric, measurement, pandemic, control-variable and country-influence specifications have now been executed. Their main estimates are summarized in [docs/RESULTS.md](RESULTS.md).
 
 ## 1. Source-file integrity and BIS coverage
 
@@ -131,6 +131,9 @@ The WDI GDP-growth series used here is not replaced with Irish GNI*. The baselin
 - [x] Expected regression sample counts calculated.
 - [x] Extreme credit-gap observations identified.
 - [x] Stata do-file executed and its sample counts reconciled with this audit.
-- [x] Baseline regression results and the initial pandemic, missing-inflation and country-exclusion sensitivities reviewed.
-- [ ] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly.
+- [x] Baseline regression results and the pandemic, missing-inflation and control-variable sensitivities reviewed.
+- [x] Linear influence sensitivities excluding Ireland, Luxembourg and both jointly executed.
+- [x] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly; slope-equality tests remain statistically significant.
 - [ ] Exported figures visually inspected and selected output artifacts prepared for publication.
+- [ ] Optional wild cluster bootstrap inference completed (requires Stata 18+).
+- [ ] Credit-numerator versus GDP-denominator sensitivity investigated.
