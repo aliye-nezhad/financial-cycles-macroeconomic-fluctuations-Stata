@@ -179,9 +179,10 @@ save `annual_gap', replace
 /***********************************************************************
 4. Import World Bank wide CSV files and reshape 1990-2024 to long format
 
-The WDI CSV archive has four metadata columns before the annual series.
-The first four metadata lines are skipped by beginning the import at row 5.
-The expected annual columns are 1960 onward; 1990-2024 map to v35-v69.
+The WDI CSV archive has four metadata rows before the column header.
+The header is row 5 and the first country observation is row 6; import begins
+at row 6 with generated variable names. The expected annual columns are
+1960 onward; 1990-2024 map to v35-v69.
 ***********************************************************************/
 
 local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
@@ -202,7 +203,7 @@ program define import_wdi_long
     args csv_path value_variable output_path
 
     import delimited using "`csv_path'", clear ///
-        varnames(nonames) rowrange(5:) stringcols(_all)
+        varnames(nonames) rowrange(6:) stringcols(_all)
 
     capture confirm variable v69
     if _rc {
