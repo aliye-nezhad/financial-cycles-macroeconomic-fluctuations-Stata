@@ -86,7 +86,7 @@ Several qualifications remain important:
 - The credit-to-GDP gap is a generated measure based on a one-sided HP trend.
 - GDP enters the denominator of the credit-to-GDP ratio. A higher ratio or gap can reflect stronger credit, weaker GDP, or both. Controlling for current and lagged GDP growth does not fully resolve this issue.
 - The estimates use historical, revised data and are not a real-time forecasting exercise.
-- The conventional standard errors are clustered across 43 countries. All four wild cluster bootstrap tests have now run in Stata 17 with 9,999 Rademacher replications. The installed `boottest.ado` identifies itself as version 4.1.0, while `boottest.mata` identifies itself as version 4.0.3. Because these components are from different releases, the successful execution is not sufficient to treat the bootstrap results as final; rerun the diagnostic after installing one consistent release.
+- The conventional standard errors are clustered across 43 countries. The installed `boottest.ado` identifies itself as version 4.1.0, while `boottest.mata` identifies itself as version 4.0.3. This pairing is present in the official upstream v4.1.0 tag; the different header numbers alone do not indicate a mixed installation. The earlier `boottest_stata() not found` error indicates that the compiled Mata function was unavailable in that Stata session. The diagnostic now runs the installed Mata source before estimation to rebuild the library. The complete diagnostic should be rerun to verify the fix and obtain bootstrap inference for the new denominator-component model.
 - The current horizon models estimate annual growth in the specific future year, not cumulative or average growth over the forecast interval.
 
 ## 6. Wild cluster bootstrap results
@@ -102,7 +102,7 @@ The supplementary diagnostic was executed in Stata 17 on the same 1,310-observat
 
 The displayed value 0.0000 is rounded output, not a probability literally equal to zero. The bootstrap test of equal asymmetric slopes rejects equality at the 1% level (p = 0.0036), consistent with the conventional clustered Wald test, (F(1,42)=14.85), p = 0.0004. The positive-gap coefficient remains negative and statistically distinguishable from zero under the bootstrap; the negative-gap coefficient remains statistically indistinguishable from zero.
 
-**Reproducibility qualification:** the execution log reports `boottest.ado` version 4.1.0 and `boottest.mata` version 4.0.3. These are mismatched package components. The tests completed, but the results remain provisional until the components are replaced by one consistent tagged release and all four tests are rerun. The bootstrap does not change the point estimates or identify a causal effect.
+**Reproducibility qualification:** the official upstream v4.1.0 tag contains `boottest.ado` 4.1.0 and `boottest.mata` 4.0.3, so this is the intended package pairing, not a mixed-release installation. The earlier `boottest_stata() not found` error is consistent with a missing or unloaded compiled Mata library. The current do-file loads the Mata source before estimation. Rerun the full do-file to verify that the bootstrap tests complete in the current Stata session. The component-model bootstrap tests have been added but have not yet been executed. The bootstrap does not change the point estimates or identify a causal effect.
 
 ## 7. Figures and quantitative presentation
 
@@ -117,11 +117,82 @@ The first two figures provide descriptive context. Figures 3 and 4 communicate t
 
 The active Stata Graph window shows one graph at a time. This is a display behavior, not evidence that the exported files overwrite one another. The do-file explicitly exports and saves each named graph separately and checks for all eight figure files at the end of execution. Open the PNG files in separate image windows to compare them simultaneously. The exported PNGs still require visual inspection before being treated as final presentation outputs.
 
-## 8. Next empirical steps
+## 8. Credit-numerator and GDP-denominator diagnostic
 
-1. Install a consistent release of `boottest` and rerun [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do). The baseline and asymmetric bootstrap tests have run, but the installed ado and Mata files are from different versions, so the results remain provisional.
-2. Visually inspect all four exported PNG figures and reconcile their scales, confidence intervals and labels with the numerical tables. The execution log confirms separate exports; it does not establish visual quality.
-3. Run [`replication/denominator_diagnostic.do`](../replication/denominator_diagnostic.do). It compares the BIS actual ratio and trend with the published gap, reconstructs the four-quarter nominal-GDP denominator from the BIS credit stock and ratio, and estimates a matched-sample component model. The diagnostic has been added but has not yet been executed; no numerator-versus-denominator result is reported here.
-4. Only after source alignment, bootstrap validation and visual inspection should we decide whether to construct a smoothed-denominator gap or use real credit growth as an alternative measure.
+**Execution date:** 13 November 2026  
+**Execution record:** User-supplied Stata log from the completed run of `replication/denominator_diagnostic.do`.
 
-The results should be treated as preliminary until these steps are completed.
+The supplementary diagnostic completed all ten sections, passed its source-alignment checks, estimated both matched-sample models, exported two separately named figures, saved the processed panel, and closed its logs.
+
+### 8.1 Source alignment and accounting identity
+
+| Check | Result |
+|---|---:|
+| Matched Q4 country-year observations | 1,377 |
+| Economies | 43 |
+| Common regression sample | 1,268 |
+| Maximum absolute difference between WS_TC and WS_CREDIT_GAP actual ratios | 0.05005 percentage points |
+| Maximum absolute error reconstructing the published credit gap | 0.00011 percentage points |
+| Maximum absolute numerator-denominator identity error | Approximately 1.1 × 10⁻¹² |
+
+Both source-comparison errors are below the pre-specified 0.10-percentage-point tolerance. The accounting identity
+
+\[
+\Delta\ln(Credit/GDP)=\Delta\ln(Credit)-\Delta\ln(GDP)
+\]
+
+holds to numerical precision in the common sample.
+
+### 8.2 Component growth rates
+
+| Component | Mean annual log change |
+|---|---:|
+| Nominal credit stock | 8.1912% |
+| Implied nominal GDP denominator | 6.7617% |
+| Credit-to-GDP ratio | 1.4295% |
+
+These are pooled country-year means over the 1,268 matched observations, not balanced-panel or time-series averages. The implied nominal-GDP denominator is reconstructed from the BIS credit stock and credit-to-GDP ratio; it is not an independently observed GDP series.
+
+### 8.3 Matched-sample regressions
+
+Both models use 1,268 observations across 43 countries, country fixed effects, outcome-year fixed effects, and country-clustered standard errors.
+
+| Variable | Matched baseline coefficient | p-value | Component-model coefficient | p-value |
+|---|---:|---:|---:|---:|
+| Credit-to-GDP gap | -0.0236 | <0.001 | — | — |
+| Current real GDP growth | 0.2475 | <0.001 | — | — |
+| Previous-year real GDP growth | 0.0137 | 0.466 | 0.1240 | 0.001 |
+| CPI inflation | -0.0401 | 0.008 | — | — |
+| Nominal credit growth | — | — | -0.0380 | 0.006 |
+| Implied nominal GDP growth | — | — | 0.0603 | 0.099 |
+
+Within-sample \(R^2\) is 0.5155 for the matched baseline and 0.4600 for the component model. These values should not be treated as a direct model-performance comparison because the specifications contain different regressors.
+
+The component model indicates a negative conditional association between nominal credit growth and next-year real GDP growth, controlling for implied nominal-GDP growth, lagged real GDP growth, country fixed effects, and outcome-year fixed effects. The implied nominal-GDP-growth coefficient is positive but is not statistically distinguishable from zero at the conventional 5% level.
+
+The component model omits current real GDP growth and CPI inflation, while retaining lagged real GDP growth. The common matched sample nevertheless requires current GDP growth and inflation so that the baseline and component specifications use the same observations.
+
+These estimates are predictive associations, not causal effects. In particular, the implied denominator is constructed from credit-related BIS series. Independent validation against a separately published nominal-GDP series is still required before interpreting the component coefficients as evidence about an economic transmission mechanism.
+
+### 8.4 Generated outputs and remaining checks
+
+The run generated:
+
+- `outputs/tables/denominator_decomposition.txt`
+- `outputs/tables/denominator_component_models.txt`
+- `outputs/figures/ratio_component_growth.png` and its editable `.gph` file
+- `outputs/figures/ratio_component_coefficients.png` and its editable `.gph` file
+- `outputs/logs/denominator_diagnostic.log`
+- `data/processed/denominator_components_panel.dta`
+
+The execution log confirms separate exports and both graph names in memory. It does not establish that the figures are visually publication-ready. The new component-model bootstrap tests have not yet been run.
+
+## 9. Next empirical steps
+
+1. **Rerun wild cluster bootstrap inference.** After the denominator diagnostic has generated the matched panel, run `do replication/inference_diagnostics.do`. The script now tests the original baseline and asymmetric models, the matched-sample baseline, each component coefficient, and the joint null that both component coefficients are zero. It loads the Mata source before estimation. Do not reinstall the package solely because the official v4.1.0 ado and Mata headers show 4.1.0 and 4.0.3, respectively.
+2. **Inspect all six PNG figures.** Review the four main-analysis figures and the two denominator-diagnostic figures for legibility, scales, confidence intervals, country coverage, and consistency with the numerical tables.
+3. **Validate the implied denominator independently.** Compare the reconstructed BIS four-quarter nominal-GDP series with World Bank GDP in current local currency (NY.GDP.MKTP.CN), checking both levels and annual growth rates, country coverage, and source-vintage differences.
+4. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
+5. **Only then consider alternative measures.** Decide whether a real-credit-growth specification or a denominator-adjusted credit measure adds information beyond the current component model.
+
+The results remain preliminary until these inference, measurement, and figure checks are completed.
