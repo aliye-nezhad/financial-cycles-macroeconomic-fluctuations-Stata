@@ -115,6 +115,13 @@ if `unzip_gdp_rc' != 0 | `unzip_cpi_rc' != 0 {
     exit 612
 }
 
+* Metadata members are retained inside the original ZIP archives and are
+* not required by the Stata import routine.
+local metadata_files : dir "data/raw" files "Metadata_*.csv"
+foreach metadata_file of local metadata_files {
+    erase "data/raw/`metadata_file'"
+}
+
 /***********************************************************************
 3. Confirm expected World Bank CSV members
 ***********************************************************************/
