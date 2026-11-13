@@ -48,6 +48,7 @@ jobs:
             docs/REPRODUCIBILITY.md \
             docs/RESULTS.md \
             outputs/README.md \
+            replication/denominator_diagnostic.do \
             replication/download_data.do \
             replication/inference_diagnostics.do \
             replication/run_analysis.do; do
@@ -68,6 +69,7 @@ jobs:
           grep -Fq "docs/REPRODUCIBILITY.md" README.md
           grep -Fq "docs/RESULTS.md" README.md
           grep -Fq "replication/inference_diagnostics.do" README.md
+          grep -Fq "replication/denominator_diagnostic.do" README.md
 
           grep -Fq "version 15.1" replication/download_data.do
           grep -Fq "version 15.1" replication/run_analysis.do
@@ -95,6 +97,17 @@ jobs:
           grep -Fq "reps(9999)" replication/inference_diagnostics.do
           grep -Fq "weight(rademacher)" replication/inference_diagnostics.do
           grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
+          grep -Fq "version 15.1" replication/denominator_diagnostic.do
+          grep -Fq "WS_CREDIT_GAP/1.0/Q..P.A.A" replication/denominator_diagnostic.do
+          grep -Fq "WS_CREDIT_GAP/1.0/Q..P.A.B" replication/denominator_diagnostic.do
+          grep -Fq "WS_TC/2.0/Q..P.A.M.XDC.A" replication/denominator_diagnostic.do
+          grep -Fq "WS_TC/2.0/Q..P.A.M.770.A" replication/denominator_diagnostic.do
+          grep -Fq "implied_nominal_gdp_4q" replication/denominator_diagnostic.do
+          grep -Fq "credit_growth_nominal" replication/denominator_diagnostic.do
+          grep -Fq "nominal_gdp_growth_implied" replication/denominator_diagnostic.do
+          grep -Fq "ratio_identity_error" replication/denominator_diagnostic.do
+          grep -Fq "ratio_component_growth" replication/denominator_diagnostic.do
+          grep -Fq "ratio_component_coefficients" replication/denominator_diagnostic.do
           if grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do; then
             echo "::error::Obsolete built-in wildbootstrap command remains in the optional diagnostic."
             exit 1
