@@ -127,7 +127,9 @@ The panel is expected to be unbalanced. The do-file reports:
 - the number of observations available for each regression horizon;
 - the number of country clusters used in each regression.
 
-No missing credit-gap, GDP-growth or inflation observation is interpolated or filled forward. The baseline regressions use the complete observations required by the model.
+No missing credit-gap, GDP-growth or inflation observation is interpolated or filled forward. In the retrieved WDI vintage, CPI inflation is missing for Argentina in 1994–2017 (24 country-year observations); the baseline complete-case sample excludes those observations. The project includes a no-inflation sensitivity model to assess this sample loss. The baseline regressions use the complete observations required by the model.
+
+The pre-estimation data audit, including country coverage, actual expected sample sizes, and influential gap observations, is documented in [docs/DATA_AUDIT.md](../docs/DATA_AUDIT.md).
 
 ## Attribution and permitted use
 
