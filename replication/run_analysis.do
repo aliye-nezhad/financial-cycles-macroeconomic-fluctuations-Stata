@@ -506,6 +506,30 @@ estimates store NO_IRL_LUX
 estimates table NO_IRL NO_LUX NO_IRL_LUX, ///
     b(%9.3f) se(%9.3f) stats(N N_g)
 
+display as text "Asymmetric model excluding Ireland"
+xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
+    c.gdp_growth c.gdp_growth_lag1 c.inflation i.outcome_year_h1 ///
+    if iso3c != "IRL", fe vce(cluster panel_id)
+estimates store ASYM_NO_IRL
+test gap_positive = gap_negative
+
+display as text "Asymmetric model excluding Luxembourg"
+xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
+    c.gdp_growth c.gdp_growth_lag1 c.inflation i.outcome_year_h1 ///
+    if iso3c != "LUX", fe vce(cluster panel_id)
+estimates store ASYM_NO_LUX
+test gap_positive = gap_negative
+
+display as text "Asymmetric model excluding Ireland and Luxembourg jointly"
+xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
+    c.gdp_growth c.gdp_growth_lag1 c.inflation i.outcome_year_h1 ///
+    if !inlist(iso3c, "IRL", "LUX"), fe vce(cluster panel_id)
+estimates store ASYM_NO_IRL_LUX
+test gap_positive = gap_negative
+
+estimates table ASYM_NO_IRL ASYM_NO_LUX ASYM_NO_IRL_LUX, ///
+    b(%9.3f) se(%9.3f) stats(N N_g)
+
 log close influence_log
 
 /***********************************************************************
