@@ -86,12 +86,12 @@ Several qualifications remain important:
 - The credit-to-GDP gap is a generated measure based on a one-sided HP trend.
 - GDP enters the denominator of the credit-to-GDP ratio. A higher ratio or gap can reflect stronger credit, weaker GDP, or both. Controlling for current and lagged GDP growth does not fully resolve this issue.
 - The estimates use historical, revised data and are not a real-time forecasting exercise.
-- The conventional standard errors are clustered across 43 countries. Finite-cluster inference remains to be checked with an optional wild cluster bootstrap.
+- The conventional standard errors are clustered across 43 countries. An initial wild cluster bootstrap test of the baseline credit-gap coefficient has now run in Stata 17 using 9,999 Rademacher replications; it reported t(42) = -6.0638 and a displayed p-value of 0.0000. The displayed p-value is rounded, not literally zero. The asymmetric coefficient and slope-equality bootstrap tests are still pending, and the local boottest ado/Mata files were identified as different versions, so the bootstrap results should remain preliminary until the package installation is made consistent and the diagnostic is rerun.
 - The current horizon models estimate annual growth in the specific future year, not cumulative or average growth over the forecast interval.
 
 ## 6. Next empirical steps
 
-1. Run the optional wild cluster bootstrap diagnostic in [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do), if Stata 18 or later is available.
+1. Complete the optional wild cluster bootstrap diagnostic in [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do) using Stata 17 and a consistent installation of the `boottest` package.
 2. Visually inspect the two exported PNG figures and reconcile them with the logged commands.
 3. Investigate the GDP-denominator channel directly by comparing the gap with movements in the underlying credit numerator and GDP denominator. This is the next substantive research question, not an invitation to add unrelated controls.
 4. After these checks, decide whether a real-credit-growth or other alternative financial-cycle measure is justified.
