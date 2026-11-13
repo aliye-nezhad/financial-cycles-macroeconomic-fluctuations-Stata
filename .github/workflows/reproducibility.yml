@@ -112,6 +112,11 @@ jobs:
           grep -Fq "name(credit_gap_gdp_scatter, replace)" replication/run_analysis.do
           grep -Fq 'graph save "outputs/figures/mean_credit_gap_by_year.gph", replace' replication/run_analysis.do
           grep -Fq 'graph save "outputs/figures/credit_gap_gdp_scatter.gph", replace' replication/run_analysis.do
+          grep -Fq 'name(mean_credit_gap_by_year) replace width(2000)' replication/run_analysis.do
+          grep -Fq 'graph save mean_credit_gap_by_year' replication/run_analysis.do
+          grep -Fq 'name(credit_gap_gdp_scatter) replace width(2000)' replication/run_analysis.do
+          grep -Fq 'graph save credit_gap_gdp_scatter' replication/run_analysis.do
+          grep -Fq 'graph dir' replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
           grep -Fq 'insheet using "data/raw/bis_credit_gap.csv", comma names clear' replication/run_analysis.do
