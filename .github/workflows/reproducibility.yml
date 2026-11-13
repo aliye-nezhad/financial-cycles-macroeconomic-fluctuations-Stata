@@ -184,13 +184,13 @@ jobs:
           echo "Static repository checks passed. This workflow does not execute Stata or validate numerical estimates."
 
   windows-bis-download:
-    name: Validate Windows BIS component acquisition
+    name: Validate Windows BIS and World Bank source acquisition
     runs-on: windows-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
 
-      - name: Download and validate supplementary BIS series
+      - name: Download and validate supplementary BIS and WDI series
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
