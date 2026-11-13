@@ -79,7 +79,7 @@ where:
 
 The primary specification uses h = 1. The h = 2 and h = 3 specifications are secondary horizon extensions. The coefficient \(\beta_h\) is a predictive association: a one-percentage-point increase in the credit gap is associated with a \(\beta_h\)-percentage-point difference in subsequent annual GDP growth, conditional on the included controls and fixed effects.
 
-Country fixed effects absorb time-invariant country characteristics. Outcome-year fixed effects absorb shocks common to countries in the same outcome year. Standard errors are clustered by country to allow heteroskedasticity and serial correlation within countries. The current sample contains 43 country clusters. Because finite-cluster performance depends on the number and balance of clusters, an optional wild cluster bootstrap diagnostic is provided for Stata 18 or later; it supplements rather than replaces the baseline clustered inference.
+Country fixed effects absorb time-invariant country characteristics. Outcome-year fixed effects absorb shocks common to countries in the same outcome year. Standard errors are clustered by country to allow heteroskedasticity and serial correlation within countries. The current sample contains 43 country clusters. Because finite-cluster performance depends on the number and balance of clusters, an optional wild cluster bootstrap diagnostic is provided using David Roodman's user-written `boottest` package, which works after `xtreg, fe` in Stata 15.1 and later; it supplements rather than replaces the baseline clustered inference.
 
 ### Asymmetric specification
 
@@ -130,7 +130,7 @@ The results are recorded in [docs/RESULTS.md](RESULTS.md). They remain prelimina
 
 The next steps are deliberately limited to questions that affect interpretation:
 
-1. Run the optional wild cluster bootstrap diagnostic, if Stata 18 or later is available, to assess finite-cluster inference for the baseline gap coefficient and asymmetric slope tests.
+1. Run the optional `boottest` diagnostic to assess finite-cluster inference for the baseline gap coefficient and asymmetric slope tests. The baseline coefficient bootstrap has run in Stata 17; the asymmetric bootstrap tests remain pending.
 2. Inspect the exported PNG figures and compare them with the numerical tables.
 3. Investigate the credit-to-GDP denominator issue directly. The BIS gap is constructed from a credit-to-GDP ratio, so a positive gap can reflect stronger credit accumulation, weaker GDP, or both. A focused supplementary analysis should distinguish these channels before the project makes a substantive claim about credit booms.
 4. Only after these checks, decide whether any additional specification is justified. Do not add estimators merely to enlarge the model list.
