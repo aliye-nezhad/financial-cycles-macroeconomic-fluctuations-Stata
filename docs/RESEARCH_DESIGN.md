@@ -130,9 +130,9 @@ The results are recorded in [docs/RESULTS.md](RESULTS.md). They remain prelimina
 
 The next steps are deliberately limited to questions that affect interpretation:
 
-1. Run the optional `boottest` diagnostic to assess finite-cluster inference for the baseline gap coefficient and asymmetric slope tests. The baseline coefficient bootstrap has run in Stata 17; the asymmetric bootstrap tests remain pending.
-2. Inspect the exported PNG figures and compare them with the numerical tables.
-3. Investigate the credit-to-GDP denominator issue directly. The BIS gap is constructed from a credit-to-GDP ratio, so a positive gap can reflect stronger credit accumulation, weaker GDP, or both. A focused supplementary analysis should distinguish these channels before the project makes a substantive claim about credit booms.
-4. Only after these checks, decide whether any additional specification is justified. Do not add estimators merely to enlarge the model list.
+1. The baseline and all three asymmetric wild cluster bootstrap tests have been executed with 9,999 Rademacher replications in Stata 17. However, the installed `boottest.ado` and `boottest.mata` identify different versions (4.1.0 and 4.0.3). Install one consistent tagged release and rerun the diagnostic before treating the bootstrap results as final.
+2. Inspect the four exported PNG figures and compare them with the numerical tables. The latest execution log confirms that the four graph objects were exported separately, but the images have not yet been visually reviewed.
+3. Run `replication/denominator_diagnostic.do`. This supplementary script obtains the BIS actual credit-to-GDP ratio and trend, together with the underlying private non-financial-sector credit stock. It reconstructs the trailing-four-quarter nominal-GDP denominator, checks the identities across BIS series, and compares the predictive content of nominal credit growth and implied nominal-GDP growth on a common sample. The script has been added but has not yet been executed.
+4. Only after these checks, decide whether a modified credit-gap measure using a smoothed GDP denominator or a real-credit-growth alternative is justified. Do not add estimators merely to enlarge the model list.
 
 The project remains an observational predictive exercise. No result should be described as a causal effect.
