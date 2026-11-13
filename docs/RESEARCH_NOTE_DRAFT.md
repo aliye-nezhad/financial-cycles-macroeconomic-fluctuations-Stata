@@ -93,12 +93,12 @@ The regression sensitivity estimates the baseline model across four samples: the
 |---|---:|---:|---:|
 | 43 economies, unbalanced | -0.02280 (0.00376), 1,310 | -0.02901 (0.00357), 1,267 | -0.02675 (0.00348), 1,224 |
 | 31 economies, full period | -0.01950 (0.00412), 1,054 | -0.02658 (0.00408), 1,023 | -0.02454 (0.00404), 992 |
-| 31 economies, common period | -0.03135 (0.00731), 589 | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
+| 31 economies, common period | Pending re-execution (expected N=558) | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
 | 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-All 12 linear credit-gap coefficients are negative and statistically significant at the 1% level. The common-period estimates are larger in absolute value than the full-period estimates, indicating sensitivity to the period covered.
+The 11 count-consistent linear estimates are negative and statistically significant at the 1% level. The 31-country common-period H1 estimate is withheld: the earlier output reports 589 observations, but the committed predictor-year filter (2006–2023) permits at most 558 observations. The coefficient and standard error from that earlier run are provisional pending re-execution. The count-consistent common-period estimates are larger in absolute value than the full-period estimates, indicating sensitivity to the period covered.
 
-The asymmetric results are less stable. The full-period samples reproduce the original pattern of a negative and significant positive-gap slope, a near-zero negative-gap slope, and rejection of equal slopes. In the common-period samples, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. The asymmetry should therefore not be presented as invariant to sample period.
+The asymmetric results are less stable. The full-period samples reproduce the original pattern of a negative and significant positive-gap slope, a near-zero negative-gap slope, and rejection of equal slopes. The 31-country common-period asymmetric H1 estimates are withheld for the same observation-count discrepancy; the updated do-file now asserts 558 observations for both common-period H1 models. In the 43-country common-period sample, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. The asymmetry should therefore not be presented as invariant to sample period.
 
 ## Measurement diagnostics
 
