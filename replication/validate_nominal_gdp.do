@@ -102,18 +102,19 @@ if !_rc {
 /***********************************************************************
 2. Import World Bank GDP (current LCU), retaining 1989-2024
 
-The World Bank bulk CSV begins with metadata/separator records, followed
-by a header row and country observations. The first three imported
-pre-data records are dropped; the header row is then identified by
-"Country Code" and explicitly removed. Columns v34-v69 correspond to
-1989-2024. WDI's ".." missing-value marker is converted to Stata missing
-and every annual column is destringed before reshaping.
+The World Bank bulk CSV begins with two metadata records, followed by
+the column header and country observations. insheet skips the blank
+separator, so the script drops only the first two metadata observations.
+It then identifies and removes the header row using "Country Code".
+Columns v34-v69 correspond to 1989-2024. WDI's ".." missing-value
+marker is converted to Stata missing and every annual column is
+destringed before reshaping.
 ***********************************************************************/
 
 tempfile wb_gdp
 
 insheet using "data/raw/wb_gdp_current_lcu.csv", comma nonames clear
-drop in 1/3
+drop in 1/2
 
 capture confirm variable v69
 if _rc {
