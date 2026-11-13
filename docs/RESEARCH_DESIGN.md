@@ -32,7 +32,7 @@ The baseline therefore controls for current GDP growth and its one-year lag, in 
 
 ## Data and sample
 
-The outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving at most 43 country units. The preliminary source-data audit confirms 43 individual economies and 1,377 Q4 country-year observations. The panel is unbalanced: 31 countries have Q4 observations for all years from 1990 through 2024, while 12 begin later. The one-year-ahead complete-case sample has 1,310 observations across all 43 countries; the two- and three-year-ahead samples have 1,267 and 1,224 observations, respectively. See docs/DATA_AUDIT.md for country coverage, missingness, data distributions and pre-estimation sample counts.
+The outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving 43 individual country units in the retrieved vintage. The preliminary source-data audit confirms 43 individual economies and 1,377 Q4 country-year observations. The panel is unbalanced: 31 countries have Q4 observations for all years from 1990 through 2024, while 12 begin later. The one-year-ahead complete-case sample has 1,310 observations across all 43 countries; the two- and three-year-ahead samples have 1,267 and 1,224 observations, respectively. See docs/DATA_AUDIT.md for country coverage, missingness, data distributions and pre-estimation sample counts.
 
 ### Main variables
 
