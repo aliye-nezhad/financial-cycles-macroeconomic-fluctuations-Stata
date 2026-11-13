@@ -11,12 +11,12 @@ The main analysis uses three public source datasets. The optional denominator di
 | wb_cpi_inflation.zip | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
 | wb_gdp_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN (unlinked current-LCU comparison) |
 | wb_gdp_linked_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN.AD (linked current-LCU validation) |
-| wb_gdp_current_lcu.csv | Canonical extracted CSV for the unlinked comparison |
-| wb_gdp_current_lcu_metadata.txt | Retrieval status, World Bank update date, and archive/CSV SHA-256 hashes |
-| wb_gdp_linked_current_lcu.csv | Canonical extracted CSV for the preferred linked validation |
-| wb_gdp_linked_current_lcu_metadata.txt | Retrieval status, World Bank update date, and archive/CSV SHA-256 hashes |
-| bis_credit_gap_ratio.csv; bis_credit_gap_trend.csv | Supplementary BIS actual ratio and one-sided trend |
-| bis_total_credit_xdc.csv; bis_total_credit_gdp.csv | Supplementary BIS nominal credit stock and credit-to-GDP ratio |
+| wb_gdp_current_lcu.csv | World Bank, World Development Indicators | Canonical extracted CSV for the unlinked comparison |
+| wb_gdp_current_lcu_metadata.txt | World Bank, World Development Indicators | Retrieval status, update date, and archive/CSV SHA-256 hashes |
+| wb_gdp_linked_current_lcu.csv | World Bank, World Development Indicators | Canonical extracted CSV for the preferred linked validation |
+| wb_gdp_linked_current_lcu_metadata.txt | World Bank, World Development Indicators | Retrieval status, update date, and archive/CSV SHA-256 hashes |
+| bis_credit_gap_ratio.csv; bis_credit_gap_trend.csv | Bank for International Settlements (BIS) | Supplementary actual ratio and one-sided trend |
+| bis_total_credit_xdc.csv; bis_total_credit_gdp.csv | Bank for International Settlements (BIS) | Supplementary nominal credit stock and credit-to-GDP ratio |
 
 The main-analysis source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. That workflow commits the main-analysis archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. The supplementary BIS components and nominal-GDP validation series use separate acquisition helpers and are not added to the main-analysis source vintage. Existing local raw archives are not overwritten unless the relevant refresh option is enabled.
 
