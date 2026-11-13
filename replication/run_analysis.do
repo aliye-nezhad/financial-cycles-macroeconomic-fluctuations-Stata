@@ -555,9 +555,12 @@ twoway line mean_credit_gap year, sort ///
     legend(off) ///
     name(mean_credit_gap_by_year, replace)
 
+* Export and save the explicitly named graph, not whichever Graph window
+* happens to be active. The PNG and GPH paths are unique to this figure.
 graph export "outputs/figures/mean_credit_gap_by_year.png", ///
-    replace width(2000)
-graph save "outputs/figures/mean_credit_gap_by_year.gph", replace
+    name(mean_credit_gap_by_year) replace width(2000)
+graph save mean_credit_gap_by_year ///
+    "outputs/figures/mean_credit_gap_by_year.gph", replace
 restore
 
 twoway (scatter gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1), ///
@@ -578,9 +581,15 @@ twoway (scatter gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1), ///
         rows(1) position(6) size(small) region(lcolor(white) fcolor(white))) ///
     name(credit_gap_gdp_scatter, replace)
 
+* Explicitly target the scatter graph for both output formats.
 graph export "outputs/figures/credit_gap_gdp_scatter.png", ///
-    replace width(2000)
-graph save "outputs/figures/credit_gap_gdp_scatter.gph", replace
+    name(credit_gap_gdp_scatter) replace width(2000)
+graph save credit_gap_gdp_scatter ///
+    "outputs/figures/credit_gap_gdp_scatter.gph", replace
+
+* Leave both named graphs available in memory and record their names in the log.
+display as text "Graphs retained in memory:"
+graph dir
 
 /***********************************************************************
 14. Save final analysis dataset and validate expected outputs
