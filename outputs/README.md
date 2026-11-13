@@ -14,7 +14,12 @@ Expected outputs:
 - tables/robustness_models.txt
 - tables/influence_sensitivity.txt
 - figures/mean_credit_gap_by_year.png
+- figures/mean_credit_gap_by_year.gph
 - figures/credit_gap_gdp_scatter.png
+- figures/credit_gap_gdp_scatter.gph
 - logs/analysis.log
 
 These files are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
+
+
+Both figures are stored separately and have distinct Stata graph names. Each is exported as a PNG for viewing and saved as a native Stata `.gph` file for later editing. The analysis uses Stata's built-in `s1mono` scheme with explicit black, white and grayscale options. Re-running the script updates each figure's own files without replacing the other figure.
