@@ -11,7 +11,7 @@ The main analysis uses three public source datasets. The optional denominator di
 | wb_cpi_inflation.zip | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
 | wb_gdp_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN (supplementary validation) |
 
-The source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. The Actions workflow commits the downloaded archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. Existing local raw archives are not overwritten unless the refresh option in the Stata download script is enabled.
+The main-analysis source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. That workflow commits the main-analysis archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. The supplementary BIS components and nominal-GDP validation series use separate acquisition helpers and are not added to the main-analysis source vintage. Existing local raw archives are not overwritten unless the relevant refresh option is enabled.
 
 ## BIS credit-to-GDP gap
 
