@@ -99,7 +99,7 @@ See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotat
 
 ## Current status
 
-The BIS and World Bank source files have been downloaded, committed with SHA-256 checksums, and audited. The preliminary data audit identifies 43 individual economies and 1,310 complete one-year-ahead observations for the baseline sample. Stata execution and regression-output reconciliation remain pending; no regression estimates or empirical findings are reported yet. GitHub Actions validates repository structure and source-file checksums; it does not execute Stata or verify numerical estimates.
+The BIS and World Bank source files have been downloaded, committed with SHA-256 checksums, and audited. The first complete Stata run was executed on 13 November 2026. It reproduced the expected one-, two- and three-year-ahead samples exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The initial asymmetric specification suggests that this relationship is concentrated in above-trend credit conditions. Additional asymmetric influence checks excluding Ireland and Luxembourg have now been added to the analysis script and remain to be run before the asymmetry result is treated as established. Generated tables, figures and logs are currently local outputs pending final review. GitHub Actions validates repository structure and source-file checksums; it does not execute Stata or verify numerical estimates.
 
 ## Data attribution
 
