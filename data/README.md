@@ -10,7 +10,7 @@ The analysis uses three public source datasets:
 | wb_gdp_growth.zip | World Bank, World Development Indicators | NY.GDP.MKTP.KD.ZG |
 | wb_cpi_inflation.zip | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
 
-The source files are downloaded by replication/download_data.do. Existing raw files are not overwritten unless the refresh option in that script is enabled.
+The source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. The Actions workflow commits the downloaded archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. Existing local raw archives are not overwritten unless the refresh option in the Stata download script is enabled.
 
 ## BIS credit-to-GDP gap
 
@@ -135,4 +135,4 @@ BIS statistics may be reproduced provided the BIS is cited as the source and the
 
 World Bank indicators should be cited as World Development Indicators, World Bank, with the relevant indicator code and retrieval date.
 
-The repository records the source URLs and retrieval date. Source data may be updated by the providers; a new download is a new data vintage and should not silently replace the vintage used for a previously reported result.
+The repository records the source URLs and retrieval date in data/DATA_VINTAGE.md and stores checksums in data/raw.sha256 after acquisition. Source data may be updated by the providers; a new download is a new data vintage and should not silently replace the vintage used for a previously reported result.
