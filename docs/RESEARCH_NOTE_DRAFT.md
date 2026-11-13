@@ -149,7 +149,7 @@ The main entry points are:
 
 Before this note is used externally, the following items remain:
 
-1. Execute the corrected balanced-panel script to complete the 43-country 2006–2024 linked-GDP validation and inspect the consolidated four-sample output.
+1. Execute the corrected balanced-panel script to re-estimate the 31-country common-period H1 linear and asymmetric regressions at N=558, complete the 43-country 2006–2024 linked-GDP validation, and inspect the consolidated four-sample output.
 2. Rerun the linked-GDP audit so that the two top-20 CSV files reflect the revised, focused export fields.
 3. Review the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their tables and logs.
 4. Freeze the final source metadata, checksums, tables, figures, and logs. GitHub Actions checks repository structure and source acquisition; it does not run Stata or validate numerical estimates.
