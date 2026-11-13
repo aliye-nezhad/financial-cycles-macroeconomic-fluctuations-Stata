@@ -313,3 +313,33 @@ Key outputs:
 - `outputs/logs/nominal_gdp_linked_outlier_audit.log`
 
 Official references: [World Bank linked-series metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD) and [World Bank explanation of linked current-price GDP series](https://documents1.worldbank.org/curated/en/661311618822193354/pdf/World-Development-Indicators-2017.pdf).
+
+
+## 12. Balanced-panel linked-GDP sample sensitivity
+
+After running the main analysis and `replication/validate_nominal_gdp_linked.do`, run the standalone sample-composition validation:
+
+```stata
+do replication/validate_balanced_panel_samples.do
+```
+
+The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in every year from 1990 through 2024 and applies the same country definition to the linked-GDP validation panel. It then compares four samples:
+
+| Sample | Level window | Growth-comparison window | Expected levels | Expected growth observations |
+|---|---|---|---:|---:|
+| All 43 economies, unbalanced | 1990–2024 | 1991–2024 | 1,377 | 1,334 |
+| 31 complete-coverage economies | 1990–2024 | 1991–2024 | 1,085 | 1,054 |
+| 31 complete-coverage economies, common period | 2006–2024 | 2007–2024 | 589 | 558 |
+| All 43 economies, common period | 2006–2024 | 2007–2024 | 817 | 774 |
+
+The level and growth filters are deliberately separate. For the common-period samples, 2006 is the first year in the level comparison; 2007 is the first growth-comparison year because annual growth requires both the current and preceding year's GDP levels. Including 2006 growth would import the 2005 GDP level and would not represent the stated common-period comparison.
+
+Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
+
+Expected outputs:
+
+- `outputs/tables/balanced_panel_linked_gdp_validation.csv`
+- `data/processed/balanced_panel_linked_gdp_validation.dta`
+- `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`
+
+The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
