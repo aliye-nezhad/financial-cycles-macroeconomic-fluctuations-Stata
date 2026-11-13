@@ -166,6 +166,26 @@ Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA25
 
 The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
 
+After the optional denominator diagnostic has downloaded its four BIS component files, record their checksums separately so the main analysis vintage is not silently changed.
+
+Linux, macOS or Git Bash:
+
+```bash
+sha256sum data/raw/bis_credit_gap_ratio.csv data/raw/bis_credit_gap_trend.csv data/raw/bis_total_credit_xdc.csv data/raw/bis_total_credit_gdp.csv > data/denominator_components.sha256
+sha256sum --check data/denominator_components.sha256
+```
+
+Windows PowerShell:
+
+```powershell
+Get-FileHash .\data\raw\bis_credit_gap_ratio.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_credit_gap_trend.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_total_credit_xdc.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_total_credit_gdp.csv -Algorithm SHA256
+```
+
+Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` alongside these hashes.
+
 ## 7. Expected outputs
 
 | Path | Contents |
