@@ -33,9 +33,10 @@ Argentina's CPI observations remain missing for 2006-2017.
 For predictive regressions, the final predictor year is 2024 minus
 the forecast horizon, so the future outcome remains within 2024.
 
-For linked-GDP validation, levels use 1990-2024 or 2006-2024;
-growth comparisons begin one year later because they require a
-preceding annual GDP level.
+For linked-GDP validation, levels use 1990-2024 or 2006-2024.
+Growth observations are indexed by calendar year. The 2006 growth
+observation uses the 2005 GDP level as its lag input, but remains a
+2006 observation in the common-period comparison.
 
 No source observations are permanently deleted, winsorized, interpolated,
 or adjusted. Sample restrictions are applied only within this diagnostic.
