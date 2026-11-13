@@ -247,6 +247,16 @@ foreach sample_name of local sample_names {
         local n = e(N)
         local clusters = e(N_g)
 
+        * The 31-country common-period H1 regression uses predictor years
+        * 2006-2023: 31 countries x 18 years = 558 observations. This is
+        * distinct from the 589 linked-GDP validation observations (2006-2024).
+        if "`sample_name'" == "balanced31_common" & `h' == 1 & `n' != 558 {
+            display as error "Expected 558 observations in the 31-country common-period H1 regression; found `n'."
+            postclose `model_post'
+            log close main_log
+            exit 459
+        }
+
         post `model_post' ///
             ("`sample_name'") ///
             ("linear") ///
@@ -299,6 +309,14 @@ foreach sample_name of local sample_names {
     local df = e(df_r)
     local n = e(N)
     local clusters = e(N_g)
+
+    if "`sample_name'" == "balanced31_common" & `n' != 558 {
+        display as error "Expected 558 observations in the 31-country common-period asymmetric H1 regression; found `n'."
+        postclose `model_post'
+        log close main_log
+        exit 459
+    }
+
     local crit = invttail(`df', .025)
 
     local b_positive = _b[gap_positive]
