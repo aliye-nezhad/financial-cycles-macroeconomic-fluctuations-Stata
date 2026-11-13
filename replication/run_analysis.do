@@ -15,6 +15,9 @@ version 15.1
 clear all
 set more off
 set linesize 100
+
+* Use a consistent, publication-style monochrome scheme for all figures.
+set scheme s1mono
 capture log close _all
 
 capture mkdir "data"
@@ -514,26 +517,46 @@ collapse (mean) mean_credit_gap = credit_gap_q4 ///
          (count) countries_observed = credit_gap_q4, by(year)
 
 twoway line mean_credit_gap year, sort ///
-    yline(0, lpattern(dash)) ///
-    title("Mean Credit-to-GDP Gap Across Available Economies") ///
-    subtitle("Unweighted mean; country coverage varies by year") ///
-    xtitle("Year") ytitle("Percentage points of GDP")
+    lcolor(black) lwidth(medthick) ///
+    yline(0, lcolor(gs10) lpattern(dash) lwidth(thin)) ///
+    title("Mean Credit-to-GDP Gap Across Available Economies", ///
+        color(black) size(medsmall)) ///
+    subtitle("Unweighted mean; country coverage varies by year", ///
+        color(gs6) size(small)) ///
+    xtitle("Year", color(black)) ///
+    ytitle("Percentage points of GDP", color(black)) ///
+    xlabel(, labcolor(gs5) nogrid) ///
+    ylabel(, labcolor(gs5) nogrid) ///
+    graphregion(color(white)) plotregion(color(white)) ///
+    legend(off) ///
+    name(mean_credit_gap_by_year, replace)
 
 graph export "outputs/figures/mean_credit_gap_by_year.png", ///
     replace width(2000)
+graph save "outputs/figures/mean_credit_gap_by_year.gph", replace
 restore
 
 twoway (scatter gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1), ///
-            msize(vsmall)) ///
-       (lfit gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1)), ///
-    yline(0, lpattern(dash)) ///
-    title("Credit-to-GDP Gaps and Subsequent GDP Growth") ///
-    subtitle("Unconditional pooled association; not the fixed-effects estimate") ///
-    xtitle("Credit-to-GDP gap (percentage points of GDP)") ///
-    ytitle("GDP growth one year ahead (annual percent)")
+            msize(vsmall) mcolor(gs8) mlcolor(gs8)) ///
+       (lfit gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1), ///
+            lcolor(black) lwidth(medthick)), ///
+    yline(0, lcolor(gs10) lpattern(dash) lwidth(thin)) ///
+    title("Credit-to-GDP Gaps and Subsequent GDP Growth", ///
+        color(black) size(medsmall)) ///
+    subtitle("Unconditional pooled association; not the fixed-effects estimate", ///
+        color(gs6) size(small)) ///
+    xtitle("Credit-to-GDP gap (percentage points of GDP)", color(black)) ///
+    ytitle("GDP growth one year ahead (annual percent)", color(black)) ///
+    xlabel(, labcolor(gs5) nogrid) ///
+    ylabel(, labcolor(gs5) nogrid) ///
+    graphregion(color(white)) plotregion(color(white)) ///
+    legend(order(1 "Country-year observations" 2 "Linear fit") ///
+        rows(1) position(6) size(small) region(lcolor(white) fcolor(white))) ///
+    name(credit_gap_gdp_scatter, replace)
 
 graph export "outputs/figures/credit_gap_gdp_scatter.png", ///
     replace width(2000)
+graph save "outputs/figures/credit_gap_gdp_scatter.gph", replace
 
 /***********************************************************************
 14. Save final analysis dataset and validate expected outputs
@@ -551,7 +574,9 @@ foreach output in ///
     outputs/tables/robustness_models.txt ///
     outputs/tables/influence_sensitivity.txt ///
     outputs/figures/mean_credit_gap_by_year.png ///
+    outputs/figures/mean_credit_gap_by_year.gph ///
     outputs/figures/credit_gap_gdp_scatter.png ///
+    outputs/figures/credit_gap_gdp_scatter.gph ///
     outputs/logs/analysis.log {
     capture confirm file "`output'"
     if _rc {
