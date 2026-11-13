@@ -213,14 +213,14 @@ foreach sample_name of local sample_names {
     }
     else if "`sample_name'" == "balanced31_common" {
         local level_if "balanced31 == 1 & level_overlap == 1 & inrange(year, 2006, 2024)"
-        local growth_if "balanced31 == 1 & growth_overlap == 1"
+        local growth_if "balanced31 == 1 & growth_overlap == 1 & inrange(year, 2006, 2024)"
         local expected_levels = 589
         local expected_growth = 589
         local expected_countries = 31
     }
     else if "`sample_name'" == "all43_common" {
         local level_if "level_overlap == 1 & inrange(year, 2006, 2024)"
-        local growth_if "growth_overlap == 1"
+        local growth_if "growth_overlap == 1 & inrange(year, 2006, 2024)"
         local expected_levels = 817
         local expected_growth = 817
         local expected_countries = 43
