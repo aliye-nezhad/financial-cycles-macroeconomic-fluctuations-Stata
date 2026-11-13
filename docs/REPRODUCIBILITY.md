@@ -342,6 +342,8 @@ The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in eve
 
 The level and growth comparisons use separate overlap indicators but the same calendar-year window. For the common-period samples, both cover 2006–2024. The 2006 annual growth rate uses the 2005 GDP level as its lag input; it remains a 2006 growth observation. The 2005 growth observation itself is excluded.
 
+These validation counts are distinct from the predictive-regression sample sizes. For example, the 31-country H1 regression uses predictor years 2006–2023 to predict outcomes in 2007–2024, so it contains 558 regression observations; the linked-GDP validation separately compares 19 calendar-year growth observations from 2006 through 2024 for each country.
+
 Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
 
 The combined script produces:
