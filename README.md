@@ -50,7 +50,6 @@ Source documentation, download instructions, transformations, and attribution re
 ├── data/
 │   ├── raw/
 │   ├── processed/
-│   ├── raw.sha256
 │   └── README.md
 ├── docs/
 │   ├── LITERATURE_NOTES.md
