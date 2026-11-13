@@ -34,8 +34,6 @@ jobs:
             data/raw/bis_credit_gap.csv \
             data/raw/wb_gdp_growth.zip \
             data/raw/wb_cpi_inflation.zip \
-            data/raw/API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv \
-            data/raw/API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv \
             docs/DATA_AUDIT.md \
             docs/RESEARCH_DESIGN.md \
             docs/LITERATURE_NOTES.md \
@@ -48,6 +46,9 @@ jobs:
               exit 1
             fi
           done
+
+          test -n "$(find data/raw -maxdepth 1 -type f -name 'API_NY.GDP.MKTP.KD.ZG*.csv' -print -quit)"
+          test -n "$(find data/raw -maxdepth 1 -type f -name 'API_FP.CPI.TOTL.ZG*.csv' -print -quit)"
 
           grep -Fq "Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps" README.md
           grep -Fq "do replication/download_data.do" README.md
