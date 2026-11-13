@@ -42,7 +42,7 @@ if _rc {
     display as text "Check the boottest installation before running this diagnostic."
     exit 601
 }
-local boottest_mata \`"\`r(fn)'"'
+local boottest_mata `"`r(fn)'"'
 
 capture findfile lboottest.mlib
 if _rc {
@@ -57,11 +57,11 @@ which boottest
 display as text "Installed boottest Mata source:"
 which boottest.mata
 
-capture noisily run \`"\`boottest_mata'"'
+capture noisily run `"`boottest_mata'"'
 local mata_rc = _rc
-if \`mata_rc' != 0 {
+if `mata_rc' != 0 {
     display as error "Could not load the boottest Mata source."
-    exit \`mata_rc'
+    exit `mata_rc'
 }
 
 /***********************************************************************
@@ -82,9 +82,9 @@ use "data/processed/financial_cycles_panel.dta", clear
 
 foreach required_var in panel_id year credit_gap_q4 gdp_growth ///
     gdp_growth_lag1 inflation {
-    capture confirm variable \`required_var'
+    capture confirm variable `required_var'
     if _rc {
-        display as error "Required variable not found: \`required_var'"
+        display as error "Required variable not found: `required_var'"
         exit 111
     }
 }
@@ -131,7 +131,7 @@ xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth ///
 
 quietly count if e(sample)
 local baseline_n = r(N)
-display as result "Baseline estimation observations: \`baseline_n'"
+display as result "Baseline estimation observations: `baseline_n'"
 display as result "Baseline country clusters: " e(N_g)
 
 boottest credit_gap_q4, reps(9999) seed(13112026) weight(rademacher)
@@ -146,7 +146,7 @@ estimates store ASYM_BOOT
 
 quietly count if e(sample)
 local asymmetric_n = r(N)
-display as result "Asymmetric estimation observations: \`asymmetric_n'"
+display as result "Asymmetric estimation observations: `asymmetric_n'"
 display as result "Asymmetric country clusters: " e(N_g)
 
 display as text "Conventional cluster-robust equality-of-slopes test"
