@@ -85,6 +85,9 @@ jobs:
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
           grep -Fq "estimates store NO_INFLATION" replication/run_analysis.do
           grep -Fq "NO_IRL_LUX" replication/run_analysis.do
+          grep -Fq "ASYM_NO_IRL" replication/run_analysis.do
+          grep -Fq "ASYM_NO_LUX" replication/run_analysis.do
+          grep -Fq "ASYM_NO_IRL_LUX" replication/run_analysis.do
           grep -Fq "influence_sensitivity.txt" replication/run_analysis.do
           grep -Fq "set scheme s1mono" replication/run_analysis.do
           grep -Fq "name(mean_credit_gap_by_year, replace)" replication/run_analysis.do
