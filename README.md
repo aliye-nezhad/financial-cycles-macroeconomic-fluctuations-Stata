@@ -52,8 +52,11 @@ Source documentation, download instructions, transformations, and attribution re
 ├── data/
 │   ├── raw/
 │   ├── processed/
+│   ├── DATA_VINTAGE.md
+│   ├── raw.sha256
 │   └── README.md
 ├── docs/
+│   ├── DATA_AUDIT.md
 │   ├── LITERATURE_NOTES.md
 │   ├── RESEARCH_DESIGN.md
 │   └── REPRODUCIBILITY.md
@@ -92,11 +95,11 @@ do replication/run_analysis.do
 
 The repository also includes a GitHub Actions data-acquisition workflow. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits the source files to the private repository. The Stata download script preserves existing raw archives by default; set its refresh option to 1 only when intentionally retrieving a new vintage. The retrieval date and checksums are retained with the source files.
 
-See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions.
+See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions.
 
 ## Current status
 
-The research design and repository workflow are being prepared. No regression estimates or empirical findings are reported until the source files have been downloaded, the merged sample has been validated, and the Stata analysis has been executed. GitHub Actions performs repository-level static checks; it does not execute Stata or verify numerical estimates.
+The BIS and World Bank source files have been downloaded, committed with SHA-256 checksums, and audited. The preliminary data audit identifies 43 individual economies and 1,310 complete one-year-ahead observations for the baseline sample. Stata execution and regression-output reconciliation remain pending; no regression estimates or empirical findings are reported yet. GitHub Actions validates repository structure and source-file checksums; it does not execute Stata or verify numerical estimates.
 
 ## Data attribution
 
