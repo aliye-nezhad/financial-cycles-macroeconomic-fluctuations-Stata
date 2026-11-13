@@ -2,25 +2,35 @@
 
 The main Stata analysis has completed successfully. The uploaded execution log confirms that the expected tables, figures, processed dataset and logs were generated locally and that the final file-existence checks passed. The baseline, asymmetric, measurement, pandemic, control-variable and country-influence specifications have all been executed. The numerical findings are summarized in [docs/RESULTS.md](../docs/RESULTS.md).
 
-The generated output artifacts have not yet been committed. The PNG figures must be visually inspected before they are treated as final presentation outputs. The optional wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; it writes `tables/wild_cluster_bootstrap.txt`.
+The analysis now exports four separate figures:
+
+1. `mean_credit_gap_by_year.png` — the annual unweighted mean BIS credit-to-GDP gap across available economies.
+2. `credit_gap_gdp_scatter.png` — the pooled, unconditional relationship between the credit gap and GDP growth one year ahead. This is descriptive and is not the fixed-effects estimate.
+3. `fe_horizon_coefficients.png` — the estimated credit-gap coefficients from the one-, two-, and three-year-ahead country and outcome-year fixed-effects models, with country-clustered 95% confidence intervals. This is the main model-based figure.
+4. `asymmetric_gap_coefficients.png` — the positive- and negative-gap coefficients from the asymmetric one-year-ahead fixed-effects model, with country-clustered 95% confidence intervals.
+
+Each PNG has a separately named native Stata `.gph` counterpart for editing. The do-file explicitly supplies the graph name to each export and save command, then lists all four names with `graph dir`. Stata's Graph window displays one active graph at a time; switching the active display does not mean that the other graph's file has been replaced. To compare the figures simultaneously, open the four PNG files from `outputs/figures/` in separate image windows.
+
+The generated output artifacts have not yet been committed. The PNGs still need visual inspection before they are treated as final presentation outputs. The optional wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; it writes `tables/wild_cluster_bootstrap.txt`.
 
 Expected outputs:
 
-- tables/sample_coverage.txt
-- tables/descriptive_statistics.txt
-- tables/correlation_matrix.txt
-- tables/baseline_models.txt
-- tables/asymmetric_model.txt
-- tables/robustness_models.txt
-- tables/influence_sensitivity.txt
-- tables/wild_cluster_bootstrap.txt (optional; Stata 15.1+ with boottest)
-- figures/mean_credit_gap_by_year.png
-- figures/mean_credit_gap_by_year.gph
-- figures/credit_gap_gdp_scatter.png
-- figures/credit_gap_gdp_scatter.gph
-- logs/analysis.log
+- `tables/sample_coverage.txt`
+- `tables/descriptive_statistics.txt`
+- `tables/correlation_matrix.txt`
+- `tables/baseline_models.txt`
+- `tables/asymmetric_model.txt`
+- `tables/robustness_models.txt`
+- `tables/influence_sensitivity.txt`
+- `tables/wild_cluster_bootstrap.txt` (optional; Stata 15.1+ with boottest)
+- `figures/mean_credit_gap_by_year.png`
+- `figures/mean_credit_gap_by_year.gph`
+- `figures/credit_gap_gdp_scatter.png`
+- `figures/credit_gap_gdp_scatter.gph`
+- `figures/fe_horizon_coefficients.png`
+- `figures/fe_horizon_coefficients.gph`
+- `figures/asymmetric_gap_coefficients.png`
+- `figures/asymmetric_gap_coefficients.gph`
+- `logs/analysis.log`
 
-These files are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
-
-
-Both figures are stored separately under distinct Stata graph names. The do-file explicitly passes each graph name to `graph export` and `graph save`, rather than relying on the active Graph window. Each figure has its own PNG and native Stata `.gph` file. The final `graph dir` command lists the two named graphs retained in memory. Re-running the script replaces only the corresponding figure's own files.
+These are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
