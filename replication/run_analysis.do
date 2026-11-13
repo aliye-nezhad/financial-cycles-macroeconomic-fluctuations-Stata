@@ -666,8 +666,8 @@ clear
 set obs 2
 generate byte component = _n
 generate double estimate = .
-generate double standard_error = \`=0'
-generate double critical_value = \`=0'
+generate double standard_error = .
+generate double critical_value = .
 
 replace estimate = `pos_b' in 1
 replace standard_error = `pos_se' in 1
