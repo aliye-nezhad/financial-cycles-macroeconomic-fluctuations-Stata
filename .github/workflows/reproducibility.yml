@@ -29,6 +29,14 @@ jobs:
             .gitattributes \
             .github/workflows/data-acquisition.yml \
             data/README.md \
+            data/DATA_VINTAGE.md \
+            data/raw.sha256 \
+            data/raw/bis_credit_gap.csv \
+            data/raw/wb_gdp_growth.zip \
+            data/raw/wb_cpi_inflation.zip \
+            data/raw/API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv \
+            data/raw/API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv \
+            docs/DATA_AUDIT.md \
             docs/RESEARCH_DESIGN.md \
             docs/LITERATURE_NOTES.md \
             docs/REPRODUCIBILITY.md \
@@ -66,11 +74,17 @@ jobs:
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
           grep -Fq "gdp_growth_lag1" replication/run_analysis.do
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
+          grep -Fq "estimates store NO_INFLATION" replication/run_analysis.do
+          grep -Fq "NO_IRL_LUX" replication/run_analysis.do
+          grep -Fq "influence_sensitivity.txt" replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
           grep -Fq "rowrange(6:)" replication/run_analysis.do
 
           grep -Fq "No causal identification." docs/RESEARCH_DESIGN.md
+          grep -Fq "1,310" docs/DATA_AUDIT.md
+          grep -Fq "Argentina" docs/DATA_AUDIT.md
+          sha256sum --check data/raw.sha256
           grep -Fq "one-sided" docs/RESEARCH_DESIGN.md
           grep -Fq "denominator" docs/RESEARCH_DESIGN.md
 
@@ -79,10 +93,6 @@ jobs:
             echo "::error::Unexpected non-Stata source files in this Stata project:"
             echo "$tracked_non_stata"
             exit 1
-          fi
-
-          if [[ -f data/raw.sha256 ]]; then
-            sha256sum --check data/raw.sha256
           fi
 
           echo "Static repository checks passed. This workflow does not execute Stata or validate numerical estimates."
