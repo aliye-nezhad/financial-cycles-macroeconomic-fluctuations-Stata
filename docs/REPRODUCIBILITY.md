@@ -337,8 +337,8 @@ The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in eve
 |---|---|---|---:|---:|
 | All 43 economies, unbalanced | 1990–2024 | 1991–2024 | 1,377 | 1,334 |
 | 31 complete-coverage economies | 1990–2024 | 1991–2024 | 1,085 | 1,054 |
-| 31 complete-coverage economies, common period | 2006–2024 | 2007–2024 | 589 | 558 |
-| All 43 economies, common period | 2006–2024 | 2007–2024 | 817 | 774 |
+| 31 complete-coverage economies, common period | 2006–2024 | 2006–2024 | 589 | 589 |
+| All 43 economies, common period | 2006–2024 | 2006–2024 | 817 | 817 |
 
 The level and growth filters are deliberately separate. For the common-period samples, 2006 is the first year in the level comparison; 2007 is the first growth-comparison year because annual growth requires both the current and preceding year's GDP levels. Including 2006 growth would import the 2005 GDP level and would not represent the stated common-period comparison.
 
