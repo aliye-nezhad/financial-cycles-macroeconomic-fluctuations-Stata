@@ -149,7 +149,7 @@ holds to numerical precision in the common sample.
 |---|---:|
 | Nominal credit stock | 8.1912% |
 | Implied nominal GDP denominator | 6.7617% |
-| Credit-to-GDP ratio | 1.4295% |
+| Credit-to-GDP ratio growth | 1.4295% |
 
 These are pooled country-year means over the 1,268 matched observations, not balanced-panel or time-series averages. The implied nominal-GDP denominator is reconstructed from the BIS credit stock and credit-to-GDP ratio; it is not an independently observed GDP series.
 
