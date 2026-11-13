@@ -135,5 +135,14 @@ The WDI GDP-growth series used here is not replaced with Irish GNI*. The baselin
 - [x] Linear influence sensitivities excluding Ireland, Luxembourg and both jointly executed.
 - [x] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly; slope-equality tests remain statistically significant.
 - [ ] Exported figures visually inspected and selected output artifacts prepared for publication.
-- [ ] Rerun and validate wild cluster bootstrap inference for the matched-sample denominator-component model (Stata 15.1+ with `boottest`; not Stata 18's built-in command).
+- [x] Wild cluster bootstrap inference for the matched-sample denominator-component model completed with 9,999 Rademacher replications across 43 country clusters; see [docs/RESULTS.md](RESULTS.md).
 - [x] Credit-numerator versus GDP-denominator sensitivity investigated; source alignment and the numerator-denominator identity passed the checks recorded in docs/RESULTS.md.
+
+
+## 8. Linked nominal-GDP cross-source validation
+
+The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched to the BIS-implied Q4 denominator for 1,377 country-year levels and 1,334 annual growth observations across all 43 economies. The growth comparison covers 1991–2024. The correlation is 0.9962, the mean absolute growth difference is 0.2198 percentage points, and the RMSE is 0.7244 percentage points. The median absolute time-varying level deviation after country-specific scale adjustment is 0.0541%; its 95th percentile is 2.8228% and its maximum is 9.9510%. Full statistics and interpretation are in [docs/RESULTS.md](RESULTS.md).
+
+- [x] Linked WDI current-LCU source downloaded, validated and checksum recorded.
+- [x] BIS-implied nominal-GDP denominator compared with linked WDI levels and annual growth.
+- [ ] Country-year outlier audit and visual inspection of the five validation figures.
