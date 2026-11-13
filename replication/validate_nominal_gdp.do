@@ -226,6 +226,16 @@ quietly count if growth_country_tag == 1
 local growth_countries = r(N)
 drop growth_country_tag
 
+if `level_observations' == 0 | `growth_observations' == 0 {
+    display as error "No overlapping positive nominal-GDP levels or annual growth observations were found."
+    log close validation_main_log
+    exit 2000
+}
+
+bysort iso3c: egen byte country_has_level = max(level_overlap)
+bysort iso3c: egen byte country_has_growth = max(growth_overlap)
+egen byte panel_country_tag = tag(iso3c)
+
 quietly summarize year if growth_overlap, meanonly
 local first_growth_year = r(min)
 local last_growth_year = r(max)
@@ -244,6 +254,10 @@ display as result "Countries with matched nominal-GDP levels: `level_countries'"
 display as result "Matched annual nominal-GDP growth observations: `growth_observations'"
 display as result "Countries with matched annual growth: `growth_countries'"
 display as result "Annual growth comparison years: `first_growth_year' to `last_growth_year'"
+display as text "Countries without matched positive GDP levels:"
+list iso3c if panel_country_tag == 1 & country_has_level == 0, noobs
+display as text "Countries without matched annual GDP growth:"
+list iso3c if panel_country_tag == 1 & country_has_growth == 0, noobs
 
 display as text "------------------------------------------------------------"
 display as text "Within-country nominal-GDP level comparison"
