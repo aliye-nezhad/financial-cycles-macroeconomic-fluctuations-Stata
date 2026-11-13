@@ -340,7 +340,7 @@ The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in eve
 | 31 complete-coverage economies, common period | 2006–2024 | 2006–2024 | 589 | 589 |
 | All 43 economies, common period | 2006–2024 | 2006–2024 | 817 | 817 |
 
-The level and growth filters are deliberately separate. For the common-period samples, 2006 is the first year in the level comparison; 2007 is the first growth-comparison year because annual growth requires both the current and preceding year's GDP levels. Including 2006 growth would import the 2005 GDP level and would not represent the stated common-period comparison.
+The level and growth comparisons use separate overlap indicators but the same calendar-year window. For the common-period samples, both cover 2006–2024. The 2006 annual growth rate uses the 2005 GDP level as its lag input; it remains a 2006 growth observation. The 2005 growth observation itself is excluded.
 
 Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
 
