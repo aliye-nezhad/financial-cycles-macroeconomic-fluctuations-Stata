@@ -87,6 +87,7 @@ jobs:
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
           grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do
           grep -Fq "version 18.0" replication/inference_diagnostics.do
+          grep -Fq "if c(stata_version) < 18 {" replication/inference_diagnostics.do
           grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
           grep -Fq "gdp_growth_lag1" replication/run_analysis.do
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
