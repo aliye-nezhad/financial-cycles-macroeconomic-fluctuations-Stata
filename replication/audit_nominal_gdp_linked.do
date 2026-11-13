@@ -39,7 +39,7 @@ log using "outputs/logs/nominal_gdp_linked_outlier_audit.log", ///
 
 use "data/processed/nominal_gdp_linked_validation_panel.dta", clear
 
-foreach required_var in iso3c year implied_nominal_gdp_4q ///
+foreach required_var in iso3c country_name year implied_nominal_gdp_4q ///
     wb_nominal_gdp_lcu nominal_gdp_growth_implied ///
     wb_nominal_gdp_growth level_ratio scale_adjusted_pct_deviation ///
     growth_difference absolute_growth_difference squared_growth_difference {
@@ -90,6 +90,9 @@ generate int rank = _n
 list rank iso3c year level_ratio scale_adjusted_pct_deviation ///
     abs_scale_adj_dev in 1/20, noobs abbreviate(24) separator(0)
 keep in 1/20
+* Export only the variables needed to interpret the level discrepancy.
+keep rank iso3c country_name year level_ratio ///
+    scale_adjusted_pct_deviation abs_scale_adj_dev
 export delimited using ///
     "outputs/tables/nominal_gdp_linked_level_outliers_top20.csv", replace
 restore
@@ -111,6 +114,9 @@ list rank iso3c year nominal_gdp_growth_implied ///
     absolute_growth_difference in 1/20, ///
     noobs abbreviate(24) separator(0)
 keep in 1/20
+* Export only the variables needed to interpret the growth discrepancy.
+keep rank iso3c country_name year nominal_gdp_growth_implied ///
+    wb_nominal_gdp_growth growth_difference absolute_growth_difference
 export delimited using ///
     "outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv", replace
 restore
