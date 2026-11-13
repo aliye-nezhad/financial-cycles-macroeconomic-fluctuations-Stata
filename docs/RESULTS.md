@@ -275,4 +275,43 @@ The comparison provides strong cross-source evidence that the BIS-implied denomi
 
 This is not proof that the two sources are fully independent in their underlying national-accounts inputs. Nor does it establish that the component regressions identify an economic transmission mechanism. The component estimates remain conditional predictive associations. The comparison validates a measurement construction; it does not establish causality.
 
-The five-figure outlier audit in `replication/audit_nominal_gdp_linked.do` was run twice in Stata 17 on 13 November 2026. Both runs produced the top-20 level and growth discrepancy tables, the 43-country summary, and the first three figures. The first run stopped at the fourth figure because its graph name exceeded Stata's name-length limit. After that name was shortened, the second run reached the fourth figure but stopped because the two `graph hbar` commands used `xlabel()` and `xtitle()` rather than Stata's `ylabel()` and `ytitle()` options for the numerical axis. The current repository script corrects all three issues. Rerun the script to produce both remaining figures and pass the final output checks; no audit outputs have yet been visually reviewed or committed.
+The five-figure outlier audit in `replication/audit_nominal_gdp_linked.do` completed successfully in Stata 17 on 13 November 2026. The run generated both top-20 discrepancy tables, the 43-country summary, the processed country-audit dataset, and all five figures in PNG and editable GPH formats. The final output-existence checks passed. No observations were removed, winsorized, or adjusted. The figures have not yet been visually inspected, and the local outputs have not yet been committed.
+
+### 10.5 Country-year discrepancy audit
+
+The audit confirms that the pooled validation statistics are strong, but the upper tail is not evenly distributed across country-years. The largest absolute annual-growth differences are:
+
+| Rank | Country | Year | BIS-implied growth | WDI linked growth | Difference (BIS minus WDI) |
+|---:|---|---:|---:|---:|---:|
+| 1 | United Kingdom | 1995 | 4.9601% | 13.7362% | -8.7760 pp |
+| 2 | Indonesia | 1993 | 15.4671% | 23.8176% | -8.3504 pp |
+| 3 | Argentina | 2004 | 17.4795% | 25.5038% | -8.0243 pp |
+| 4 | Hungary | 1991 | 10.0371% | 17.8783% | -7.8411 pp |
+| 5 | Russia | 2011 | 18.9083% | 26.0916% | -7.1834 pp |
+
+The largest absolute time-varying level deviations from each country's median implied/WDI level ratio are also concentrated in a small set of early observations:
+
+| Rank | Country | Year | Implied/WDI level ratio | Absolute scale-adjusted deviation |
+|---:|---|---:|---:|---:|
+| 1 | Indonesia | 1991 | 1.16965 | 9.9510% |
+| 2 | United Kingdom | 1990 | 1.09315 | 9.3058% |
+| 3 | United Kingdom | 1991 | 1.09261 | 9.2522% |
+| 4 | Hungary | 1990 | 1.09021 | 9.1866% |
+| 5 | United Kingdom | 1993 | 1.09170 | 9.1608% |
+
+Country-level mean absolute growth differences are largest for Australia (1.2258 percentage points), South Africa (0.6779), New Zealand (0.6012), Indonesia (0.5996), Russia (0.5399), and Argentina (0.4790). These country averages should be read alongside their maxima and RMSEs: a small number of large observations can dominate the latter even when the median absolute difference is modest. For example, the United Kingdom's mean absolute growth difference is 0.2866 percentage points, but its maximum is 8.7760 points and its RMSE is 1.5056 points.
+
+The country-specific median level ratios identify a different issue from the time-varying deviations above. The largest absolute median level differences are India (6.6294%), Indonesia (6.3792%), Malaysia (2.8793%), and Australia (2.8349%). These reflect country-specific scale differences in the median ratio; they should not be conflated with the year-specific deviations around each country's median. The United Kingdom, for example, has a median level ratio very close to one (1.00008) despite several early-year deviations above 9%.
+
+The audit identifies where source-level investigation should focus, but it does not establish why the discrepancies occur. Possible explanations such as historical national-accounts revisions, source coverage, timing conventions, or changes in underlying series must be checked against source documentation and country-specific data before being asserted. The observations remain in the validation panel unchanged.
+
+### 10.6 Balanced-panel cross-source sensitivity
+
+A balanced-panel sensitivity is warranted before treating the pooled validation metrics as representative of a fixed country composition over time. The current validation is unbalanced: 31 economies have Q4 BIS coverage for all years from 1990 through 2024, while 12 economies enter later, with first observations ranging from 1993 to 2006. The current 1,377 level and 1,334 growth observations therefore combine different country and year coverage.
+
+Two complementary balanced samples should be reported:
+
+1. **Full-period balanced country sample:** the 31 economies with complete 1990–2024 coverage. This implies 1,085 level observations (31 × 35) and 1,054 annual-growth observations (31 × 34).
+2. **All-country common-period sample:** all 43 economies over 2006–2024 for levels (817 observations) and 2007–2024 for annual growth (774 observations), because the BIS-implied growth measure requires a preceding year's level.
+
+For each sample, recompute the correlation, mean signed difference, MAE, RMSE, 95th-percentile and maximum absolute growth differences, alongside the country-scale-adjusted level-deviation distribution. Retain all observations and use the same definitions as the full-sample validation. These are measurement-composition sensitivities, not alternative preferred samples; they do not replace the full unbalanced validation or the main econometric specification.
