@@ -43,6 +43,8 @@ jobs:
           unzip -oq data/raw/wb_gdp_growth.zip -d data/raw
           unzip -oq data/raw/wb_cpi_inflation.zip -d data/raw
 
+          rm -f data/raw/Metadata_*.csv
+
           GDP_CSV="$(find data/raw -maxdepth 1 -type f -name 'API_NY.GDP.MKTP.KD.ZG*.csv' -print -quit)"
           CPI_CSV="$(find data/raw -maxdepth 1 -type f -name 'API_FP.CPI.TOTL.ZG*.csv' -print -quit)"
 
