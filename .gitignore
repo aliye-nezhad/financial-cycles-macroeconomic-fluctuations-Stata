@@ -1,0 +1,18 @@
+# Operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors and temporary files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Stata temporary files
+*.tmp
+*.stswp
+
+# Keep raw source downloads and generated reference outputs under version control
+# once their provenance, checksums, and reproducibility have been verified.
