@@ -53,6 +53,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── raw.sha256
 │   └── README.md
 ├── docs/
+│   ├── LITERATURE_NOTES.md
 │   ├── RESEARCH_DESIGN.md
 │   └── REPRODUCIBILITY.md
 ├── outputs/
@@ -90,7 +91,7 @@ do replication/run_analysis.do
 
 The download script preserves existing raw files by default. To retrieve a fresh source vintage, change the refresh setting documented at the top of that script. Record the retrieval date and regenerate the raw-data checksums after updating source files.
 
-See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for detailed instructions and [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the research question, hypotheses, variable definitions, specifications, and limitations.
+See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions.
 
 ## Current status
 
