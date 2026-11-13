@@ -447,21 +447,45 @@ xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
     fe vce(cluster panel_id)
 estimates store NO_LAG
 
-display as text "Influence sensitivity excluding Ireland and Luxembourg"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
-    i.outcome_year_h1 if !inlist(iso3c, "IRL", "LUX"), ///
-    fe vce(cluster panel_id)
-estimates store EXCL_IRL_LUX
-
 display as text "Expanded sample omitting CPI inflation control"
 xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store NO_INFLATION
 
-estimates table AVG_GAP NO_PANDEMIC NO_LAG EXCL_IRL_LUX NO_INFLATION, ///
+estimates table AVG_GAP NO_PANDEMIC NO_LAG NO_INFLATION, ///
     b(%9.3f) se(%9.3f) stats(N N_g)
 
 log close robustness_log
+
+/***********************************************************************
+12. Influence sensitivity for the largest absolute credit-gap observations
+***********************************************************************/
+
+log using "outputs/tables/influence_sensitivity.txt", ///
+    replace text name(influence_log)
+
+display as text "Exclude Ireland"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+    i.outcome_year_h1 if iso3c != "IRL", ///
+    fe vce(cluster panel_id)
+estimates store NO_IRL
+
+display as text "Exclude Luxembourg"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+    i.outcome_year_h1 if iso3c != "LUX", ///
+    fe vce(cluster panel_id)
+estimates store NO_LUX
+
+display as text "Exclude Ireland and Luxembourg jointly"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
+    i.outcome_year_h1 if !inlist(iso3c, "IRL", "LUX"), ///
+    fe vce(cluster panel_id)
+estimates store NO_IRL_LUX
+
+estimates table NO_IRL NO_LUX NO_IRL_LUX, ///
+    b(%9.3f) se(%9.3f) stats(N N_g)
+
+log close influence_log
 
 /***********************************************************************
 12. Figures
@@ -507,6 +531,7 @@ foreach output in ///
     outputs/tables/baseline_models.txt ///
     outputs/tables/asymmetric_model.txt ///
     outputs/tables/robustness_models.txt ///
+    outputs/tables/influence_sensitivity.txt ///
     outputs/figures/mean_credit_gap_by_year.png ///
     outputs/figures/credit_gap_gdp_scatter.png ///
     outputs/logs/analysis.log {
