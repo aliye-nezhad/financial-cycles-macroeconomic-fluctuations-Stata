@@ -235,6 +235,14 @@ foreach required_var in freq borrowers_cty tc_borrowers tc_lenders ///
     }
 }
 
+* UNIT_TYPE contains the numeric code 770. Stata's insheet command may
+* infer this all-numeric CSV column as numeric, while other BIS dimensions
+* are imported as strings. Normalize it before applying the dimension filter.
+capture confirm string variable unit_type
+if _rc {
+    tostring unit_type, replace force
+}
+
 keep if freq == "Q" & tc_borrowers == "P" & tc_lenders == "A" ///
     & valuation == "M" & unit_type == "770" & tc_adjust == "A"
 
