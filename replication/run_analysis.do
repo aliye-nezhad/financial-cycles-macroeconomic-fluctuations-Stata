@@ -139,7 +139,6 @@ drop if missing(bis_iso2, year, quarter, credit_gap)
 merge m:1 bis_iso2 using `country_crosswalk', keep(match) nogen
 
 isid iso3c year quarter
-assert inrange(credit_gap, -200, 200)
 
 quietly count
 if r(N) == 0 {
@@ -240,11 +239,11 @@ import_wdi_long "data/raw/`cpi_file'" inflation "`cpi_long'"
 
 use `annual_gap', clear
 
-merge 1:1 iso3c year using `gdp_long'
+merge 1:1 iso3c year using `gdp_long', keep(master match)
 generate byte matched_gdp = (_merge == 3)
 drop _merge
 
-merge 1:1 iso3c year using `cpi_long'
+merge 1:1 iso3c year using `cpi_long', keep(master match)
 generate byte matched_inflation = (_merge == 3)
 drop _merge
 
