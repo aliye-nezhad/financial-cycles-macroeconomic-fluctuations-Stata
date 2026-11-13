@@ -3,7 +3,7 @@
 ## Requirements
 
 - Licensed Stata 15.1 or later.
-- Internet access is needed only if source files are missing or a new data vintage is requested. The current repository includes the downloaded source files.
+- Internet access is needed only if source files are missing or a new data vintage is requested. The main-analysis source files are retained in the repository; the supplementary nominal-GDP validation data are retrieved by their dedicated script.
 - A working directory set to the repository root.
 
 The main analysis uses built-in Stata commands only. The optional wild cluster bootstrap diagnostic requires David Roodman's user-written `boottest` package; it is not needed to reproduce the main regressions.
@@ -250,9 +250,9 @@ The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-
 
 ## 9. GitHub Actions
 
-GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and verifies that all four supplementary CSV files are downloaded and nonempty. This tests the Windows download path used by the denominator diagnostic. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
+GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and `replication/download_nominal_gdp.ps1` against the World Bank Indicators API. It verifies that all four supplementary BIS CSV files and the World Bank nominal-GDP archive, CSV, and metadata file are downloaded. These checks test the Windows source-acquisition paths. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
 
-A successful workflow run therefore confirms repository integrity and the supplementary Windows data-acquisition path, but not Stata execution or numerical reproducibility.
+A successful workflow run therefore confirms repository integrity and the supplementary Windows BIS and World Bank data-acquisition paths, but not Stata execution or numerical reproducibility.
 
 ## 10. Reproducibility and source vintages
 
