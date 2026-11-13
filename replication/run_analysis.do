@@ -177,12 +177,12 @@ tempfile annual_gap
 save `annual_gap', replace
 
 /***********************************************************************
-4. Import World Bank wide CSV files and reshape 1990-2024 to long format
+4. Import World Bank wide CSV files and reshape 1989-2024 to long format
 
 The WDI CSV archive has four metadata rows before the column header.
 The header is row 5 and the first country observation is row 6; import begins
 at row 6 with generated variable names. The expected annual columns are
-1960 onward; 1990-2024 map to v35-v69.
+1960 onward; 1989-2024 map to v34-v69.
 ***********************************************************************/
 
 local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
@@ -225,7 +225,7 @@ program define import_wdi_long
     rename v `value_variable'
     destring `value_variable', replace force
     keep iso3c year `value_variable'
-    keep if inrange(year, 1990, 2024)
+    keep if inrange(year, 1989, 2024)
     isid iso3c year
     save "`output_path'", replace
 end
@@ -489,7 +489,7 @@ estimates table NO_IRL NO_LUX NO_IRL_LUX, ///
 log close influence_log
 
 /***********************************************************************
-12. Figures
+13. Figures
 ***********************************************************************/
 
 preserve
@@ -519,7 +519,7 @@ graph export "outputs/figures/credit_gap_gdp_scatter.png", ///
     replace width(2000)
 
 /***********************************************************************
-13. Save final analysis dataset and validate expected outputs
+14. Save final analysis dataset and validate expected outputs
 ***********************************************************************/
 
 save "data/processed/financial_cycles_panel.dta", replace
