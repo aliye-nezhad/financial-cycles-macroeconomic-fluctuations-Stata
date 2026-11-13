@@ -48,6 +48,7 @@ jobs:
             docs/REPRODUCIBILITY.md \
             docs/RESULTS.md \
             outputs/README.md \
+            replication/balanced_panel_sensitivity.do \
             replication/denominator_diagnostic.do \
             replication/download_denominator_sources.ps1 \
             replication/download_data.do \
@@ -104,6 +105,10 @@ jobs:
           grep -Fq "weight(rademacher)" replication/inference_diagnostics.do
           grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
           grep -Fq "version 15.1" replication/denominator_diagnostic.do
+          grep -Fq "version 15.1" replication/balanced_panel_sensitivity.do
+          grep -Fq "inrange(year, 2007, 2024)" replication/balanced_panel_sensitivity.do
+          grep -Fq "local expected_growth = 558" replication/balanced_panel_sensitivity.do
+          grep -Fq "local expected_growth = 774" replication/balanced_panel_sensitivity.do
           grep -Fq "version 15.1" replication/validate_balanced_panel_samples.do
           grep -Fq "inrange(year, 2007, 2024)" replication/validate_balanced_panel_samples.do
           grep -Fq "local expected_growth = 558" replication/validate_balanced_panel_samples.do
