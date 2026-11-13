@@ -413,7 +413,13 @@ xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
     fe vce(cluster panel_id)
 estimates store NO_PANDEMIC
 
-estimates table AVG_GAP NO_PANDEMIC, ///
+display as text "One-year model omitting lagged GDP growth, on the baseline complete-case sample"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
+    i.outcome_year_h1 if !missing(L.gdp_growth), ///
+    fe vce(cluster panel_id)
+estimates store NO_LAG
+
+estimates table AVG_GAP NO_PANDEMIC NO_LAG, ///
     b(%9.3f) se(%9.3f) stats(N N_g)
 
 log close robustness_log
