@@ -262,17 +262,17 @@ jobs:
               throw "World Bank CSV is unexpectedly small: $CsvPath"
             }
 
-            $metadata = Get-Content -LiteralPath $MetadataPath -Raw
-            if ($metadata -notmatch "(?m)^Indicator: $([regex]::Escape($Indicator))$") {
+            $metadataLines = @(Get-Content -LiteralPath $MetadataPath)
+            if ("Indicator: $Indicator" -notin $metadataLines) {
               throw "Metadata does not identify the expected indicator $Indicator."
             }
 
             $actualCsvHash = (Get-FileHash -LiteralPath $CsvPath -Algorithm SHA256).Hash
             $actualArchiveHash = (Get-FileHash -LiteralPath $ArchivePath -Algorithm SHA256).Hash
-            if ($metadata -notmatch "(?m)^CSV SHA-256: $actualCsvHash$") {
+            if ("CSV SHA-256: $actualCsvHash" -notin $metadataLines) {
               throw "CSV checksum in metadata does not match $CsvPath."
             }
-            if ($metadata -notmatch "(?m)^Archive SHA-256: $actualArchiveHash$") {
+            if ("Archive SHA-256: $actualArchiveHash" -notin $metadataLines) {
               throw "Archive checksum in metadata does not match $ArchivePath."
             }
           }
