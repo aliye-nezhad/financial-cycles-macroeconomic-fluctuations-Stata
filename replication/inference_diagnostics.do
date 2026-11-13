@@ -1,7 +1,7 @@
 /***********************************************************************
 Project:  Financial Cycles and Macroeconomic Fluctuations
 File:     inference_diagnostics.do
-Purpose:  Wild cluster bootstrap inference for the main one-year models
+Purpose:  Wild cluster bootstrap inference for the main and component models
 Requires: Stata 15.1+ and David Roodman's user-written boottest package
 
 Run from the repository root, after run_analysis.do:
@@ -167,6 +167,104 @@ estimates restore ASYM_BOOT
 display as text "Wild bootstrap test: positive-gap slope equals negative-gap slope"
 boottest gap_positive = gap_negative, ///
     reps(9999) seed(13112029) weight(rademacher)
+
+/***********************************************************************
+3. Matched-sample denominator-component inference
+
+If denominator_diagnostic.do has already run, test the matched-sample
+credit-gap model and the numerator-denominator component model. The
+component model uses exactly the sample and specification reported by
+denominator_diagnostic.do. If its processed panel is absent, these
+additional tests are skipped without affecting the main diagnostics.
+***********************************************************************/
+
+capture confirm file "data/processed/denominator_components_panel.dta"
+
+if _rc {
+    display as text "Denominator-components panel not found."
+    display as text "Run replication/denominator_diagnostic.do to enable component inference."
+    display as text "Matched-sample component bootstrap tests skipped."
+}
+else {
+    use "data/processed/denominator_components_panel.dta", clear
+
+    foreach required_var in panel_id year component_sample ///
+        gdp_growth_h1 outcome_year_h1 credit_gap_q4 gdp_growth ///
+        gdp_growth_lag1 inflation credit_growth_nominal ///
+        nominal_gdp_growth_implied {
+        capture confirm variable `required_var'
+        if _rc {
+            display as error "Required denominator-inference variable not found: `required_var'"
+            log close wildbootstrap_log
+            exit 111
+        }
+    }
+
+    xtset panel_id year
+
+    quietly count if component_sample
+    local component_n = r(N)
+
+    egen byte component_country_tag = tag(panel_id) if component_sample
+    quietly count if component_country_tag == 1
+    local component_g = r(N)
+    drop component_country_tag
+
+    if `component_n' == 0 | `component_g' < 2 {
+        display as error "The matched denominator-component sample is empty or has fewer than two countries."
+        log close wildbootstrap_log
+        exit 2000
+    }
+
+    display as text "============================================================"
+    display as text "Matched-sample denominator-component inference"
+    display as result "Matched estimation observations: `component_n'"
+    display as result "Country clusters: `component_g'"
+    display as text "Replications: 9,999"
+    display as text "Weight distribution: Rademacher"
+    display as text "============================================================"
+
+    display as text "C. Matched-sample baseline credit-gap model"
+
+    xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth ///
+        c.gdp_growth_lag1 c.inflation i.outcome_year_h1 ///
+        if component_sample, fe vce(cluster panel_id)
+
+    estimates store GAP_MATCHED_BOOT
+
+    quietly count if e(sample)
+    display as result "Matched baseline estimation observations: " r(N)
+    display as result "Matched baseline country clusters: " e(N_g)
+
+    boottest credit_gap_q4, reps(9999) seed(13112030) weight(rademacher)
+
+    display as text "D. Numerator-denominator component model"
+
+    xtreg gdp_growth_h1 c.credit_growth_nominal ///
+        c.nominal_gdp_growth_implied c.gdp_growth_lag1 ///
+        i.outcome_year_h1 if component_sample, ///
+        fe vce(cluster panel_id)
+
+    estimates store COMPONENTS_BOOT
+
+    quietly count if e(sample)
+    display as result "Component-model estimation observations: " r(N)
+    display as result "Component-model country clusters: " e(N_g)
+
+    display as text "Wild bootstrap test: nominal credit growth coefficient equals zero"
+    boottest credit_growth_nominal, ///
+        reps(9999) seed(13112031) weight(rademacher)
+
+    estimates restore COMPONENTS_BOOT
+    display as text "Wild bootstrap test: implied nominal GDP growth coefficient equals zero"
+    boottest nominal_gdp_growth_implied, ///
+        reps(9999) seed(13112032) weight(rademacher)
+
+    estimates restore COMPONENTS_BOOT
+    display as text "Wild bootstrap joint test: both component coefficients equal zero"
+    boottest credit_growth_nominal nominal_gdp_growth_implied, ///
+        reps(9999) seed(13112033) weight(rademacher)
+}
 
 log close wildbootstrap_log
 
