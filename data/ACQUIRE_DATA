@@ -1,1 +1,1 @@
-Refresh the initial source-data bundle after metadata-file cleanup.
+Retry source-data cleanup using the latest acquisition workflow.
