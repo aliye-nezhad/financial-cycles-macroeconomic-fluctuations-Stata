@@ -341,6 +341,8 @@ The first run of the linked-GDP sample validation produced valid count checks an
 | 31 economies, full period | 1,085 | 1,054 | 0.99039 | 0.23247 | 0.73805 | 0.04398% | 2.80148% |
 | 31 economies, common period | 589 | 589 | 0.99098 | 0.22043 | 0.67067 | 0.03398% | 1.29870% |
 
+The linked-GDP validation counts should not be confused with the predictive-regression sample sizes. The validation compares annual growth observations indexed 2006–2024. The H1 regression instead uses credit-gap and control observations dated 2006–2023 to predict GDP growth in 2007–2024, giving 558 observations in the 31-country common-period regression.
+
 The 31-economy common-period comparison produced 589 level observations and 589 annual growth observations (31 × 19). Its median and 95th-percentile absolute scale-adjusted level deviations were 0.03398% and 1.29870%. For annual growth, the correlation was 0.99098, the MAE was 0.22043 percentage points, and the RMSE was 0.67067 percentage points. The median and 95th-percentile absolute growth differences were 0.04682 and 1.05405 percentage points, respectively.
 
 The first run stopped because the script's expected growth count was incorrectly set to 558 (31 × 18), although its 2006–2024 sample condition correctly returned 589 observations (31 × 19). The 2006 growth rate is a valid calendar-year 2006 observation; it uses the 2005 GDP level as the lag input, while the 2005 growth observation is outside the comparison window. The calculated 31-country common-period metrics are therefore valid and are retained above. The 43-economy common-period validation was not reached in that run.
