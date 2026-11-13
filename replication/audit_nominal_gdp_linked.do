@@ -295,7 +295,6 @@ graph hbar abs_median_level_deviation, ///
         color(gs6) size(small)) ///
     xtitle("Absolute deviation from unity (%)") ///
     xlabel(, labsize(small)) ///
-/
     graphregion(color(white)) plotregion(color(white)) ///
     name(gdp_validation_country_level, replace)
 
