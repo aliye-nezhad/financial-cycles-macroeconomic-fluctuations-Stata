@@ -42,6 +42,43 @@ The BIS defines the gap as the credit-to-GDP ratio minus its long-run trend. The
 
 The BIS reports 44 economies in the dataset, including the euro-area aggregate. The project uses a 43-country ISO crosswalk and excludes the euro-area aggregate.
 
+## Supplementary BIS components for the denominator diagnostic
+
+The optional `replication/denominator_diagnostic.do` script retrieves additional series to distinguish movements in the credit numerator from movements in the nominal-GDP denominator.
+
+From the BIS `WS_CREDIT_GAP` dataflow (version 1.0), the script retrieves:
+
+| `CG_DTYPE` code | Meaning | Local file |
+|---|---|---|
+| A | Actual credit-to-GDP ratio | `bis_credit_gap_ratio.csv` |
+| B | One-sided HP-filter trend | `bis_credit_gap_trend.csv` |
+
+From the BIS `WS_TC` total-credit dataflow (version 2.0), it retrieves the private non-financial sector (`TC_BORROWERS=P`), all lenders (`TC_LENDERS=A)), market valuation (`VALUATION=M`), and break-adjusted series (`TC_ADJUST=A`):
+
+| `UNIT_TYPE` code | Meaning | Local file |
+|---|---|---|
+| XDC | Credit stock in domestic currency | `bis_total_credit_xdc.csv` |
+| 770 | Credit-to-GDP ratio, percent of GDP | `bis_total_credit_gdp.csv` |
+
+The BIS states that the credit-to-GDP ratio is the outstanding amount of debt at the end of the quarter divided by the sum of nominal GDP over the previous four quarters. The script reconstructs this denominator as:
+
+[
+GDP^{4Q}_{i,t}=100\times\frac{Credit_{i,t}}{Credit/GDP_{i,t}}.
+]
+
+At Q4, the trailing four-quarter denominator corresponds to calendar-year nominal GDP. This is an implied denominator reconstructed from BIS credit and ratio series, not a separately published BIS GDP series. The script applies the SDMX unit multiplier to the domestic-currency credit stock before computing log changes.
+
+The diagnostic checks that the `WS_TC` ratio aligns with the `WS_CREDIT_GAP` actual ratio and that actual ratio minus trend reproduces the published gap. Differences above 0.10 percentage points are flagged for review. Source vintages must be aligned before the resulting component regressions are interpreted.
+
+Official references:
+
+- [BIS credit-to-GDP gaps](https://data.bis.org/topics/CREDIT_GAPS)
+- [BIS credit to the non-financial sector](https://data.bis.org/topics/TOTAL_CREDIT)
+- [BIS statistical API documentation](https://stats.bis.org/api-doc/v2/)
+- [BIS FAQ on the credit-to-GDP denominator](https://data.bis.org/faq)
+
+These supplementary files are required only for the denominator diagnostic, not for the main analysis. The script downloads them if absent and preserves them by default; set its refresh option to 1 only when intentionally retrieving a new source vintage.
+
 ### BIS-to-World Bank country-code crosswalk
 
 | BIS code | World Bank code | Economy |
