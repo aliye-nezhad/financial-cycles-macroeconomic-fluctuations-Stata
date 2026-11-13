@@ -87,6 +87,14 @@ foreach source_file in ///
     }
 }
 
+display as text "BIS component source retrieval date: `c(current_date)'"
+display as text "Source refresh setting: `refresh'"
+display as text "Component source files:"
+display as text "  data/raw/bis_credit_gap_ratio.csv"
+display as text "  data/raw/bis_credit_gap_trend.csv"
+display as text "  data/raw/bis_total_credit_xdc.csv"
+display as text "  data/raw/bis_total_credit_gdp.csv"
+
 /***********************************************************************
 2. Import the BIS actual credit-to-GDP ratio and its HP-filter trend
 ***********************************************************************/
