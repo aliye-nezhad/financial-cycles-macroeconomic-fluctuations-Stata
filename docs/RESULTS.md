@@ -91,18 +91,37 @@ Several qualifications remain important:
 
 ## 6. Wild cluster bootstrap results
 
-The supplementary diagnostic was executed in Stata 17 on the same 1,310-observation, 43-country one-year-ahead sample. Each test used 9,999 Rademacher replications, country-level clustering, and a fixed seed recorded in the do-file.
+**Execution date:** 13 November 2026  
+**Execution record:** User-supplied Stata 17 log from the completed run of `replication/inference_diagnostics.do`.
 
-| Hypothesis | Bootstrap t-statistic | Displayed p-value | 95% bootstrap confidence set |
+The diagnostic completed successfully. All eight tests used 9,999 Rademacher replications, country-level clustering across 43 economies, and the fixed seeds recorded in the do-file. The original baseline and asymmetric models use 1,310 observations; the matched-sample baseline and component model use 1,268 observations.
+
+| Hypothesis | Bootstrap statistic | Displayed p-value | 95% bootstrap confidence set |
 |---|---:|---:|---:|
-| Baseline credit-gap coefficient = 0 | -6.0638 | 0.0000 | [-0.03090, -0.01429] |
-| Positive-gap coefficient = 0 | -5.0903 | 0.0000 | [-0.07432, -0.02860] |
-| Negative-gap coefficient = 0 | -0.3795 | 0.7163 | [-0.01367, 0.01219] |
-| Positive-gap slope = negative-gap slope | -3.8545 | 0.0036 | [-0.07609, -0.01773] |
+| Baseline credit-gap coefficient = 0 | t = -6.0638 | 0.0000 | [-0.03090, -0.01429] |
+| Positive-gap coefficient = 0 | t = -5.0903 | 0.0000 | [-0.07432, -0.02860] |
+| Negative-gap coefficient = 0 | t = -0.3795 | 0.7163 | [-0.01367, 0.01219] |
+| Positive-gap slope = negative-gap slope | t = -3.8545 | 0.0036 | [-0.07609, -0.01773] |
+| Matched-sample credit-gap coefficient = 0 | t = -6.0226 | 0.0000 | [-0.03187, -0.01446] |
+| Nominal credit-growth coefficient = 0 | t = -2.9230 | 0.0178 | [-0.06570, -0.008138] |
+| Implied nominal-GDP-growth coefficient = 0 | t = 1.6886 | 0.1592 | [-0.01985, 0.1559] |
+| Both component coefficients jointly equal zero | F(2,42) = 5.2084 | 0.0952 | Not applicable |
 
-The displayed value 0.0000 is rounded output, not a probability literally equal to zero. The bootstrap test of equal asymmetric slopes rejects equality at the 1% level (p = 0.0036), consistent with the conventional clustered Wald test, (F(1,42)=14.85), p = 0.0004. The positive-gap coefficient remains negative and statistically distinguishable from zero under the bootstrap; the negative-gap coefficient remains statistically indistinguishable from zero.
+The displayed value 0.0000 is rounded output, not a probability literally equal to zero.
 
-**Reproducibility qualification:** the official upstream v4.1.0 tag contains `boottest.ado` 4.1.0 and `boottest.mata` 4.0.3, so this is the intended package pairing, not a mixed-release installation. The earlier `boottest_stata() not found` error is consistent with a missing or unloaded compiled Mata library. The current do-file loads the Mata source before estimation. Rerun the full do-file to verify that the bootstrap tests complete in the current Stata session. The component-model bootstrap tests have been added but have not yet been executed. The bootstrap does not change the point estimates or identify a causal effect.
+### 6.1 Interpretation
+
+The bootstrap evidence supports the principal baseline and asymmetric findings. The baseline credit-gap coefficient remains negative and statistically distinguishable from zero. In the asymmetric model, the positive-gap slope is significant, the negative-gap slope is not, and the equality test rejects equal slopes (p = 0.0036). The asymmetry therefore survives this finite-cluster inference check.
+
+The matched-sample baseline credit-gap coefficient is also significant. In the component model, nominal credit growth has a negative coefficient (-0.0380) and remains individually significant under the bootstrap (p = 0.0178). The implied nominal-GDP-growth coefficient is positive (0.0603) but is not individually significant (p = 0.1592).
+
+The joint test of the two component coefficients gives p = 0.0952. It does not reject the joint null at the 5% level; it is marginal at the 10% level. The evidence therefore does not support a strong claim that the two components are jointly significant at conventional 5% levels. The stronger individual result is the negative conditional association for nominal credit growth.
+
+The component coefficients remain predictive associations, not causal effects. The implied nominal-GDP denominator is reconstructed from BIS credit stock and credit-to-GDP ratio data. Independent validation against separately published nominal GDP is the next measurement check.
+
+### 6.2 Reproducibility
+
+The execution log confirms that the installed Mata source was loaded before estimation, the compiled `lboottest.mlib` was found, all eight tests completed, and the output log closed normally. Stata 17 was used. The installed `boottest.ado` 4.1.0 and `boottest.mata` 4.0.3 headers are the intended pairing in the official upstream v4.1.0 tag. No package reinstallation is indicated by this run.
 
 ## 7. Figures and quantitative presentation
 
@@ -189,10 +208,10 @@ The execution log confirms separate exports and both graph names in memory. It d
 
 ## 9. Next empirical steps
 
-1. **Rerun wild cluster bootstrap inference.** After the denominator diagnostic has generated the matched panel, run `do replication/inference_diagnostics.do`. The script now tests the original baseline and asymmetric models, the matched-sample baseline, each component coefficient, and the joint null that both component coefficients are zero. It loads the Mata source before estimation. Do not reinstall the package solely because the official v4.1.0 ado and Mata headers show 4.1.0 and 4.0.3, respectively.
-2. **Inspect all six PNG figures.** Review the four main-analysis figures and the two denominator-diagnostic figures for legibility, scales, confidence intervals, country coverage, and consistency with the numerical tables.
-3. **Validate the implied denominator independently.** Compare the reconstructed BIS four-quarter nominal-GDP series with World Bank GDP in current local currency (NY.GDP.MKTP.CN), checking both levels and annual growth rates, country coverage, and source-vintage differences.
+1. **Independently validate the reconstructed nominal-GDP denominator.** Compare the BIS-implied four-quarter denominator with World Bank GDP in current local currency (NY.GDP.MKTP.CN). Evaluate level ratios within each country, annual log-growth differences, coverage, and source-vintage dates. The validation must not treat nominal LCU levels as directly comparable across countries.
+2. **Review the validation results before interpreting the component model.** If the implied denominator and independently published GDP growth diverge materially, investigate source definitions, national-account revisions, currency redenominations, and BIS/World Bank vintage differences before adding further regressions.
+3. **Inspect all six PNG figures.** Review the four main-analysis figures and two denominator-diagnostic figures for legibility, scales, confidence intervals, country coverage, and consistency with the numerical tables.
 4. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
-5. **Only then consider alternative measures.** Decide whether a real-credit-growth specification or a denominator-adjusted credit measure adds information beyond the current component model.
+5. **Only then consider alternative measures.** Decide whether real-credit growth or a denominator-adjusted credit measure adds information beyond the current component model.
 
-The results remain preliminary until these inference, measurement, and figure checks are completed.
+The results remain preliminary until the independent measurement, sample-composition, and figure checks are completed.
