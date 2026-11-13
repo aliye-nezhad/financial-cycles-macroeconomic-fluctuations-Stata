@@ -23,4 +23,4 @@ Expected outputs:
 These files are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
 
 
-Both figures are stored separately and have distinct Stata graph names. Each is exported as a PNG for viewing and saved as a native Stata `.gph` file for later editing. The analysis uses Stata's built-in `s1mono` scheme with explicit black, white and grayscale options. Re-running the script updates each figure's own files without replacing the other figure.
+Both figures are stored separately under distinct Stata graph names. The do-file explicitly passes each graph name to `graph export` and `graph save`, rather than relying on the active Graph window. Each figure has its own PNG and native Stata `.gph` file. The final `graph dir` command lists the two named graphs retained in memory. Re-running the script replaces only the corresponding figure's own files.
