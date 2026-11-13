@@ -46,7 +46,9 @@ Source documentation, download instructions, transformations, and attribution re
 ## Repository structure
 
 ```text
-├── .github/workflows/reproducibility.yml
+├── .github/workflows/
+│   ├── data-acquisition.yml
+│   └── reproducibility.yml
 ├── data/
 │   ├── raw/
 │   ├── processed/
@@ -88,7 +90,7 @@ Run the analysis:
 do replication/run_analysis.do
 ```
 
-The download script preserves existing raw files by default. To retrieve a fresh source vintage, change the refresh setting documented at the top of that script. Record the retrieval date and regenerate the raw-data checksums after updating source files.
+The repository also includes a GitHub Actions data-acquisition workflow. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits the source files to the private repository. The Stata download script preserves existing raw archives by default; set its refresh option to 1 only when intentionally retrieving a new vintage. The retrieval date and checksums are retained with the source files.
 
 See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions.
 
