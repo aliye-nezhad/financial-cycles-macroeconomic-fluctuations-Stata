@@ -1,0 +1,485 @@
+/***********************************************************************
+Project:  Financial Cycles and Macroeconomic Fluctuations
+File:     run_analysis.do
+Purpose:  Construct the country panel and estimate predictive FE models
+Requires: Stata 15.1+
+
+Run from the repository root:
+    do replication/run_analysis.do
+
+The script downloads source files only when they are absent. See
+replication/download_data.do to intentionally refresh the data vintage.
+***********************************************************************/
+
+version 15.1
+clear all
+set more off
+set linesize 100
+capture log close _all
+
+local warning_count 0
+local missing_output_count 0
+
+capture mkdir "data"
+capture mkdir "data/raw"
+capture mkdir "data/processed"
+capture mkdir "outputs"
+capture mkdir "outputs/tables"
+capture mkdir "outputs/figures"
+capture mkdir "outputs/logs"
+
+/***********************************************************************
+0. Obtain source files if they are not already present
+***********************************************************************/
+
+do replication/download_data.do
+
+capture confirm file "data/raw/bis_credit_gap.csv"
+if _rc {
+    display as error "BIS input file is missing."
+    exit 601
+}
+
+log using "outputs/logs/analysis.log", replace text name(main_log)
+
+/***********************************************************************
+1. Define the BIS-to-World-Bank country-code crosswalk
+
+The BIS dataset contains 44 economies including the euro-area aggregate.
+The project retains the 43 individual economies listed below and excludes
+the euro-area aggregate to avoid double-counting.
+***********************************************************************/
+
+tempfile country_crosswalk
+preserve
+clear
+input str2 bis_iso2 str3 iso3c str24 country_name
+"AR" "ARG" "Argentina"
+"AU" "AUS" "Australia"
+"AT" "AUT" "Austria"
+"BE" "BEL" "Belgium"
+"BR" "BRA" "Brazil"
+"CA" "CAN" "Canada"
+"CL" "CHL" "Chile"
+"CN" "CHN" "China"
+"CO" "COL" "Colombia"
+"CZ" "CZE" "Czechia"
+"DK" "DNK" "Denmark"
+"FI" "FIN" "Finland"
+"FR" "FRA" "France"
+"DE" "DEU" "Germany"
+"GR" "GRC" "Greece"
+"HK" "HKG" "Hong Kong SAR"
+"HU" "HUN" "Hungary"
+"IN" "IND" "India"
+"ID" "IDN" "Indonesia"
+"IE" "IRL" "Ireland"
+"IL" "ISR" "Israel"
+"IT" "ITA" "Italy"
+"JP" "JPN" "Japan"
+"KR" "KOR" "Korea"
+"LU" "LUX" "Luxembourg"
+"MY" "MYS" "Malaysia"
+"MX" "MEX" "Mexico"
+"NL" "NLD" "Netherlands"
+"NZ" "NZL" "New Zealand"
+"NO" "NOR" "Norway"
+"PL" "POL" "Poland"
+"PT" "PRT" "Portugal"
+"RU" "RUS" "Russian Federation"
+"SA" "SAU" "Saudi Arabia"
+"SG" "SGP" "Singapore"
+"ZA" "ZAF" "South Africa"
+"ES" "ESP" "Spain"
+"SE" "SWE" "Sweden"
+"CH" "CHE" "Switzerland"
+"TH" "THA" "Thailand"
+"TR" "TUR" "Türkiye"
+"GB" "GBR" "United Kingdom"
+"US" "USA" "United States"
+end
+isid bis_iso2
+isid iso3c
+save `country_crosswalk', replace
+restore
+
+/***********************************************************************
+2. Import and validate BIS quarterly credit-gap observations
+***********************************************************************/
+
+import delimited using "data/raw/bis_credit_gap.csv", ///
+    clear varnames(1) case(lower) stringcols(_all)
+
+foreach required_var in freq borrowers_cty tc_borrowers tc_lenders ///
+    cg_dtype time_period obs_value {
+    capture confirm variable `required_var'
+    if _rc {
+        display as error "Required BIS variable not found: `required_var'"
+        display as error "Inspect the BIS CSV header and revise the import mapping."
+        log close main_log
+        exit 111
+    }
+}
+
+keep if freq == "Q"
+keep if tc_borrowers == "P"
+keep if tc_lenders == "A"
+keep if cg_dtype == "C"
+
+generate int year = real(substr(time_period, 1, 4))
+generate byte quarter = real(substr(time_period, 7, 1))
+destring obs_value, replace force
+rename borrowers_cty bis_iso2
+rename obs_value credit_gap
+
+keep if inrange(year, 1990, 2024)
+keep if inrange(quarter, 1, 4)
+drop if missing(bis_iso2, year, quarter, credit_gap)
+
+merge m:1 bis_iso2 using `country_crosswalk', keep(match) nogen
+
+isid iso3c year quarter
+assert inrange(credit_gap, -200, 200)
+
+quietly count
+if r(N) == 0 {
+    display as error "No BIS observations remain after filtering and country matching."
+    log close main_log
+    exit 2000
+}
+
+/***********************************************************************
+3. Construct annual credit-gap measures
+
+Baseline: fourth-quarter observation.
+Robustness: annual mean, retained only with all four quarters present.
+***********************************************************************/
+
+tempfile gap_q4 gap_average
+
+preserve
+keep if quarter == 4
+keep iso3c country_name year credit_gap
+rename credit_gap credit_gap_q4
+isid iso3c year
+save `gap_q4', replace
+restore
+
+collapse (mean) credit_gap_average = credit_gap ///
+         (count) quarters_observed = credit_gap, by(iso3c year)
+
+keep if quarters_observed == 4
+isid iso3c year
+save `gap_average', replace
+
+use `gap_q4', clear
+merge 1:1 iso3c year using `gap_average', keep(master match) nogen
+isid iso3c year
+tempfile annual_gap
+save `annual_gap', replace
+
+/***********************************************************************
+4. Import World Bank wide CSV files and reshape 1990-2024 to long format
+
+The WDI CSV archive has four metadata columns before the annual series.
+The first four metadata lines are skipped by beginning the import at row 5.
+The expected annual columns are 1960 onward; 1990-2024 map to v35-v69.
+***********************************************************************/
+
+local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
+local cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
+
+if "`gdp_files'" == "" | "`cpi_files'" == "" {
+    display as error "One or both World Bank CSV members are missing. Run replication/download_data.do."
+    log close main_log
+    exit 601
+}
+
+local gdp_file : word 1 of `gdp_files'
+local cpi_file : word 1 of `cpi_files'
+
+tempfile gdp_long cpi_long
+
+program define import_wdi_long
+    args csv_path value_variable output_path
+
+    import delimited using "`csv_path'", clear ///
+        varnames(nonames) rowrange(5:) stringcols(_all)
+
+    capture confirm variable v69
+    if _rc {
+        display as error "Expected WDI year column v69 (2024) was not found in `csv_path'."
+        exit 111
+    }
+
+    keep v1 v2 v35-v69
+    rename v1 country_name_wdi
+    rename v2 iso3c
+
+    forvalues y = 1990/2024 {
+        local source_column = `y' - 1955
+        rename v`source_column' v`y'
+    }
+
+    isid iso3c
+    reshape long v, i(iso3c) j(year)
+    rename v `value_variable'
+    destring `value_variable', replace force
+    keep iso3c year `value_variable'
+    keep if inrange(year, 1990, 2024)
+    isid iso3c year
+    save "`output_path'", replace
+end
+
+import_wdi_long "data/raw/`gdp_file'" gdp_growth "`gdp_long'"
+import_wdi_long "data/raw/`cpi_file'" inflation "`cpi_long'"
+
+/***********************************************************************
+5. Merge the financial-cycle and macroeconomic series
+***********************************************************************/
+
+use `annual_gap', clear
+
+merge 1:1 iso3c year using `gdp_long'
+generate byte matched_gdp = (_merge == 3)
+drop _merge
+
+merge 1:1 iso3c year using `cpi_long'
+generate byte matched_inflation = (_merge == 3)
+drop _merge
+
+keep if inrange(year, 1990, 2024)
+isid iso3c year
+
+egen long panel_id = group(iso3c)
+label variable panel_id "Country panel identifier"
+label variable iso3c "World Bank ISO3 country code"
+label variable country_name "Country"
+label variable year "Calendar year"
+label variable credit_gap_q4 "BIS credit-to-GDP gap, fourth quarter (percentage points of GDP)"
+label variable credit_gap_average "BIS credit-to-GDP gap, annual average (percentage points of GDP)"
+label variable gdp_growth "Real GDP growth (annual percent)"
+label variable inflation "CPI inflation (annual percent)"
+label variable matched_gdp "GDP observation matched"
+label variable matched_inflation "Inflation observation matched"
+
+generate byte complete_baseline = !missing(credit_gap_q4, gdp_growth, inflation)
+label variable complete_baseline "Complete observation for baseline regressions"
+
+xtset panel_id year
+xtdescribe
+
+save "data/processed/financial_cycles_panel.dta", replace
+
+/***********************************************************************
+6. Sample coverage and data-quality audit
+***********************************************************************/
+
+log using "outputs/tables/sample_coverage.txt", ///
+    replace text name(coverage_log)
+
+display as text "Country coverage in the merged BIS-led panel"
+tabulate country_name
+
+display as text "Merged panel structure"
+xtdescribe
+
+display as text "Source-match indicators"
+tabulate matched_gdp
+tabulate matched_inflation
+
+display as text "Complete observations for baseline variables"
+count if complete_baseline == 1
+
+display as text "Country-level coverage"
+preserve
+collapse (count) n_gap = credit_gap_q4 ///
+         n_gdp = gdp_growth ///
+         n_inflation = inflation ///
+         (min) first_year = year ///
+         (max) last_year = year, by(iso3c country_name)
+list iso3c country_name first_year last_year n_gap n_gdp n_inflation, ///
+    noobs sep(0)
+restore
+
+log close coverage_log
+
+/***********************************************************************
+7. Descriptive statistics and correlation matrix
+***********************************************************************/
+
+log using "outputs/tables/descriptive_statistics.txt", ///
+    replace text name(descriptive_log)
+
+summarize credit_gap_q4 credit_gap_average gdp_growth inflation
+summarize credit_gap_q4 gdp_growth inflation if complete_baseline == 1
+
+log close descriptive_log
+
+log using "outputs/tables/correlation_matrix.txt", ///
+    replace text name(correlation_log)
+
+pwcorr credit_gap_q4 gdp_growth inflation, obs sig
+
+log close correlation_log
+
+/***********************************************************************
+8. Construct future-growth outcomes and asymmetric gap variables
+***********************************************************************/
+
+generate double gap_positive = cond(missing(credit_gap_q4), ., ///
+    max(credit_gap_q4, 0))
+generate double gap_negative = cond(missing(credit_gap_q4), ., ///
+    min(credit_gap_q4, 0))
+
+generate double gdp_growth_h1 = F1.gdp_growth
+generate double gdp_growth_h2 = F2.gdp_growth
+generate double gdp_growth_h3 = F3.gdp_growth
+
+generate int outcome_year_h1 = year + 1
+generate int outcome_year_h2 = year + 2
+generate int outcome_year_h3 = year + 3
+
+label variable gdp_growth_h1 "Real GDP growth one year ahead"
+label variable gdp_growth_h2 "Real GDP growth two years ahead"
+label variable gdp_growth_h3 "Real GDP growth three years ahead"
+label variable gap_positive "Positive component of credit-to-GDP gap"
+label variable gap_negative "Negative component of credit-to-GDP gap"
+
+/***********************************************************************
+9. Baseline two-way fixed-effects predictive regressions
+
+The year fixed effects refer to the outcome year (t+h), not the predictor
+year (t). Country-clustered standard errors allow within-country
+heteroskedasticity and serial dependence.
+***********************************************************************/
+
+log using "outputs/tables/baseline_models.txt", ///
+    replace text name(baseline_log)
+
+display as text "Horizon 1: next-year GDP growth"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
+    i.outcome_year_h1, fe vce(cluster panel_id)
+estimates store H1
+
+display as text "Horizon 2: GDP growth two years ahead"
+xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth c.inflation ///
+    i.outcome_year_h2, fe vce(cluster panel_id)
+estimates store H2
+
+display as text "Horizon 3: GDP growth three years ahead"
+xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth c.inflation ///
+    i.outcome_year_h3, fe vce(cluster panel_id)
+estimates store H3
+
+display as text "Horizon-specific model comparison"
+estimates table H1 H2 H3, b(%9.3f) se(%9.3f) stats(N N_g)
+
+log close baseline_log
+
+/***********************************************************************
+10. Asymmetric credit-gap specification
+***********************************************************************/
+
+log using "outputs/tables/asymmetric_model.txt", ///
+    replace text name(asymmetric_log)
+
+xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
+    c.gdp_growth c.inflation i.outcome_year_h1, ///
+    fe vce(cluster panel_id)
+estimates store ASYM
+
+display as text "Test of equal slopes above and below the trend"
+test gap_positive = gap_negative
+
+estimates table ASYM, b(%9.3f) se(%9.3f) stats(N N_g)
+
+log close asymmetric_log
+
+/***********************************************************************
+11. Robustness specifications
+***********************************************************************/
+
+log using "outputs/tables/robustness_models.txt", ///
+    replace text name(robustness_log)
+
+display as text "Annual-average gap, requiring four quarterly observations"
+xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth c.inflation ///
+    i.outcome_year_h1, fe vce(cluster panel_id)
+estimates store AVG_GAP
+
+display as text "Fourth-quarter gap, excluding outcome years 2020 and 2021"
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
+    i.outcome_year_h1 if !inlist(outcome_year_h1, 2020, 2021), ///
+    fe vce(cluster panel_id)
+estimates store NO_PANDEMIC
+
+estimates table AVG_GAP NO_PANDEMIC, ///
+    b(%9.3f) se(%9.3f) stats(N N_g)
+
+log close robustness_log
+
+/***********************************************************************
+12. Figures
+***********************************************************************/
+
+preserve
+collapse (mean) mean_credit_gap = credit_gap_q4 ///
+         (count) countries_observed = credit_gap_q4, by(year)
+
+twoway line mean_credit_gap year, sort ///
+    yline(0, lpattern(dash)) ///
+    title("Mean Credit-to-GDP Gap Across Available Economies") ///
+    subtitle("Unweighted mean; country coverage varies by year") ///
+    xtitle("Year") ytitle("Percentage points of GDP")
+
+graph export "outputs/figures/mean_credit_gap_by_year.png", ///
+    replace width(2000)
+restore
+
+twoway (scatter gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1), ///
+            msize(vsmall)) ///
+       (lfit gdp_growth_h1 credit_gap_q4 if !missing(gdp_growth_h1)), ///
+    yline(0, lpattern(dash)) ///
+    title("Credit-to-GDP Gaps and Subsequent GDP Growth") ///
+    subtitle("Unconditional pooled association; not the fixed-effects estimate") ///
+    xtitle("Credit-to-GDP gap (percentage points of GDP)") ///
+    ytitle("GDP growth one year ahead (annual percent)")
+
+graph export "outputs/figures/credit_gap_gdp_scatter.png", ///
+    replace width(2000)
+
+/***********************************************************************
+13. Save final analysis dataset and validate expected outputs
+***********************************************************************/
+
+save "data/processed/financial_cycles_panel.dta", replace
+
+foreach output in ///
+    data/processed/financial_cycles_panel.dta ///
+    outputs/tables/sample_coverage.txt ///
+    outputs/tables/descriptive_statistics.txt ///
+    outputs/tables/correlation_matrix.txt ///
+    outputs/tables/baseline_models.txt ///
+    outputs/tables/asymmetric_model.txt ///
+    outputs/tables/robustness_models.txt ///
+    outputs/figures/mean_credit_gap_by_year.png ///
+    outputs/figures/credit_gap_gdp_scatter.png ///
+    outputs/logs/analysis.log {
+    capture confirm file "`output'"
+    if _rc {
+        display as error "Required output missing: `output'"
+        local missing_output_count = `missing_output_count' + 1
+    }
+}
+
+if `missing_output_count' > 0 {
+    display as error "Analysis failed: `missing_output_count' expected output file(s) are missing."
+    display as result "Review outputs/logs/analysis.log."
+    log close main_log
+    exit 498
+}
+
+display as result "Analysis completed. Inspect all tables, diagnostics and sample counts before interpretation."
+display as result "Main log: outputs/logs/analysis.log"
+log close main_log
