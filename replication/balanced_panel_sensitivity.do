@@ -601,8 +601,8 @@ foreach sample_name of local sample_names {
     local max_level_deviation = r(max)
 
     * Growth uses a distinct period condition. In the common-period
-    * samples, 2006 is the first level year and 2007 is the first valid
-    * growth-comparison year because annual growth requires the 2006 level.
+    * samples, the 2006 annual growth rate is a valid calendar-year
+    * observation. It uses the 2005 GDP level only as its lag input.
     quietly count if `growth_if'
     local n_growth = r(N)
 
