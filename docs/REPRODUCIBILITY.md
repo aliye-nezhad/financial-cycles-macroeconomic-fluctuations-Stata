@@ -145,7 +145,36 @@ Outputs are written to:
 
 This supplementary script does not alter the main analysis pipeline or the original BIS credit-gap series.
 
-## 6. Data integrity
+## 7. Independent nominal-GDP validation (Stata 15.1+)
+
+After `replication/denominator_diagnostic.do` has created `data/processed/denominator_components_panel.dta`, run:
+
+```stata
+do replication/validate_nominal_gdp.do
+```
+
+The script retrieves World Bank WDI indicator `NY.GDP.MKTP.CN` (GDP, current local currency) through the Indicators API. On Windows, it uses `replication/download_nominal_gdp.ps1` and PowerShell's `Invoke-WebRequest` and `Expand-Archive`, avoiding Stata's Java-dependent HTTPS download path. The helper validates the CSV header and the 1989 and 2024 columns, retains the original ZIP archive, writes a canonical CSV, and records the retrieval date, World Bank update date when present, and SHA-256 hashes in `data/raw/wb_gdp_current_lcu_metadata.txt`. Existing validated files are preserved unless the do-file's `refresh` setting is changed to 1.
+
+The Stata script retains 1989–2024, computes annual log changes in nominal GDP, and merges the series with the BIS denominator panel by ISO3 country code and year. The 1989 observation is retained to calculate the 1990 growth rate; the comparison panel remains 1990–2024. It reports the matched level and growth coverage, country-specific ratios of the BIS-implied denominator to World Bank GDP, within-country deviations from each country's median level ratio, and differences between annual log-growth rates. The overall report includes mean absolute growth error, root mean squared growth error, and the correlation between the two growth series. Country-level results are exported separately.
+
+Do not pool or compare nominal LCU levels across countries: the currency units differ. The raw level ratio is therefore reported by country. The country-specific median ratio absorbs a constant unit-scale difference only for the purpose of assessing whether the ratio is stable over time; it does not rescale or replace either source series. Annual log-growth comparisons are invariant to a constant currency-unit scale.
+
+This is an independent measurement check, not an additional regression or a causal test. Differences may reflect national-account definitions, revisions, currency redenominations, coverage, or source-vintage differences. Review the recorded WDI update date and retrieval metadata before interpreting discrepancies. The new WDI download does not overwrite the GDP-growth or CPI archives used by the main analysis.
+
+Expected outputs:
+
+- `data/raw/wb_gdp_current_lcu.zip`
+- `data/raw/wb_gdp_current_lcu.csv`
+- `data/raw/wb_gdp_current_lcu_metadata.txt`
+- `data/processed/nominal_gdp_validation_panel.dta`
+- `data/processed/nominal_gdp_validation_by_country.dta`
+- `outputs/tables/nominal_gdp_validation_overall.txt`
+- `outputs/tables/nominal_gdp_validation_by_country.csv`
+- `outputs/logs/nominal_gdp_validation.log`
+
+Official references: [World Bank indicator definition](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN), [Indicators API documentation](https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation), and [API query structure](https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures).
+
+## 7. Data integrity
 
 After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
 
@@ -188,7 +217,7 @@ Get-FileHash .\data\raw\bis_total_credit_gdp.csv -Algorithm SHA256
 
 Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` alongside these hashes.
 
-## 7. Expected outputs
+## 8. Expected outputs
 
 | Path | Contents |
 |---|---|
@@ -219,16 +248,16 @@ Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` a
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
-## 8. GitHub Actions
+## 9. GitHub Actions
 
 GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and verifies that all four supplementary CSV files are downloaded and nonempty. This tests the Windows download path used by the denominator diagnostic. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
 
 A successful workflow run therefore confirms repository integrity and the supplementary Windows data-acquisition path, but not Stata execution or numerical reproducibility.
 
-## 9. Reproducibility and source vintages
+## 10. Reproducibility and source vintages
 
 The BIS and World Bank sources may revise historical observations. The source files used for an analysis should be retained with their checksums and retrieval date. If the data are refreshed, regenerate the outputs and record the new data vintage. Results from different vintages should not be silently mixed.
 
-## 10. Interpretation
+## 11. Interpretation
 
 The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
