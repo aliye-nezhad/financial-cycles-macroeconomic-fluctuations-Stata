@@ -208,10 +208,71 @@ The execution log confirms separate exports and both graph names in memory. It d
 
 ## 9. Next empirical steps
 
-1. **Cross-source validate the reconstructed nominal-GDP denominator using linked current-LCU GDP.** The first-pass comparison used the unlinked WDI indicator NY.GDP.MKTP.CN and produced large historical country-year growth discrepancies. The World Bank explicitly provides NY.GDP.MKTP.CN.AD, a linked current-price series designed to reduce artificial breaks from changes in national-accounts base years, source data and methodologies. Run `replication/validate_nominal_gdp_linked.do` and assess within-country level ratios, annual log-growth differences, coverage and source-vintage dates. The first-pass unlinked results remain archived but should not be treated as the primary growth benchmark. The linked series is still a cross-source check, not proof of fully independent underlying measurement.
-2. **Review the validation results before interpreting the component model.** If the implied denominator and independently published GDP growth diverge materially, investigate source definitions, national-account revisions, currency redenominations, and BIS/World Bank vintage differences before adding further regressions.
-3. **Inspect all six PNG figures.** Review the four main-analysis figures and two denominator-diagnostic figures for legibility, scales, confidence intervals, country coverage, and consistency with the numerical tables.
-4. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
-5. **Only then consider alternative measures.** Decide whether real-credit growth or a denominator-adjusted credit measure adds information beyond the current component model.
+1. **Audit country-year discrepancies in the linked nominal-GDP validation.** Run `replication/audit_nominal_gdp_linked.do` to identify the largest level and growth discrepancies, produce country-level error summaries, and export five separate monochrome figures. Inspect the top-20 country-year observations before deciding whether any differences require source-specific investigation.
+2. **Review the validation figures and outputs.** Inspect the five linked-GDP audit figures alongside the four main-analysis figures and two denominator-diagnostic figures. Confirm that scales, labels, tails, and country coverage are legible and consistent with the numerical tables.
+3. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
+4. **Only then consider alternative measures.** Decide whether real-credit growth or a denominator-adjusted credit measure adds information beyond the current component model.
 
-The results remain preliminary until the independent measurement, sample-composition, and figure checks are completed.
+The linked-series comparison is strongly supportive of the reconstructed denominator, but the country-year tail audit and figure inspection remain outstanding. The results remain predictive associations, not causal estimates.
+
+## 10. Linked nominal-GDP validation using the World Bank linked current-LCU series
+
+**Execution date:** 13 November 2026  
+**Execution record:** User-supplied Stata 17 log from the completed run of `replication/validate_nominal_gdp_linked.do`.  
+**World Bank vintage:** Indicator `NY.GDP.MKTP.CN.AD`; last updated 11 November 2026; retrieved 13 November 2026.
+
+The validation compares the BIS-implied Q4 nominal-GDP denominator (Q4 credit stock divided by the Q4 credit-to-GDP ratio) with the World Bank's linked annual current-LCU GDP series. The linked WDI series is used because it is designed to reduce historical breaks associated with changes in national-accounts base years, source data, and methodologies.
+
+### 10.1 Coverage
+
+| Measure | Result |
+|---|---:|
+| Matched nominal-GDP levels | 1,377 |
+| Countries with matched levels | 43 |
+| Matched annual growth observations | 1,334 |
+| Countries with matched growth | 43 |
+| Growth comparison period | 1991–2024 |
+
+No country was missing from the positive-level or annual-growth comparison. The first growth observation is 1991 because a preceding 1990 level is required.
+
+### 10.2 Annual nominal-GDP growth
+
+| Statistic | Result |
+|---|---:|
+| Mean BIS-implied nominal-GDP growth | 6.9897% |
+| Mean World Bank linked nominal-GDP growth | 7.0235% |
+| Mean signed difference (BIS minus WDI) | -0.0337 percentage points |
+| Median signed difference | 0.0004 percentage points |
+| Mean absolute error | 0.2198 percentage points |
+| Root mean squared error | 0.7244 percentage points |
+| Correlation | 0.9962 |
+| 95th percentile absolute difference | 0.9566 percentage points |
+| 99th percentile absolute difference | 2.9546 percentage points |
+| Maximum absolute difference | 8.7760 percentage points |
+
+The two growth series track one another very closely in the matched sample. The small mean signed difference and near-zero median difference indicate little overall directional bias. The RMSE is larger than the MAE because a relatively small number of observations lie in the upper tail; those observations are the subject of the next country-year audit.
+
+### 10.3 Within-country level comparison
+
+Raw local-currency levels are not pooled across countries. The comparison therefore reports each country's implied/WDI level ratio and separately examines the time variation around that country's median ratio.
+
+| Statistic for the scale-adjusted deviation | Result |
+|---|---:|
+| Median absolute deviation | 0.0541% |
+| Mean absolute deviation | 0.4574% |
+| 75th percentile | 0.1596% |
+| 95th percentile | 2.8228% |
+| 99th percentile | 8.2413% |
+| Maximum | 9.9510% |
+
+The median country-specific level ratios are close to one for most economies, but persistent differences remain in some cases. Examples from the country-level output include Indonesia (1.0638), India (0.9337), Australia (1.0283), and Malaysia (1.0288). These are country-specific median level ratios, not time-varying deviations. The scale-adjusted statistic measures the latter and deliberately removes each country's median level scale.
+
+The upper tail in the level-deviation distribution should be inspected rather than dismissed. The validation script does not delete, winsorize, or adjust any observations.
+
+### 10.4 Interpretation and limits
+
+The comparison provides strong cross-source evidence that the BIS-implied denominator reproduces the annual movement in nominal GDP. It supports using the reconstructed denominator in the supplementary numerator-denominator diagnostic, subject to the country-year outlier audit.
+
+This is not proof that the two sources are fully independent in their underlying national-accounts inputs. Nor does it establish that the component regressions identify an economic transmission mechanism. The component estimates remain conditional predictive associations. The comparison validates a measurement construction; it does not establish causality.
+
+The five-figure outlier audit in `replication/audit_nominal_gdp_linked.do` is the next step. Its outputs have not yet been executed or visually reviewed.
