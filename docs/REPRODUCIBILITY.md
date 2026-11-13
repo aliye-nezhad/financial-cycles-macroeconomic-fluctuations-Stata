@@ -47,7 +47,60 @@ Install the package from Stata when the SSC connection is available:
 ssc install boottest, replace
 ```
 
-If the SSC installer fails in a local Windows environment, obtain a single tagged release from the official repository and install its files together. Do not mix `boottest.ado`, `boottest.mata` and `lboottest.mlib` from different releases. The diagnostic checks for these files and loads the installed Mata source before estimating the models. This order matters: loading the Mata source after estimation can remove the active estimation results.
+If SSC installation fails in Windows with an error such as `Java installation not found`, close Stata and use PowerShell to install one complete, tagged release without invoking Stata's Java-dependent installer. The following uses the official v4.5.3 release. It backs up any existing package files before replacing them:
+
+```powershell
+$ErrorActionPreference = "Stop"
+$release = "v4.5.3"
+$archive = Join-Path $env:TEMP "boottest-$release.zip"
+$extract = Join-Path $env:TEMP "boottest-$release"
+
+if (Test-Path $extract) {
+    Remove-Item $extract -Recurse -Force
+}
+
+Invoke-WebRequest `
+    -Uri "https://github.com/droodman/boottest/archive/refs/tags/$release.zip" `
+    -OutFile $archive
+
+Expand-Archive -LiteralPath $archive -DestinationPath $extract -Force
+$source = Get-ChildItem $extract -Directory | Select-Object -First 1
+$plus = Join-Path $env:USERPROFILE "ado\plus"
+$backup = Join-Path $env:TEMP ("boottest-backup-" + (Get-Date -Format "yyyyMMdd-HHmmss"))
+
+$files = @(
+    @{ Name = "boottest.ado";      Folder = "b" },
+    @{ Name = "boottest.mata";     Folder = "b" },
+    @{ Name = "boottest.sthlp";    Folder = "b" },
+    @{ Name = "artest.ado";        Folder = "a" },
+    @{ Name = "scoretest.ado";     Folder = "s" },
+    @{ Name = "waldtest.ado";      Folder = "w" },
+    @{ Name = "lboottest.mlib";    Folder = "l" }
+)
+
+foreach ($item in $files) {
+    $targetFolder = Join-Path $plus $item.Folder
+    New-Item -ItemType Directory -Force -Path $targetFolder | Out-Null
+    $target = Join-Path $targetFolder $item.Name
+
+    if (Test-Path $target) {
+        $backupFolder = Join-Path $backup $item.Folder
+        New-Item -ItemType Directory -Force -Path $backupFolder | Out-Null
+        Copy-Item -LiteralPath $target -Destination $backupFolder -Force
+    }
+
+    Copy-Item -LiteralPath (Join-Path $source.FullName $item.Name) `
+        -Destination $target -Force
+}
+
+Get-Content (Join-Path $plus "b\boottest.ado") -TotalCount 1
+Get-Content (Join-Path $plus "b\boottest.mata") -TotalCount 1
+Write-Host "Backup of replaced files: $backup"
+```
+
+The `PLUS` directory can be confirmed in Stata with `sysdir`; adjust `$plus` if your PLUS path differs. The two version lines printed at the end should identify the same release. Do not mix `boottest.ado`, `boottest.mata` and `lboottest.mlib` from different releases.
+
+The diagnostic checks for these files and loads the installed Mata source before estimating the models. This order matters: loading the Mata source after estimation can remove the active estimation results.
 
 After running `replication/run_analysis.do`, execute:
 
