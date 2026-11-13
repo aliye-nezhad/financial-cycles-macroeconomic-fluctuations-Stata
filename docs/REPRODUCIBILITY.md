@@ -317,7 +317,15 @@ Official references: [World Bank linked-series metadata](https://databank.worldb
 
 ## 12. Balanced-panel linked-GDP sample sensitivity
 
-After running the main analysis and `replication/validate_nominal_gdp_linked.do`, run the standalone sample-composition validation:
+After running the main analysis and `replication/validate_nominal_gdp_linked.do`, run the complete balanced-panel sensitivity:
+
+```stata
+do replication/balanced_panel_sensitivity.do
+```
+
+This combined script re-estimates the 12 baseline horizon models and four asymmetric H1 models across the four samples, exports three coefficient figures, and then runs the linked-GDP sample-composition validation described below.
+
+If the regression sensitivity has already completed and only the linked-GDP comparison needs to be rerun, use the standalone validation-only script:
 
 ```stata
 do replication/validate_balanced_panel_samples.do
@@ -336,10 +344,16 @@ The level and growth filters are deliberately separate. For the common-period sa
 
 Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
 
-Expected outputs:
+The combined script produces:
 
+- `outputs/tables/balanced_panel_regression_coefficients.csv`
 - `outputs/tables/balanced_panel_linked_gdp_validation.csv`
 - `data/processed/balanced_panel_linked_gdp_validation.dta`
-- `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`
+- `outputs/figures/balanced_panel_h1_coefficients.png` and `.gph`
+- `outputs/figures/bal_panel_horizon_coef.png` and `.gph`
+- `outputs/figures/balanced_panel_asymmetry.png` and `.gph`
+- `outputs/logs/balanced_panel_sensitivity.log`
+
+The standalone validation-only script produces the linked-GDP CSV, processed dataset, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`.
 
 The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
