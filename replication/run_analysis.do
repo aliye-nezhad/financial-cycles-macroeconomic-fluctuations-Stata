@@ -211,11 +211,11 @@ program define import_wdi_long
         exit 111
     }
 
-    keep v1 v2 v35-v69
+    keep v1 v2 v34-v69
     rename v1 country_name_wdi
     rename v2 iso3c
 
-    forvalues y = 1990/2024 {
+    forvalues y = 1989/2024 {
         local source_column = `y' - 1955
         rename v`source_column' v`y'
     }
@@ -233,17 +233,41 @@ end
 import_wdi_long "data/raw/`gdp_file'" gdp_growth "`gdp_long'"
 import_wdi_long "data/raw/`cpi_file'" inflation "`cpi_long'"
 
+tempfile gdp_current gdp_lag cpi_current
+
+use `gdp_long', clear
+keep if inrange(year, 1990, 2024)
+isid iso3c year
+save `gdp_current', replace
+
+use `gdp_long', clear
+keep if inrange(year, 1989, 2023)
+replace year = year + 1
+rename gdp_growth gdp_growth_lag1
+keep iso3c year gdp_growth_lag1
+isid iso3c year
+save `gdp_lag', replace
+
+use `cpi_long', clear
+keep if inrange(year, 1990, 2024)
+isid iso3c year
+save `cpi_current', replace
+
 /***********************************************************************
 5. Merge the financial-cycle and macroeconomic series
 ***********************************************************************/
 
 use `annual_gap', clear
 
-merge 1:1 iso3c year using `gdp_long', keep(master match)
+merge 1:1 iso3c year using `gdp_current', keep(master match)
 generate byte matched_gdp = (_merge == 3)
 drop _merge
 
-merge 1:1 iso3c year using `cpi_long', keep(master match)
+merge 1:1 iso3c year using `gdp_lag', keep(master match)
+generate byte matched_gdp_lag1 = (_merge == 3)
+drop _merge
+
+merge 1:1 iso3c year using `cpi_current', keep(master match)
 generate byte matched_inflation = (_merge == 3)
 drop _merge
 
@@ -259,12 +283,13 @@ label variable credit_gap_q4 "BIS credit-to-GDP gap, fourth quarter (percentage 
 label variable credit_gap_average "BIS credit-to-GDP gap, annual average (percentage points of GDP)"
 label variable gdp_growth "Real GDP growth (annual percent)"
 label variable inflation "CPI inflation (annual percent)"
-label variable matched_gdp "GDP observation matched"
+label variable matched_gdp "Current GDP observation matched"
+label variable matched_gdp_lag1 "Previous-year GDP observation matched"
 label variable matched_inflation "Inflation observation matched"
 
 xtset panel_id year
 
-generate byte complete_baseline = !missing(credit_gap_q4, gdp_growth, L.gdp_growth, inflation)
+generate byte complete_baseline = !missing(credit_gap_q4, gdp_growth, gdp_growth_lag1, inflation)
 label variable complete_baseline "Complete observation for baseline regressors, including lagged GDP growth"
 
 xtdescribe
@@ -286,6 +311,7 @@ xtdescribe
 
 display as text "Source-match indicators"
 tabulate matched_gdp
+tabulate matched_gdp_lag1
 tabulate matched_inflation
 
 display as text "Complete observations for baseline variables"
@@ -295,10 +321,11 @@ display as text "Country-level coverage"
 preserve
 collapse (count) n_gap = credit_gap_q4 ///
          n_gdp = gdp_growth ///
+         n_gdp_lag1 = gdp_growth_lag1 ///
          n_inflation = inflation ///
          (min) first_year = year ///
          (max) last_year = year, by(iso3c country_name)
-list iso3c country_name first_year last_year n_gap n_gdp n_inflation, ///
+list iso3c country_name first_year last_year n_gap n_gdp n_gdp_lag1 n_inflation, ///
     noobs sep(0)
 restore
 
@@ -358,17 +385,17 @@ log using "outputs/tables/baseline_models.txt", ///
     replace text name(baseline_log)
 
 display as text "Horizon 1: next-year GDP growth"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store H1
 
 display as text "Horizon 2: GDP growth two years ahead"
-xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
+xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
     i.outcome_year_h2, fe vce(cluster panel_id)
 estimates store H2
 
 display as text "Horizon 3: GDP growth three years ahead"
-xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
+xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
     i.outcome_year_h3, fe vce(cluster panel_id)
 estimates store H3
 
@@ -385,7 +412,7 @@ log using "outputs/tables/asymmetric_model.txt", ///
     replace text name(asymmetric_log)
 
 xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
-    c.gdp_growth L.gdp_growth c.inflation i.outcome_year_h1, ///
+    c.gdp_growth gdp_growth_lag1 c.inflation i.outcome_year_h1, ///
     fe vce(cluster panel_id)
 estimates store ASYM
 
@@ -404,19 +431,19 @@ log using "outputs/tables/robustness_models.txt", ///
     replace text name(robustness_log)
 
 display as text "Annual-average gap, requiring four quarterly observations"
-xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth L.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store AVG_GAP
 
 display as text "Fourth-quarter gap, excluding outcome years 2020 and 2021"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth gdp_growth_lag1 c.inflation ///
     i.outcome_year_h1 if !inlist(outcome_year_h1, 2020, 2021), ///
     fe vce(cluster panel_id)
 estimates store NO_PANDEMIC
 
 display as text "One-year model omitting lagged GDP growth, on the baseline complete-case sample"
 xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
-    i.outcome_year_h1 if !missing(L.gdp_growth), ///
+    i.outcome_year_h1 if !missing(gdp_growth_lag1), ///
     fe vce(cluster panel_id)
 estimates store NO_LAG
 
