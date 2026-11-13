@@ -112,6 +112,7 @@ jobs:
           grep -Fq "WS_CREDIT_GAP/1.0/Q..P.A.B" replication/denominator_diagnostic.do
           grep -Fq "WS_TC/2.0/Q..P.A.M.XDC.A" replication/denominator_diagnostic.do
           grep -Fq "WS_TC/2.0/Q..P.A.M.770.A" replication/denominator_diagnostic.do
+          grep -Fq "tostring unit_type, replace force" replication/denominator_diagnostic.do
           grep -Fq "implied_nominal_gdp_4q" replication/denominator_diagnostic.do
           grep -Fq "credit_growth_nominal" replication/denominator_diagnostic.do
           grep -Fq "nominal_gdp_growth_implied" replication/denominator_diagnostic.do
