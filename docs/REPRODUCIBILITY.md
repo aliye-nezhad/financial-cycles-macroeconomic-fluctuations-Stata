@@ -66,12 +66,13 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/correlation_matrix.txt | Pairwise correlations |
 | outputs/tables/baseline_models.txt | One-, two- and three-year-ahead estimates |
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
-| outputs/tables/robustness_models.txt | Annual-average gap and pandemic-exclusion sensitivity |
+| outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
+| outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
 | outputs/figures/credit_gap_by_country.png | Credit-gap series by country |
 | outputs/figures/credit_gap_gdp_scatter.png | Credit gap and subsequent GDP growth |
 | outputs/logs/analysis.log | Main execution log |
 
-The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
+The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
 ## 6. GitHub Actions
 
