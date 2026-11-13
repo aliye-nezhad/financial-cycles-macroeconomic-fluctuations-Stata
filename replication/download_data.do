@@ -87,37 +87,57 @@ foreach source_file in ///
 
 local root "`c(pwd)'"
 
-* Keep valid extracted WDI members when the source vintage is unchanged.
-* Remove them only when an intentional refresh has been requested.
-local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
-local cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
+* This archived World Bank vintage contains these exact, checksum-verified
+* CSV member names. Use confirm file rather than wildcard directory listing:
+* the latter was unreliable in the current Windows/Stata environment.
+local gdp_file "API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv"
+local cpi_file "API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv"
 
+capture confirm file "data/raw/`gdp_file'"
+local gdp_missing = _rc
+capture confirm file "data/raw/`cpi_file'"
+local cpi_missing = _rc
+
+* Remove only the two expected extracted members for an intentional refresh.
 if `refresh' {
-    foreach old_file of local gdp_files {
-        erase "data/raw/`old_file'"
+    if `gdp_missing' == 0 {
+        erase "data/raw/`gdp_file'"
     }
-    foreach old_file of local cpi_files {
-        erase "data/raw/`old_file'"
+    if `cpi_missing' == 0 {
+        erase "data/raw/`cpi_file'"
     }
-    local gdp_files ""
-    local cpi_files ""
+    local gdp_missing 601
+    local cpi_missing 601
 }
 
-* Extract only when one or both required CSV members are absent.
-* On Windows, use PowerShell's native ZIP support so Java is not required.
-* On other platforms, retain Stata's unzipfile implementation.
-if "`gdp_files'" == "" | "`cpi_files'" == "" {
+* Extract only archives whose required CSV member is absent.
+* Windows uses native PowerShell ZIP support; other platforms use Stata unzipfile.
+if `gdp_missing' != 0 | `cpi_missing' != 0 {
     if "`c(os)'" == "Windows" {
-        display as text "Extracting World Bank archives with Windows PowerShell..."
-        capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_gdp_growth.zip' -DestinationPath 'data/raw' -Force"
-        capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_cpi_inflation.zip' -DestinationPath 'data/raw' -Force"
+        display as text "Extracting missing World Bank CSV members with PowerShell..."
+        if `gdp_missing' != 0 {
+            capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_gdp_growth.zip' -DestinationPath 'data/raw' -Force"
+        }
+        if `cpi_missing' != 0 {
+            capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_cpi_inflation.zip' -DestinationPath 'data/raw' -Force"
+        }
     }
     else {
         cd "data/raw"
-        capture noisily unzipfile "wb_gdp_growth.zip", replace
-        local unzip_gdp_rc = _rc
-        capture noisily unzipfile "wb_cpi_inflation.zip", replace
-        local unzip_cpi_rc = _rc
+        if `gdp_missing' != 0 {
+            capture noisily unzipfile "wb_gdp_growth.zip", replace
+            local unzip_gdp_rc = _rc
+        }
+        else {
+            local unzip_gdp_rc 0
+        }
+        if `cpi_missing' != 0 {
+            capture noisily unzipfile "wb_cpi_inflation.zip", replace
+            local unzip_cpi_rc = _rc
+        }
+        else {
+            local unzip_cpi_rc 0
+        }
         cd "`root'"
 
         if `unzip_gdp_rc' != 0 | `unzip_cpi_rc' != 0 {
@@ -128,30 +148,22 @@ if "`gdp_files'" == "" | "`cpi_files'" == "" {
     }
 }
 
-* Metadata members are retained inside the original ZIP archives and are
-* not required by the Stata import routine.
-local metadata_files : dir "data/raw" files "Metadata_*.csv"
-foreach metadata_file of local metadata_files {
-    erase "data/raw/`metadata_file'"
-}
-
 /***********************************************************************
-3. Confirm expected World Bank CSV members
+3. Confirm the exact World Bank CSV members
 ***********************************************************************/
 
-local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
-local cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
-
-if "`gdp_files'" == "" {
-    display as error "World Bank GDP CSV member not found after extraction."
-    display as error "Inspect data/raw/wb_gdp_growth.zip and update the filename pattern if the provider changed it."
+capture confirm file "data/raw/`gdp_file'"
+if _rc {
+    display as error "World Bank GDP CSV member not found: `gdp_file'"
+    display as error "Check the retained archive and its recorded source vintage."
     log close download_log
     exit 601
 }
 
-if "`cpi_files'" == "" {
-    display as error "World Bank CPI CSV member not found after extraction."
-    display as error "Inspect data/raw/wb_cpi_inflation.zip and update the filename pattern if the provider changed it."
+capture confirm file "data/raw/`cpi_file'"
+if _rc {
+    display as error "World Bank CPI CSV member not found: `cpi_file'"
+    display as error "Check the retained archive and its recorded source vintage."
     log close download_log
     exit 601
 }
@@ -160,6 +172,8 @@ display as result "Data acquisition completed."
 display as text "BIS file: data/raw/bis_credit_gap.csv"
 display as text "GDP archive: data/raw/wb_gdp_growth.zip"
 display as text "CPI archive: data/raw/wb_cpi_inflation.zip"
+display as text "GDP CSV: data/raw/`gdp_file'"
+display as text "CPI CSV: data/raw/`cpi_file'"
 display as text "Retrieval date: `c(current_date)'"
 display as text "Refresh setting: `refresh'"
 
