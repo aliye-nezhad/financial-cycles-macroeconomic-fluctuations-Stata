@@ -61,4 +61,24 @@ The five linked-validation figures have been visually inspected. They are legibl
 
 The first audit run produced correct rankings and figures, but the two top-20 CSV exports retained the full 73-variable source panel. The audit do-file has since been corrected to export only the relevant country, year, rank and discrepancy fields. Rerun `replication/audit_nominal_gdp_linked.do` to regenerate the two concise CSVs before committing the audit outputs. No observations are deleted, winsorized or adjusted by the audit.
 
+## Balanced-panel and common-period sensitivity
+
+Running `replication/balanced_panel_sensitivity.do` creates:
+
+- `tables/balanced_panel_regression_coefficients.csv` — 12 linear horizon regressions and four asymmetric H1 specifications across four country-period samples.
+- `tables/balanced_panel_linked_gdp_validation.csv` — linked-GDP measurement comparisons across the same four country-period samples.
+- `../data/processed/balanced_panel_linked_gdp_validation.dta` — processed four-sample validation results.
+- `figures/balanced_panel_h1_coefficients.png` and `.gph` — H1 linear coefficient sensitivity.
+- `figures/bal_panel_horizon_coef.png` and `.gph` — H1, H2 and H3 coefficient sensitivity.
+- `figures/balanced_panel_asymmetry.png` and `.gph` — positive- and negative-gap slopes across samples.
+- `logs/balanced_panel_sensitivity.log` — combined execution record.
+
+The standalone `replication/validate_balanced_panel_samples.do` produces the linked-GDP validation CSV, processed dataset, and `logs/balanced_panel_linked_gdp_sensitivity.log` without rerunning the regressions.
+
+Two sample-count distinctions must be preserved. The 31-country common-period linked-GDP validation compares 589 level and 589 calendar-year growth observations from 2006 through 2024. The corresponding H1 regressions use predictor years 2006–2023 and therefore have an expected maximum of 558 observations (31 × 18). The earlier regression output reported 589 for both common-period H1 specifications; those two estimates are provisional. The combined do-file now asserts 558 and must be rerun before those coefficients are reported. The 43-country common-period linked-GDP validation, with 817 expected levels and growth observations, also remains pending.
+
+## Current repository state
+
+The output directories currently contain placeholders rather than the generated Stata artifacts. The files listed above are expected outputs, not evidence that they are already present in the repository. Generated tables, figures, processed datasets, and logs should be committed only after the relevant Stata run has completed, the output checks have passed, and the figures and numerical tables have been reviewed.
+
 All results describe the specified observational design and must not be presented as causal estimates.
