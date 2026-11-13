@@ -587,7 +587,127 @@ graph export "outputs/figures/credit_gap_gdp_scatter.png", ///
 graph save credit_gap_gdp_scatter ///
     "outputs/figures/credit_gap_gdp_scatter.gph", replace
 
-* Leave both named graphs available in memory and record their names in the log.
+* Figure 3: model-based coefficient plot across forecast horizons.
+* These are the country- and outcome-year fixed-effects estimates, not the
+* unconditional pooled line shown in Figure 2.
+estimates restore H1
+local h1_b = _b[credit_gap_q4]
+local h1_se = _se[credit_gap_q4]
+local h1_crit = invttail(e(df_r), .025)
+
+estimates restore H2
+local h2_b = _b[credit_gap_q4]
+local h2_se = _se[credit_gap_q4]
+local h2_crit = invttail(e(df_r), .025)
+
+estimates restore H3
+local h3_b = _b[credit_gap_q4]
+local h3_se = _se[credit_gap_q4]
+local h3_crit = invttail(e(df_r), .025)
+
+preserve
+clear
+set obs 3
+generate byte horizon = _n
+generate double estimate = .
+generate double standard_error = .
+generate double critical_value = .
+
+replace estimate = `h1_b' in 1
+replace standard_error = `h1_se' in 1
+replace critical_value = `h1_crit' in 1
+
+replace estimate = `h2_b' in 2
+replace standard_error = `h2_se' in 2
+replace critical_value = `h2_crit' in 2
+
+replace estimate = `h3_b' in 3
+replace standard_error = `h3_se' in 3
+replace critical_value = `h3_crit' in 3
+
+generate double ci_lower = estimate - critical_value * standard_error
+generate double ci_upper = estimate + critical_value * standard_error
+
+twoway (rcap ci_lower ci_upper horizon, horizontal ///
+            lcolor(gs7) lwidth(medthick)) ///
+       (scatter horizon estimate, ///
+            msymbol(O) msize(medlarge) mcolor(black)), ///
+    xline(0, lcolor(gs10) lpattern(dash) lwidth(thin)) ///
+    ylabel(1 "One year ahead" 2 "Two years ahead" 3 "Three years ahead", ///
+        angle(0) labsize(small)) ///
+    yscale(reverse) ///
+    xlabel(, labcolor(gs5) nogrid) ///
+    ytitle("") ///
+    xtitle("Credit-gap coefficient (GDP-growth percentage points per gap point)") ///
+    title("Credit Gaps and Subsequent GDP Growth", ///
+        color(black) size(medsmall)) ///
+    subtitle("Two-way fixed effects; country-clustered 95% confidence intervals", ///
+        color(gs6) size(small)) ///
+    graphregion(color(white)) plotregion(color(white)) ///
+    legend(off) ///
+    name(fe_horizon_coefficients, replace)
+
+graph export "outputs/figures/fe_horizon_coefficients.png", ///
+    name(fe_horizon_coefficients) replace width(2000)
+graph save fe_horizon_coefficients ///
+    "outputs/figures/fe_horizon_coefficients.gph", replace
+restore
+
+* Figure 4: asymmetric one-year-ahead fixed-effects coefficients.
+estimates restore ASYM
+local pos_b = _b[gap_positive]
+local pos_se = _se[gap_positive]
+local neg_b = _b[gap_negative]
+local neg_se = _se[gap_negative]
+local asym_crit = invttail(e(df_r), .025)
+
+preserve
+clear
+set obs 2
+generate byte component = _n
+generate double estimate = .
+generate double standard_error = \`=0'
+generate double critical_value = \`=0'
+
+replace estimate = `pos_b' in 1
+replace standard_error = `pos_se' in 1
+replace critical_value = `asym_crit' in 1
+
+replace estimate = `neg_b' in 2
+replace standard_error = `neg_se' in 2
+replace critical_value = `asym_crit' in 2
+
+generate double ci_lower = estimate - critical_value * standard_error
+generate double ci_upper = estimate + critical_value * standard_error
+
+twoway (rcap ci_lower ci_upper component, horizontal ///
+            lcolor(gs7) lwidth(medthick)) ///
+       (scatter component estimate, ///
+            msymbol(O) msize(medlarge) mcolor(black)), ///
+    xline(0, lcolor(gs10) lpattern(dash) lwidth(thin)) ///
+    ylabel(1 "Above-trend gap" 2 "Below-trend gap", ///
+        angle(0) labsize(small)) ///
+    yscale(reverse) ///
+    xlabel(, labcolor(gs5) nogrid) ///
+    ytitle("") ///
+    xtitle("Gap-component coefficient (GDP-growth percentage points per gap point)") ///
+    title("Asymmetry in the Credit-Gap Relationship", ///
+        color(black) size(medsmall)) ///
+    subtitle("One-year-ahead fixed-effects model; country-clustered 95% CIs", ///
+        color(gs6) size(small)) ///
+    note("Below-trend component is coded as min(credit gap, 0).", ///
+        color(gs6) size(vsmall)) ///
+    graphregion(color(white)) plotregion(color(white)) ///
+    legend(off) ///
+    name(asymmetric_gap_coefficients, replace)
+
+graph export "outputs/figures/asymmetric_gap_coefficients.png", ///
+    name(asymmetric_gap_coefficients) replace width(2000)
+graph save asymmetric_gap_coefficients ///
+    "outputs/figures/asymmetric_gap_coefficients.gph", replace
+restore
+
+* All four graph objects remain separately named in memory.
 display as text "Graphs retained in memory:"
 graph dir
 
@@ -610,6 +730,10 @@ foreach output in ///
     outputs/figures/mean_credit_gap_by_year.gph ///
     outputs/figures/credit_gap_gdp_scatter.png ///
     outputs/figures/credit_gap_gdp_scatter.gph ///
+    outputs/figures/fe_horizon_coefficients.png ///
+    outputs/figures/fe_horizon_coefficients.gph ///
+    outputs/figures/asymmetric_gap_coefficients.png ///
+    outputs/figures/asymmetric_gap_coefficients.gph ///
     outputs/logs/analysis.log {
     capture confirm file "`output'"
     if _rc {
