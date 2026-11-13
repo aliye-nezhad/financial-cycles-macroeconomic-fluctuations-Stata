@@ -121,6 +121,10 @@ display as text "Stata version: " c(stata_version)
 display as text "Cluster variable: panel_id (country)"
 display as text "Replications: 9,999"
 display as text "Weight distribution: Rademacher"
+display as text "Installed boottest ado-file:"
+which boottest
+display as text "Installed boottest Mata source:"
+which boottest.mata
 display as text "============================================================"
 
 display as text "A. Baseline one-year-ahead credit-gap coefficient"
