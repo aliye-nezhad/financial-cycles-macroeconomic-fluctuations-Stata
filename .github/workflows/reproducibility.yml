@@ -76,6 +76,7 @@ jobs:
           grep -Fq "replication/inference_diagnostics.do" README.md
           grep -Fq "replication/denominator_diagnostic.do" README.md
           grep -Fq "replication/validate_nominal_gdp.do" README.md
+          grep -Fq "replication/balanced_panel_sensitivity.do" README.md
           grep -Fq "replication/validate_balanced_panel_samples.do" README.md
 
           grep -Fq "version 15.1" replication/download_data.do
