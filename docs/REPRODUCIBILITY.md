@@ -145,7 +145,7 @@ Outputs are written to:
 
 This supplementary script does not alter the main analysis pipeline or the original BIS credit-gap series.
 
-## 7. Independent nominal-GDP validation (Stata 15.1+)
+## 6. First-pass independent nominal-GDP validation (Stata 15.1+)
 
 After `replication/denominator_diagnostic.do` has created `data/processed/denominator_components_panel.dta`, run:
 
@@ -174,96 +174,8 @@ Expected outputs:
 
 Official references: [World Bank indicator definition](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN), [Indicators API documentation](https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation), and [API query structure](https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures).
 
-## 7. Data integrity
 
-After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
-
-Linux or macOS:
-
-```bash
-sha256sum data/raw/bis_credit_gap.csv data/raw/wb_gdp_growth.zip data/raw/wb_cpi_inflation.zip data/raw/API_NY.GDP.MKTP.KD.ZG*.csv data/raw/API_FP.CPI.TOTL.ZG*.csv > data/raw.sha256
-sha256sum --check data/raw.sha256
-```
-
-Windows PowerShell:
-
-```powershell
-Get-FileHash .\data\raw\bis_credit_gap.csv -Algorithm SHA256
-Get-FileHash .\data\raw\wb_gdp_growth.zip -Algorithm SHA256
-Get-FileHash .\data\raw\wb_cpi_inflation.zip -Algorithm SHA256
-Get-ChildItem .\data\raw\API_NY.GDP.MKTP.KD.ZG*.csv | Get-FileHash -Algorithm SHA256
-Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA256
-```
-
-The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
-
-After the optional denominator diagnostic has downloaded its four BIS component files, record their checksums separately so the main analysis vintage is not silently changed.
-
-Linux, macOS or Git Bash:
-
-```bash
-sha256sum data/raw/bis_credit_gap_ratio.csv data/raw/bis_credit_gap_trend.csv data/raw/bis_total_credit_xdc.csv data/raw/bis_total_credit_gdp.csv > data/denominator_components.sha256
-sha256sum --check data/denominator_components.sha256
-```
-
-Windows PowerShell:
-
-```powershell
-Get-FileHash .\data\raw\bis_credit_gap_ratio.csv -Algorithm SHA256
-Get-FileHash .\data\raw\bis_credit_gap_trend.csv -Algorithm SHA256
-Get-FileHash .\data\raw\bis_total_credit_xdc.csv -Algorithm SHA256
-Get-FileHash .\data\raw\bis_total_credit_gdp.csv -Algorithm SHA256
-```
-
-Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` alongside these hashes.
-
-## 8. Expected outputs
-
-| Path | Contents |
-|---|---|
-| data/processed/financial_cycles_panel.dta | Merged annual country panel |
-| outputs/tables/sample_coverage.txt | Country, year and missingness audit |
-| outputs/tables/descriptive_statistics.txt | Summary statistics |
-| outputs/tables/correlation_matrix.txt | Pairwise correlations |
-| outputs/tables/baseline_models.txt | One-, two- and three-year-ahead estimates |
-| outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
-| outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
-| outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
-| outputs/tables/wild_cluster_bootstrap.txt | Optional wild cluster bootstrap inference using boottest (Stata 15.1+) |
-| outputs/figures/mean_credit_gap_by_year.png | Monochrome PNG of the unweighted mean credit gap by year |
-| outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
-| outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
-| outputs/figures/credit_gap_gdp_scatter.gph | Editable Stata graph for the credit-gap/GDP-growth scatter figure |
-| outputs/figures/fe_horizon_coefficients.png | Fixed-effects credit-gap coefficients across one-, two- and three-year horizons |
-| outputs/figures/fe_horizon_coefficients.gph | Editable Stata graph for the horizon coefficient plot |
-| outputs/figures/asymmetric_gap_coefficients.png | Positive- and negative-gap coefficients with 95% confidence intervals |
-| outputs/figures/asymmetric_gap_coefficients.gph | Editable Stata graph for the asymmetric coefficient plot |
-| outputs/logs/analysis.log | Main execution log |
-| outputs/tables/denominator_decomposition.txt | Optional source-alignment and credit/GDP component summary |
-| outputs/tables/denominator_component_models.txt | Optional matched-sample component regressions |
-| outputs/figures/ratio_component_growth.png and .gph | Optional annual growth decomposition figure |
-| outputs/figures/ratio_component_coefficients.png and .gph | Optional component-model coefficient plot |
-| outputs/logs/denominator_diagnostic.log | Optional denominator-diagnostic execution log |
-| data/processed/denominator_components_panel.dta | Optional matched panel with reconstructed GDP denominator |
-
-The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
-
-## 9. GitHub Actions
-
-GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and `replication/download_nominal_gdp.ps1` against the World Bank Indicators API. It verifies that all four supplementary BIS CSV files and the World Bank nominal-GDP archive, CSV, and metadata file are downloaded. These checks test the Windows source-acquisition paths. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
-
-A successful workflow run therefore confirms repository integrity and the supplementary Windows BIS and World Bank data-acquisition paths, but not Stata execution or numerical reproducibility.
-
-## 10. Reproducibility and source vintages
-
-The BIS and World Bank sources may revise historical observations. The source files used for an analysis should be retained with their checksums and retrieval date. If the data are refreshed, regenerate the outputs and record the new data vintage. Results from different vintages should not be silently mixed.
-
-## 11. Interpretation
-
-The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
-
-
-## 9. Preferred independent nominal-GDP validation using the linked WDI series (Stata 15.1+)
+## 7. Preferred independent nominal-GDP validation using the linked WDI series (Stata 15.1+)
 
 The first-pass validation in Section 7 used `NY.GDP.MKTP.CN`, the unlinked GDP (current LCU) indicator. Keep its outputs for transparency, but do not treat its historical growth discontinuities as a decisive test of the BIS-implied denominator. The World Bank explicitly publishes a linked current-LCU GDP series to reduce breaks caused by changes in national-accounts base years, source data and methodologies.
 
@@ -273,9 +185,9 @@ After `replication/denominator_diagnostic.do` has created the BIS denominator pa
 do replication/validate_nominal_gdp_linked.do
 ```
 
-The script uses WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU). On Windows, it calls `replication/download_linked_nominal_gdp.ps1`, which uses PowerShell's native HTTPS and ZIP support rather than Stata's Java-dependent `copy` path. The helper preserves the archive, validates the 1990 and 2024 year columns, writes a canonical CSV, and records retrieval metadata and SHA-256 hashes. Existing validated linked-series files are preserved unless the script's `refresh` setting is changed to 1.
+The script uses WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU). On Windows, it calls `replication/download_linked_nominal_gdp.ps1`, which uses PowerShell's native HTTPS and ZIP support rather than Stata's Java-dependent `copy` path. The helper validates the requested indicator code and the 1990 and 2024 year columns, retains the ZIP archive and canonical CSV, and checks that the CSV extracted from the retained archive is byte-for-byte identical to the canonical CSV. It records retrieval metadata and SHA-256 hashes. A no-refresh rerun preserves the metadata when the stored hashes still match; it does not reset the original retrieval date. If pre-existing source files have no verifiable retrieval metadata, the helper records the original retrieval date as unknown rather than inventing one.
 
-The Stata script retains 1990–2024, converts WDI's `..` missing-value marker to Stata missing, destrings the annual columns, reshapes the data to country-year form, and merges it with the BIS-implied denominator panel by ISO3 code and year. It compares country-specific level ratios and annual log-growth differences. The first growth comparison year is 1991 because 1990 is required to calculate the preceding annual change. It reports coverage, country-level summaries, mean absolute growth error, root mean squared growth error and the correlation between the BIS-implied and linked WDI growth series.
+The Stata script retains 1990–2024, verifies that every country row carries indicator code `NY.GDP.MKTP.CN.AD`, converts WDI's `..` missing-value marker to Stata missing, destrings the annual columns, reshapes the data to country-year form, and merges it with the BIS-implied denominator panel by ISO3 code and year. It compares country-specific level ratios and annual log-growth differences. The first growth comparison year is 1991 because 1990 is required to calculate the preceding annual change. It reports coverage, country-level summaries, mean absolute growth error, root mean squared growth error and the correlation between the BIS-implied and linked WDI growth series.
 
 The linked series is preferred for historical growth continuity, not because it is an exact replica of the national-accounts source used by the BIS. Its levels may differ from other historical national-accounts series, and underlying inputs may overlap with those used by the BIS. This remains a cross-source measurement check rather than proof of fully independent source construction.
 
@@ -315,7 +227,8 @@ Key outputs:
 Official references: [World Bank linked-series metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD) and [World Bank explanation of linked current-price GDP series](https://documents1.worldbank.org/curated/en/661311618822193354/pdf/World-Development-Indicators-2017.pdf).
 
 
-## 12. Balanced-panel linked-GDP sample sensitivity
+
+## 8. Balanced-panel and common-period sensitivity
 
 After running the main analysis and `replication/validate_nominal_gdp_linked.do`, run the complete balanced-panel sensitivity:
 
@@ -359,3 +272,114 @@ The combined script produces:
 The standalone validation-only script produces the linked-GDP CSV, processed dataset, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`.
 
 The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
+
+## 9. Data integrity
+
+After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
+
+Linux or macOS:
+
+```bash
+sha256sum data/raw/bis_credit_gap.csv data/raw/wb_gdp_growth.zip data/raw/wb_cpi_inflation.zip data/raw/API_NY.GDP.MKTP.KD.ZG*.csv data/raw/API_FP.CPI.TOTL.ZG*.csv > data/raw.sha256
+sha256sum --check data/raw.sha256
+```
+
+Windows PowerShell:
+
+```powershell
+Get-FileHash .\data\raw\bis_credit_gap.csv -Algorithm SHA256
+Get-FileHash .\data\raw\wb_gdp_growth.zip -Algorithm SHA256
+Get-FileHash .\data\raw\wb_cpi_inflation.zip -Algorithm SHA256
+Get-ChildItem .\data\raw\API_NY.GDP.MKTP.KD.ZG*.csv | Get-FileHash -Algorithm SHA256
+Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA256
+```
+
+The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
+
+After the optional denominator diagnostic has downloaded its four BIS component files, record their checksums separately so the main analysis vintage is not silently changed.
+
+For the supplementary World Bank nominal-GDP sources, keep separate checksum records rather than adding them to the main-analysis `data/raw.sha256` file:
+
+Linux, macOS or Git Bash:
+
+```bash
+sha256sum data/raw/wb_gdp_current_lcu.zip data/raw/wb_gdp_current_lcu.csv > data/unlinked_nominal_gdp.sha256
+sha256sum data/raw/wb_gdp_linked_current_lcu.zip data/raw/wb_gdp_linked_current_lcu.csv > data/linked_nominal_gdp.sha256
+sha256sum --check data/linked_nominal_gdp.sha256
+```
+
+Windows PowerShell:
+
+```powershell
+Get-FileHash .\\data\\raw\\wb_gdp_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\\data\\raw\\wb_gdp_current_lcu.csv -Algorithm SHA256
+Get-FileHash .\\data\\raw\\wb_gdp_linked_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\\data\\raw\\wb_gdp_linked_current_lcu.csv -Algorithm SHA256
+```
+
+The per-source metadata files already store the archive and canonical-CSV hashes. Retain those files with the corresponding source vintage. Do not regenerate a retrieval date simply because a validation script was rerun.
+
+Linux, macOS or Git Bash:
+
+```bash
+sha256sum data/raw/bis_credit_gap_ratio.csv data/raw/bis_credit_gap_trend.csv data/raw/bis_total_credit_xdc.csv data/raw/bis_total_credit_gdp.csv > data/denominator_components.sha256
+sha256sum --check data/denominator_components.sha256
+```
+
+Windows PowerShell:
+
+```powershell
+Get-FileHash .\data\raw\bis_credit_gap_ratio.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_credit_gap_trend.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_total_credit_xdc.csv -Algorithm SHA256
+Get-FileHash .\data\raw\bis_total_credit_gdp.csv -Algorithm SHA256
+```
+
+Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` alongside these hashes.
+
+## 10. Expected outputs
+
+| Path | Contents |
+|---|---|
+| data/processed/financial_cycles_panel.dta | Merged annual country panel |
+| outputs/tables/sample_coverage.txt | Country, year and missingness audit |
+| outputs/tables/descriptive_statistics.txt | Summary statistics |
+| outputs/tables/correlation_matrix.txt | Pairwise correlations |
+| outputs/tables/baseline_models.txt | One-, two- and three-year-ahead estimates |
+| outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
+| outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
+| outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
+| outputs/tables/wild_cluster_bootstrap.txt | Optional wild cluster bootstrap inference using boottest (Stata 15.1+) |
+| outputs/figures/mean_credit_gap_by_year.png | Monochrome PNG of the unweighted mean credit gap by year |
+| outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
+| outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
+| outputs/figures/credit_gap_gdp_scatter.gph | Editable Stata graph for the credit-gap/GDP-growth scatter figure |
+| outputs/figures/fe_horizon_coefficients.png | Fixed-effects credit-gap coefficients across one-, two- and three-year horizons |
+| outputs/figures/fe_horizon_coefficients.gph | Editable Stata graph for the horizon coefficient plot |
+| outputs/figures/asymmetric_gap_coefficients.png | Positive- and negative-gap coefficients with 95% confidence intervals |
+| outputs/figures/asymmetric_gap_coefficients.gph | Editable Stata graph for the asymmetric coefficient plot |
+| outputs/logs/analysis.log | Main execution log |
+| outputs/tables/denominator_decomposition.txt | Optional source-alignment and credit/GDP component summary |
+| outputs/tables/denominator_component_models.txt | Optional matched-sample component regressions |
+| outputs/figures/ratio_component_growth.png and .gph | Optional annual growth decomposition figure |
+| outputs/figures/ratio_component_coefficients.png and .gph | Optional component-model coefficient plot |
+| outputs/logs/denominator_diagnostic.log | Optional denominator-diagnostic execution log |
+| data/processed/denominator_components_panel.dta | Optional matched panel with reconstructed GDP denominator |
+
+The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
+
+## 11. GitHub Actions
+
+GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and both World Bank nominal-GDP downloaders: `download_nominal_gdp.ps1` for the unlinked comparison and `download_linked_nominal_gdp.ps1` for the preferred linked series. It verifies the four supplementary BIS CSV files, both World Bank archives and canonical CSVs, indicator metadata, and matching SHA-256 checksums. It also runs each WDI downloader twice without refresh and confirms that neither source files nor provenance metadata change on the second run. These checks test the Windows source-acquisition paths and downloader idempotence. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
+
+A successful workflow run therefore confirms repository integrity and the supplementary Windows BIS and World Bank data-acquisition paths, but not Stata execution or numerical reproducibility.
+
+## 12. Reproducibility and source vintages
+
+The BIS and World Bank sources may revise historical observations. The source files used for an analysis should be retained with their checksums and retrieval date. If the data are refreshed, regenerate the outputs and record the new data vintage. Results from different vintages should not be silently mixed.
+
+## 13. Interpretation
+
+The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
+
+
