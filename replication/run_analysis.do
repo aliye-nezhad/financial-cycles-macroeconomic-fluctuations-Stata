@@ -17,9 +17,6 @@ set more off
 set linesize 100
 capture log close _all
 
-local warning_count 0
-local missing_output_count 0
-
 capture mkdir "data"
 capture mkdir "data/raw"
 capture mkdir "data/processed"
@@ -33,6 +30,8 @@ capture mkdir "outputs/logs"
 ***********************************************************************/
 
 do replication/download_data.do
+
+local missing_output_count 0
 
 capture confirm file "data/raw/bis_credit_gap.csv"
 if _rc {
