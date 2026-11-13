@@ -262,10 +262,11 @@ label variable inflation "CPI inflation (annual percent)"
 label variable matched_gdp "GDP observation matched"
 label variable matched_inflation "Inflation observation matched"
 
-generate byte complete_baseline = !missing(credit_gap_q4, gdp_growth, inflation)
-label variable complete_baseline "Complete observation for baseline regressions"
-
 xtset panel_id year
+
+generate byte complete_baseline = !missing(credit_gap_q4, gdp_growth, L.gdp_growth, inflation)
+label variable complete_baseline "Complete observation for baseline regressors, including lagged GDP growth"
+
 xtdescribe
 
 save "data/processed/financial_cycles_panel.dta", replace
@@ -357,17 +358,17 @@ log using "outputs/tables/baseline_models.txt", ///
     replace text name(baseline_log)
 
 display as text "Horizon 1: next-year GDP growth"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store H1
 
 display as text "Horizon 2: GDP growth two years ahead"
-xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth c.inflation ///
+xtreg gdp_growth_h2 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
     i.outcome_year_h2, fe vce(cluster panel_id)
 estimates store H2
 
 display as text "Horizon 3: GDP growth three years ahead"
-xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth c.inflation ///
+xtreg gdp_growth_h3 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
     i.outcome_year_h3, fe vce(cluster panel_id)
 estimates store H3
 
@@ -384,7 +385,7 @@ log using "outputs/tables/asymmetric_model.txt", ///
     replace text name(asymmetric_log)
 
 xtreg gdp_growth_h1 c.gap_positive c.gap_negative ///
-    c.gdp_growth c.inflation i.outcome_year_h1, ///
+    c.gdp_growth L.gdp_growth c.inflation i.outcome_year_h1, ///
     fe vce(cluster panel_id)
 estimates store ASYM
 
@@ -403,12 +404,12 @@ log using "outputs/tables/robustness_models.txt", ///
     replace text name(robustness_log)
 
 display as text "Annual-average gap, requiring four quarterly observations"
-xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_average c.gdp_growth L.gdp_growth c.inflation ///
     i.outcome_year_h1, fe vce(cluster panel_id)
 estimates store AVG_GAP
 
 display as text "Fourth-quarter gap, excluding outcome years 2020 and 2021"
-xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth c.inflation ///
+xtreg gdp_growth_h1 c.credit_gap_q4 c.gdp_growth L.gdp_growth c.inflation ///
     i.outcome_year_h1 if !inlist(outcome_year_h1, 2020, 2021), ///
     fe vce(cluster panel_id)
 estimates store NO_PANDEMIC
