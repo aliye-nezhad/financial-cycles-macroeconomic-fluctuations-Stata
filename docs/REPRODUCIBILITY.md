@@ -261,3 +261,33 @@ The BIS and World Bank sources may revise historical observations. The source fi
 ## 11. Interpretation
 
 The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
+
+
+## 9. Preferred independent nominal-GDP validation using the linked WDI series (Stata 15.1+)
+
+The first-pass validation in Section 7 used `NY.GDP.MKTP.CN`, the unlinked GDP (current LCU) indicator. Keep its outputs for transparency, but do not treat its historical growth discontinuities as a decisive test of the BIS-implied denominator. The World Bank explicitly publishes a linked current-LCU GDP series to reduce breaks caused by changes in national-accounts base years, source data and methodologies.
+
+After `replication/denominator_diagnostic.do` has created the BIS denominator panel, run:
+
+```stata
+do replication/validate_nominal_gdp_linked.do
+```
+
+The script uses WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU). On Windows, it calls `replication/download_linked_nominal_gdp.ps1`, which uses PowerShell's native HTTPS and ZIP support rather than Stata's Java-dependent `copy` path. The helper preserves the archive, validates the 1990 and 2024 year columns, writes a canonical CSV, and records retrieval metadata and SHA-256 hashes. Existing validated linked-series files are preserved unless the script's `refresh` setting is changed to 1.
+
+The Stata script retains 1990–2024, converts WDI's `..` missing-value marker to Stata missing, destrings the annual columns, reshapes the data to country-year form, and merges it with the BIS-implied denominator panel by ISO3 code and year. It compares country-specific level ratios and annual log-growth differences. The first growth comparison year is 1991 because 1990 is required to calculate the preceding annual change. It reports coverage, country-level summaries, mean absolute growth error, root mean squared growth error and the correlation between the BIS-implied and linked WDI growth series.
+
+The linked series is preferred for historical growth continuity, not because it is an exact replica of the national-accounts source used by the BIS. Its levels may differ from other historical national-accounts series, and underlying inputs may overlap with those used by the BIS. This remains a cross-source measurement check rather than proof of fully independent source construction.
+
+Expected outputs:
+
+- `data/raw/wb_gdp_linked_current_lcu.zip`
+- `data/raw/wb_gdp_linked_current_lcu.csv`
+- `data/raw/wb_gdp_linked_current_lcu_metadata.txt`
+- `data/processed/nominal_gdp_linked_validation_panel.dta`
+- `data/processed/nominal_gdp_linked_validation_by_country.dta`
+- `outputs/tables/nominal_gdp_linked_validation_overall.txt`
+- `outputs/tables/nominal_gdp_linked_validation_by_country.csv`
+- `outputs/logs/nominal_gdp_linked_validation.log`
+
+Official references: [World Bank linked-series metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD) and [World Bank explanation of linked current-price GDP series](https://documents1.worldbank.org/curated/en/661311618822193354/pdf/World-Development-Indicators-2017.pdf).
