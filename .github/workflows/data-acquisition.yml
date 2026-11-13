@@ -1,0 +1,95 @@
+name: Acquire source data
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - data/ACQUIRE_DATA
+
+permissions:
+  contents: write
+
+jobs:
+  acquire:
+    name: Download and archive BIS and World Bank source data
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Download and validate source files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p data/raw
+
+          BIS_URL="https://stats.bis.org/api/v2/data/dataflow/BIS/WS_CREDIT_GAP/1.0/Q..P.A.C?format=csv&startPeriod=1990-Q1&endPeriod=2024-Q4"
+          GDP_URL="https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.KD.ZG?source=2&downloadformat=csv"
+          CPI_URL="https://api.worldbank.org/v2/country/all/indicator/FP.CPI.TOTL.ZG?source=2&downloadformat=csv"
+
+          curl --fail --location --retry 3 --retry-all-errors --user-agent "financial-cycles-panel-research/1.0" "$BIS_URL" -o data/raw/bis_credit_gap.csv
+          curl --fail --location --retry 3 --retry-all-errors "$GDP_URL" -o data/raw/wb_gdp_growth.zip
+          curl --fail --location --retry 3 --retry-all-errors "$CPI_URL" -o data/raw/wb_cpi_inflation.zip
+
+          unzip -t data/raw/wb_gdp_growth.zip
+          unzip -t data/raw/wb_cpi_inflation.zip
+
+          rm -f data/raw/API_NY.GDP.MKTP.KD.ZG*.csv
+          rm -f data/raw/API_FP.CPI.TOTL.ZG*.csv
+
+          unzip -oq data/raw/wb_gdp_growth.zip -d data/raw
+          unzip -oq data/raw/wb_cpi_inflation.zip -d data/raw
+
+          GDP_CSV="$(find data/raw -maxdepth 1 -type f -name 'API_NY.GDP.MKTP.KD.ZG*.csv' -print -quit)"
+          CPI_CSV="$(find data/raw -maxdepth 1 -type f -name 'API_FP.CPI.TOTL.ZG*.csv' -print -quit)"
+
+          test -s data/raw/bis_credit_gap.csv
+          test -n "$GDP_CSV"
+          test -n "$CPI_CSV"
+
+          BIS_HEADER="$(head -n 1 data/raw/bis_credit_gap.csv)"
+          printf '%s\n' "$BIS_HEADER" | grep -qi 'BORROWERS_CTY'
+          printf '%s\n' "$BIS_HEADER" | grep -qi 'CG_DTYPE'
+          printf '%s\n' "$BIS_HEADER" | grep -qi 'TIME_PERIOD'
+          printf '%s\n' "$BIS_HEADER" | grep -qi 'OBS_VALUE'
+
+          grep -q 'Country Code' "$GDP_CSV"
+          grep -q 'Country Code' "$CPI_CSV"
+
+          sha256sum \
+            data/raw/bis_credit_gap.csv \
+            data/raw/wb_gdp_growth.zip \
+            data/raw/wb_cpi_inflation.zip \
+            "$GDP_CSV" \
+            "$CPI_CSV" > data/raw.sha256
+
+          {
+            echo "# Source-data vintage"
+            echo
+            echo "- Retrieved (UTC): $(date -u '+%Y-%m-%d %H:%M:%S')"
+            echo "- BIS dataset: WS_CREDIT_GAP, series key Q..P.A.C, 1990-Q1 to 2024-Q4"
+            echo "- World Bank GDP growth: NY.GDP.MKTP.KD.ZG"
+            echo "- World Bank CPI inflation: FP.CPI.TOTL.ZG"
+            echo "- BIS source: https://data.bis.org/topics/CREDIT_GAPS"
+            echo "- World Bank API: https://api.worldbank.org/"
+            echo
+            echo "The checksum file records the exact files used. Refreshing these files creates a new source-data vintage."
+          } > data/DATA_VINTAGE.md
+
+      - name: Commit source data and checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f data/ACQUIRE_DATA
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw data/raw.sha256 data/DATA_VINTAGE.md
+          if git diff --cached --quiet; then
+            echo "No source-data changes to commit."
+            exit 0
+          fi
+          git commit -m "Add BIS and World Bank source data"
+          git push origin HEAD:main
