@@ -1,62 +1,64 @@
 # Outputs
 
-The main Stata analysis has completed successfully. The uploaded execution log confirms that the expected tables, figures, processed dataset and logs were generated locally and that the final file-existence checks passed. The baseline, asymmetric, measurement, pandemic, control-variable and country-influence specifications have all been executed. The numerical findings are summarized in [docs/RESULTS.md](../docs/RESULTS.md).
+This directory contains the generated tables, figures and execution logs from the Stata analysis. The numerical findings and interpretation are documented in [docs/RESULTS.md](../docs/RESULTS.md); data coverage and source checks are documented in [docs/DATA_AUDIT.md](../docs/DATA_AUDIT.md).
 
-The analysis now exports four separate figures:
+## Main analysis
 
-1. `mean_credit_gap_by_year.png` — the annual unweighted mean BIS credit-to-GDP gap across available economies.
-2. `credit_gap_gdp_scatter.png` — the pooled, unconditional relationship between the credit gap and GDP growth one year ahead. This is descriptive and is not the fixed-effects estimate.
-3. `fe_horizon_coefficients.png` — the estimated credit-gap coefficients from the one-, two-, and three-year-ahead country and outcome-year fixed-effects models, with country-clustered 95% confidence intervals. This is the main model-based figure.
-4. `asymmetric_gap_coefficients.png` — the positive- and negative-gap coefficients from the asymmetric one-year-ahead fixed-effects model, with country-clustered 95% confidence intervals.
+The main analysis exports four distinct monochrome figures, each as PNG and editable Stata GPH:
 
-Each PNG has a separately named native Stata `.gph` counterpart for editing. The do-file explicitly supplies the graph name to each export and save command, then lists all four names with `graph dir`. Stata's Graph window displays one active graph at a time; switching the active display does not mean that the other graph's file has been replaced. To compare the figures simultaneously, open the four PNG files from `outputs/figures/` in separate image windows.
+- `figures/mean_credit_gap_by_year.png` and `.gph` — annual unweighted mean BIS credit-to-GDP gap across available economies.
+- `figures/credit_gap_gdp_scatter.png` and `.gph` — pooled descriptive relationship between the credit gap and GDP growth one year ahead; not the fixed-effects estimate.
+- `figures/fe_horizon_coefficients.png` and `.gph` — one-, two- and three-year-ahead fixed-effects credit-gap coefficients with country-clustered 95% confidence intervals.
+- `figures/asymmetric_gap_coefficients.png` and `.gph` — positive- and negative-gap coefficients from the asymmetric one-year-ahead fixed-effects model.
 
-The generated figure artifacts have not yet been committed. All six PNGs (four main-analysis figures and two denominator-diagnostic figures) still need visual inspection before they are treated as final presentation outputs. The wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; after the denominator panel exists, it tests the matched-sample baseline and numerator-denominator component model. The eight-test diagnostic completed successfully on 13 November 2026; results are recorded in `docs/RESULTS.md`. The independent World Bank nominal-GDP validation script has been added but has not yet been executed.
+Main tables include `tables/sample_coverage.txt`, `descriptive_statistics.txt`, `correlation_matrix.txt`, `baseline_models.txt`, `asymmetric_model.txt`, `robustness_models.txt`, and `influence_sensitivity.txt`. The optional bootstrap results are stored in `tables/wild_cluster_bootstrap.txt`. The main execution log is `logs/analysis.log`.
 
-Expected outputs:
+## Credit-numerator and GDP-denominator diagnostic
 
-- `tables/sample_coverage.txt`
-- `tables/descriptive_statistics.txt`
-- `tables/correlation_matrix.txt`
-- `tables/baseline_models.txt`
-- `tables/asymmetric_model.txt`
-- `tables/robustness_models.txt`
-- `tables/influence_sensitivity.txt`
-- `tables/wild_cluster_bootstrap.txt` (optional; Stata 15.1+ with boottest)
-- `figures/mean_credit_gap_by_year.png`
-- `figures/mean_credit_gap_by_year.gph`
-- `figures/credit_gap_gdp_scatter.png`
-- `figures/credit_gap_gdp_scatter.gph`
-- `figures/fe_horizon_coefficients.png`
-- `figures/fe_horizon_coefficients.gph`
-- `figures/asymmetric_gap_coefficients.png`
-- `figures/asymmetric_gap_coefficients.gph`
-- `logs/analysis.log`
+Running `replication/denominator_diagnostic.do` creates:
 
-## Optional denominator diagnostic outputs
-
-Running `replication/denominator_diagnostic.do` after the main analysis creates a separate set of supplementary outputs. The script completed successfully on 13 November 2026. The supplied Stata log confirms that the source-alignment checks passed, both matched-sample regressions ran, and the two figures were exported separately. The generated files are local and have not yet been committed:
-
-- `tables/denominator_decomposition.txt` — source-alignment checks, reconstructed denominator, and annual component-growth summaries.
+- `tables/denominator_decomposition.txt` — source alignment, reconstructed denominator, and annual component-growth summaries.
 - `tables/denominator_component_models.txt` — matched-sample baseline and numerator-denominator predictive regressions.
-- `figures/ratio_component_growth.png` and `figures/ratio_component_growth.gph` — annual mean changes in nominal credit, implied nominal GDP, and the credit-to-GDP ratio.
-- `figures/ratio_component_coefficients.png` and `figures/ratio_component_coefficients.gph` — matched-sample component-model coefficients and 95% confidence intervals.
+- `figures/ratio_component_growth.png` and `.gph` — annual mean changes in nominal credit, implied nominal GDP, and the credit-to-GDP ratio.
+- `figures/ratio_component_coefficients.png` and `.gph` — matched-sample component-model coefficients and 95% confidence intervals.
 - `logs/denominator_diagnostic.log` — execution record.
-- `../data/processed/denominator_components_panel.dta` — matched annual panel with the reconstructed denominator and component growth rates.
+- `../data/processed/denominator_components_panel.dta` — matched annual panel.
 
-The source-alignment checks must be reviewed before interpreting the component regressions. The diagnostic does not alter the main analysis outputs.
+The diagnostic does not alter the main analysis outputs. Its estimates are predictive associations, not causal effects.
 
-## Independent nominal-GDP validation outputs
+## Independent nominal-GDP validation
 
-Running `replication/validate_nominal_gdp.do` after the denominator diagnostic creates:
+The preferred validation uses World Bank WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU) and compares it with the BIS-implied Q4 denominator. The completed Stata 17 run matched 1,377 nominal-GDP levels and 1,334 annual growth observations across 43 economies. The growth correlation is 0.9962, the mean absolute difference is 0.2198 percentage points, and the RMSE is 0.7244 points.
 
-- `tables/nominal_gdp_validation_overall.txt` — matched coverage, within-country level-ratio diagnostics, annual log-growth differences, mean absolute error, root mean squared error, and correlation.
-- `tables/nominal_gdp_validation_by_country.csv` — country-level overlap counts, median implied-to-World-Bank level ratio, mean growth difference, median absolute growth difference, and median absolute scale-adjusted level deviation.
-- `../data/processed/nominal_gdp_validation_panel.dta` — merged BIS and World Bank country-year validation panel.
-- `../data/processed/nominal_gdp_validation_by_country.dta` — Stata country-level summary.
-- `../data/raw/wb_gdp_current_lcu.zip`, `wb_gdp_current_lcu.csv`, and `wb_gdp_current_lcu_metadata.txt` — retained source archive, canonical CSV, retrieval metadata, and SHA-256 hashes.
-- `logs/nominal_gdp_validation.log` — execution record.
+Generated validation outputs include:
 
-The script has been committed but has not yet been run. Its outputs must be generated and reviewed before the denominator is treated as independently validated.
+- `tables/nominal_gdp_linked_validation_overall.txt` — coverage, level-ratio diagnostics, annual log-growth differences, MAE, RMSE and correlation.
+- `tables/nominal_gdp_linked_validation_by_country.csv` — country-level overlap and discrepancy summaries.
+- `../data/processed/nominal_gdp_linked_validation_panel.dta` — merged BIS and linked WDI country-year panel.
+- `../data/processed/nominal_gdp_linked_validation_by_country.dta` — Stata country-level summary.
+- `../data/raw/wb_gdp_linked_current_lcu.zip`, `wb_gdp_linked_current_lcu.csv`, and associated metadata — retained source archive, canonical CSV, retrieval metadata and hashes.
+- `logs/nominal_gdp_linked_validation.log` — execution record.
 
-These are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
+The earlier unlinked WDI indicator `NY.GDP.MKTP.CN` is retained as an archival comparison, not as the preferred time-series benchmark. Its outputs are `tables/nominal_gdp_validation_overall.txt`, `tables/nominal_gdp_validation_by_country.csv`, and `logs/nominal_gdp_validation.log`.
+
+## Linked nominal-GDP outlier audit
+
+Running `replication/audit_nominal_gdp_linked.do` after the linked validation creates:
+
+- `tables/nominal_gdp_linked_level_outliers_top20.csv` — the 20 largest country-year deviations from each country's median implied/WDI level ratio.
+- `tables/nominal_gdp_linked_growth_outliers_top20.csv` — the 20 largest absolute country-year growth differences.
+- `tables/nominal_gdp_linked_validation_country_audit.csv` — 43-country summary of level and growth discrepancies.
+- `../data/processed/nominal_gdp_linked_validation_country_audit.dta` — Stata country-level audit dataset.
+- Five separately named figures, each exported as PNG and editable GPH:
+  - `figures/nominal_gdp_validation_scatter`
+  - `figures/nominal_gdp_validation_median_growth_difference`
+  - `figures/nominal_gdp_validation_p95_growth_difference`
+  - `figures/nominal_gdp_validation_country_growth_mae`
+  - `figures/nominal_gdp_validation_country_level_deviation`
+- `logs/nominal_gdp_linked_outlier_audit.log` — execution record.
+
+The five linked-validation figures have been visually inspected. They are legible, use the project's monochrome style, and are exported as separate files. The full-range scatter retains the high-growth observations rather than hiding them through axis truncation.
+
+The first audit run produced correct rankings and figures, but the two top-20 CSV exports retained the full 73-variable source panel. The audit do-file has since been corrected to export only the relevant country, year, rank and discrepancy fields. Rerun `replication/audit_nominal_gdp_linked.do` to regenerate the two concise CSVs before committing the audit outputs. No observations are deleted, winsorized or adjusted by the audit.
+
+All results describe the specified observational design and must not be presented as causal estimates.
