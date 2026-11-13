@@ -94,54 +94,6 @@ foreach source_file in ///
     "data/raw/bis_total_credit_xdc.csv" ///
     "data/raw/bis_total_credit_gdp.csv" {
     capture confirm file "`source_file'"
-    if _rc local need_download 1
-}
-
-if `refresh' | `need_download' {
-    if lower("`c(os)'") == "windows" {
-        display as text "Retrieving missing BIS component files with Windows PowerShell..."
-        capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -File "replication/download_denominator_sources.ps1" -Refresh `refresh'
-        local download_rc = _rc
-        if `download_rc' {
-            display as error "PowerShell BIS source retrieval failed with return code `download_rc'."
-            display as error "Check the PowerShell message above and verify internet access to the BIS API."
-            log close main_log
-            exit `download_rc'
-        }
-    }
-    else {
-        capture confirm file "data/raw/bis_credit_gap_ratio.csv"
-        if _rc | `refresh' {
-            display as text "Downloading BIS credit-to-GDP actual ratio..."
-            copy "`gap_ratio_url'" "data/raw/bis_credit_gap_ratio.csv", replace
-        }
-
-        capture confirm file "data/raw/bis_credit_gap_trend.csv"
-        if _rc | `refresh' {
-            display as text "Downloading BIS credit-to-GDP trend..."
-            copy "`gap_trend_url'" "data/raw/bis_credit_gap_trend.csv", replace
-        }
-
-        capture confirm file "data/raw/bis_total_credit_xdc.csv"
-        if _rc | `refresh' {
-            display as text "Downloading BIS private non-financial-sector credit stock in domestic currency..."
-            copy "`tc_stock_url'" "data/raw/bis_total_credit_xdc.csv", replace
-        }
-
-        capture confirm file "data/raw/bis_total_credit_gdp.csv"
-        if _rc | `refresh' {
-            display as text "Downloading BIS private non-financial-sector credit-to-GDP ratio..."
-            copy "`tc_ratio_url'" "data/raw/bis_total_credit_gdp.csv", replace
-        }
-    }
-}
-
-foreach source_file in ///
-    "data/raw/bis_credit_gap_ratio.csv" ///
-    "data/raw/bis_credit_gap_trend.csv" ///
-    "data/raw/bis_total_credit_xdc.csv" ///
-    "data/raw/bis_total_credit_gdp.csv" {
-    capture confirm file "`source_file'"
     if _rc {
         display as error "Required BIS component file is missing: `source_file'"
         log close main_log
