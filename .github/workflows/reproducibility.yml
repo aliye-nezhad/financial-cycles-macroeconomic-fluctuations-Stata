@@ -85,10 +85,18 @@ jobs:
           grep -Fq "F3.gdp_growth" replication/run_analysis.do
           grep -Fq "i.outcome_year_h1" replication/run_analysis.do
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
-          grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do
-          grep -Fq "version 18.0" replication/inference_diagnostics.do
-          grep -Fq "if c(stata_version) < 18 {" replication/inference_diagnostics.do
+          grep -Fq "version 15.1" replication/inference_diagnostics.do
+          grep -Fq "which boottest" replication/inference_diagnostics.do
+          grep -Fq "run" replication/inference_diagnostics.do
+          grep -Fq "boottest credit_gap_q4" replication/inference_diagnostics.do
+          grep -Fq "boottest gap_positive" replication/inference_diagnostics.do
+          grep -Fq "boottest gap_negative" replication/inference_diagnostics.do
+          grep -Fq "boottest gap_positive = gap_negative" replication/inference_diagnostics.do
           grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
+          if grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do; then
+            echo "::error::Stata 18-only wildbootstrap command remains in the optional diagnostic."
+            exit 1
+          fi
           grep -Fq "gdp_growth_lag1" replication/run_analysis.do
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
           grep -Fq "estimates store NO_INFLATION" replication/run_analysis.do
