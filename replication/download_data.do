@@ -86,6 +86,19 @@ foreach source_file in ///
 }
 
 local root "`c(pwd)'"
+
+* Remove extracted WDI members before unpacking the retained archives.
+* This prevents an older CSV from being selected after a source refresh.
+local old_gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
+local old_cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
+
+foreach old_file of local old_gdp_files {
+    erase "data/raw/`old_file'"
+}
+foreach old_file of local old_cpi_files {
+    erase "data/raw/`old_file'"
+}
+
 cd "data/raw"
 
 capture noisily unzipfile "wb_gdp_growth.zip", replace
