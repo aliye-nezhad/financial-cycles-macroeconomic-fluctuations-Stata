@@ -33,4 +33,17 @@ Expected outputs:
 - `figures/asymmetric_gap_coefficients.gph`
 - `logs/analysis.log`
 
+## Optional denominator diagnostic outputs
+
+Running `replication/denominator_diagnostic.do` after the main analysis creates a separate set of supplementary outputs. The script has been added to the repository but has not yet been executed, so these files are not yet available:
+
+- `tables/denominator_decomposition.txt` — source-alignment checks, reconstructed denominator, and annual component-growth summaries.
+- `tables/denominator_component_models.txt` — matched-sample baseline and numerator-denominator predictive regressions.
+- `figures/ratio_component_growth.png` and `figures/ratio_component_growth.gph` — annual mean changes in nominal credit, implied nominal GDP, and the credit-to-GDP ratio.
+- `figures/ratio_component_coefficients.png` and `figures/ratio_component_coefficients.gph` — matched-sample component-model coefficients and 95% confidence intervals.
+- `logs/denominator_diagnostic.log` — execution record.
+- `../data/processed/denominator_components_panel.dta` — matched annual panel with the reconstructed denominator and component growth rates.
+
+The source-alignment checks must be reviewed before interpreting the component regressions. The diagnostic does not alter the main analysis outputs.
+
 These are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
