@@ -119,9 +119,9 @@ The active Stata Graph window shows one graph at a time. This is a display behav
 
 ## 8. Next empirical steps
 
-1. Install a consistent release of `boottest` and rerun [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do) to validate the provisional bootstrap results.
-2. Visually inspect all four exported PNG figures and reconcile them with the logged commands.
-3. Investigate the GDP-denominator channel directly by comparing the gap with movements in the underlying credit numerator and GDP denominator. This is the next substantive research question, not an invitation to add unrelated controls.
-4. After these checks, decide whether a real-credit-growth or other alternative financial-cycle measure is justified.
+1. Install a consistent release of `boottest` and rerun [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do). The baseline and asymmetric bootstrap tests have run, but the installed ado and Mata files are from different versions, so the results remain provisional.
+2. Visually inspect all four exported PNG figures and reconcile their scales, confidence intervals and labels with the numerical tables. The execution log confirms separate exports; it does not establish visual quality.
+3. Run [`replication/denominator_diagnostic.do`](../replication/denominator_diagnostic.do). It compares the BIS actual ratio and trend with the published gap, reconstructs the four-quarter nominal-GDP denominator from the BIS credit stock and ratio, and estimates a matched-sample component model. The diagnostic has been added but has not yet been executed; no numerator-versus-denominator result is reported here.
+4. Only after source alignment, bootstrap validation and visual inspection should we decide whether to construct a smoothed-denominator gap or use real credit growth as an alternative measure.
 
 The results should be treated as preliminary until these steps are completed.
