@@ -1,6 +1,6 @@
 # Source-data vintage
 
-- Retrieved (UTC): 2026-11-13 08:49:18
+- Retrieved (UTC): 2026-11-13 09:00:26
 - BIS dataset: WS_CREDIT_GAP, series key Q..P.A.C, 1990-Q1 to 2024-Q4
 - World Bank GDP growth: NY.GDP.MKTP.KD.ZG
 - World Bank CPI inflation: FP.CPI.TOTL.ZG
