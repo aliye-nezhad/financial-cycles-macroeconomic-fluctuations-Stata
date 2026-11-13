@@ -315,10 +315,10 @@ A Stata 17 sensitivity run on 13 November 2026 completed all 12 baseline horizon
 |---|---:|---:|---:|
 | 43 economies, unbalanced | -0.02280 (0.00376), 1,310 | -0.02901 (0.00357), 1,267 | -0.02675 (0.00348), 1,224 |
 | 31 economies, full period | -0.01950 (0.00412), 1,054 | -0.02658 (0.00408), 1,023 | -0.02454 (0.00404), 992 |
-| 31 economies, common period | -0.03135 (0.00731), 589 | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
+| 31 economies, common period | Pending re-execution (expected N=558) | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
 | 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-All 12 credit-gap coefficients are negative and statistically significant at the 1% level. The common-period estimates are larger in absolute value than the corresponding full-period estimates. This is a period sensitivity, not evidence that the association has become causal or that the common-period specification is automatically preferable. The 43-economy common-period regression sample is not strictly balanced because Argentina's CPI observations are missing for 2006–2017.
+The 11 count-consistent linear estimates are negative and statistically significant at the 1% level. The 31-country common-period H1 estimate is withheld pending re-execution: the earlier output reports 589 observations, but the committed predictor-year filter (2006–2023) permits at most 31 × 18 = 558 observations. The coefficient and standard error from that earlier run should not be treated as verified. The common-period estimates that are count-consistent are larger in absolute value than the corresponding full-period estimates. This is a period sensitivity, not evidence that the association has become causal or that the common-period specification is automatically preferable. The 43-economy common-period regression sample is not strictly balanced because Argentina's CPI observations are missing for 2006–2017.
 
 #### Asymmetric one-year-ahead regressions
 
@@ -326,10 +326,10 @@ All 12 credit-gap coefficients are negative and statistically significant at the
 |---|---:|---:|---:|---:|
 | 43 economies, unbalanced | -0.05138 (<0.001) | -0.00211 (0.7063) | -0.04927 (0.00039) | 1,310 |
 | 31 economies, full period | -0.04842 (0.00023) | -0.00037 (0.9480) | -0.04806 (0.00205) | 1,054 |
-| 31 economies, common period | -0.05075 (0.03043) | -0.01740 (0.02664) | -0.03335 (0.22805) | 589 |
+| 31 economies, common period | Pending re-execution | Pending re-execution | Pending re-execution | 558 expected |
 | 43 economies, common period | -0.05327 (0.00278) | -0.01783 (0.01064) | -0.03544 (0.08793) | 762 |
 
-The full-period samples reproduce the original asymmetry: the positive-gap slope is negative and significant, the negative-gap slope is close to zero and insignificant, and the equality test rejects equal slopes. In the common-period samples, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. For the 43-economy common sample, the equality test is marginal at 10% (p = 0.08793), not 5%. The asymmetric interpretation is therefore more sensitive to the sample period than the linear negative association.
+The full-period samples reproduce the original asymmetry: the positive-gap slope is negative and significant, the negative-gap slope is close to zero and insignificant, and the equality test rejects equal slopes. The 31-country common-period asymmetric H1 output is withheld because its reported count of 589 conflicts with the 2006–2023 predictor window, which permits at most 558 observations. The combined script now asserts the expected 558 observations for both the linear and asymmetric H1 specifications in this sample. In the 43-economy common-period sample, both component slopes are negative and individually significant, but the equality test is marginal at 10% (p = 0.08793), not 5%. The asymmetric interpretation is therefore more sensitive to the sample period than the linear negative association.
 
 #### Linked nominal-GDP validation: completed and pending comparisons
 
@@ -341,7 +341,7 @@ The first run of the linked-GDP sample validation produced valid count checks an
 | 31 economies, full period | 1,085 | 1,054 | 0.99039 | 0.23247 | 0.73805 | 0.04398% | 2.80148% |
 | 31 economies, common period | 589 | 589 | 0.99098 | 0.22043 | 0.67067 | 0.03398% | 1.29870% |
 
-The linked-GDP validation counts should not be confused with the predictive-regression sample sizes. The validation compares annual growth observations indexed 2006–2024. The H1 regression instead uses credit-gap and control observations dated 2006–2023 to predict GDP growth in 2007–2024, giving 558 observations in the 31-country common-period regression.
+The linked-GDP validation counts should not be confused with the predictive-regression sample sizes. The validation compares annual growth observations indexed 2006–2024. The H1 regression instead uses credit-gap and control observations dated 2006–2023 to predict GDP growth in 2007–2024, giving 558 observations in the 31-country common-period regression. This 558-observation regression sample is distinct from the 589 linked-GDP validation observations. A separate review found that the earlier balanced-panel regression table incorrectly reported 589 for both 31-country common-period H1 regressions; those H1 estimates are now marked provisional pending rerun with the corrected count assertion.
 
 The 31-economy common-period comparison produced 589 level observations and 589 annual growth observations (31 × 19). Its median and 95th-percentile absolute scale-adjusted level deviations were 0.03398% and 1.29870%. For annual growth, the correlation was 0.99098, the MAE was 0.22043 percentage points, and the RMSE was 0.67067 percentage points. The median and 95th-percentile absolute growth differences were 0.04682 and 1.05405 percentage points, respectively.
 
