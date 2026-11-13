@@ -61,6 +61,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── DATA_AUDIT.md
 │   ├── LITERATURE_NOTES.md
 │   ├── RESEARCH_DESIGN.md
+│   ├── RESEARCH_NOTE_DRAFT.md
 │   ├── RESULTS.md
 │   └── REPRODUCIBILITY.md
 ├── outputs/
