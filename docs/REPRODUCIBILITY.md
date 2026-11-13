@@ -367,6 +367,19 @@ Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` a
 | outputs/figures/ratio_component_coefficients.png and .gph | Optional component-model coefficient plot |
 | outputs/logs/denominator_diagnostic.log | Optional denominator-diagnostic execution log |
 | data/processed/denominator_components_panel.dta | Optional matched panel with reconstructed GDP denominator |
+| data/processed/nominal_gdp_linked_validation_panel.dta | Preferred linked-WDI and BIS denominator comparison panel |
+| outputs/tables/nominal_gdp_linked_validation_overall.txt | Overall linked nominal-GDP validation statistics |
+| outputs/tables/nominal_gdp_linked_validation_by_country.csv | Country-level linked-GDP validation results |
+| outputs/logs/nominal_gdp_linked_validation.log | Linked nominal-GDP validation execution log |
+| outputs/tables/nominal_gdp_linked_level_outliers_top20.csv | Twenty largest time-varying level discrepancies |
+| outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv | Twenty largest annual growth discrepancies |
+| outputs/tables/nominal_gdp_linked_validation_country_audit.csv | Country-level discrepancy audit |
+| outputs/logs/nominal_gdp_linked_outlier_audit.log | Linked-GDP outlier-audit execution log |
+| outputs/tables/balanced_panel_regression_coefficients.csv | Four-sample linear and asymmetric regression coefficients |
+| outputs/tables/balanced_panel_linked_gdp_validation.csv | Four-sample linked-GDP validation results |
+| data/processed/balanced_panel_linked_gdp_validation.dta | Processed four-sample linked-GDP validation dataset |
+| outputs/logs/balanced_panel_sensitivity.log | Combined regression and linked-GDP sensitivity log |
+| outputs/logs/balanced_panel_linked_gdp_sensitivity.log | Standalone linked-GDP sample-validation log |
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
