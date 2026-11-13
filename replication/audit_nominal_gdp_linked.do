@@ -265,8 +265,8 @@ graph hbar mean_abs_growth_difference, ///
         color(black) size(medsmall)) ///
     subtitle("Top 15 by mean absolute difference", ///
         color(gs6) size(small)) ///
-    xtitle("Mean absolute difference (percentage points)") ///
-    xlabel(, labsize(small)) ///
+    ytitle("Mean absolute difference (percentage points)") ///
+    ylabel(, labsize(small)) ///
     graphregion(color(white)) plotregion(color(white)) ///
     name(gdp_val_country_mae, replace)
 
@@ -294,8 +294,8 @@ graph hbar abs_median_level_deviation, ///
         color(black) size(medsmall)) ///
     subtitle("Top 15 absolute deviations of median level ratio from one", ///
         color(gs6) size(small)) ///
-    xtitle("Absolute deviation from unity (%)") ///
-    xlabel(, labsize(small)) ///
+    ytitle("Absolute deviation from unity (%)") ///
+    ylabel(, labsize(small)) ///
     graphregion(color(white)) plotregion(color(white)) ///
     name(gdp_validation_country_level, replace)
 
