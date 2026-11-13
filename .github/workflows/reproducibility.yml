@@ -169,3 +169,35 @@ jobs:
           fi
 
           echo "Static repository checks passed. This workflow does not execute Stata or validate numerical estimates."
+
+  windows-bis-download:
+    name: Validate Windows BIS component acquisition
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Download and validate supplementary BIS series
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+          .\replication\download_denominator_sources.ps1
+
+          $expected = @(
+            "bis_credit_gap_ratio.csv",
+            "bis_credit_gap_trend.csv",
+            "bis_total_credit_xdc.csv",
+            "bis_total_credit_gdp.csv"
+          )
+
+          foreach ($name in $expected) {
+            $path = Join-Path "data/raw" $name
+            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+              throw "Missing downloaded BIS file: $path"
+            }
+            if ((Get-Item -LiteralPath $path).Length -lt 100) {
+              throw "Downloaded BIS file is unexpectedly small: $path"
+            }
+          }
+
+          Write-Host "Windows BIS download and file checks passed."
