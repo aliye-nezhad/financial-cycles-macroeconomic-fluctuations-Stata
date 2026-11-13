@@ -2,13 +2,13 @@
 Project:  Financial Cycles and Macroeconomic Fluctuations
 File:     validate_nominal_gdp_linked.do
 Purpose:  Independently validate the BIS-implied nominal-GDP denominator
-          against World Bank GDP in current local currency
+          against World Bank linked GDP in current local currency
 Requires: Stata 15.1+; PowerShell on Windows for source acquisition
 
 Run from the repository root, after denominator_diagnostic.do:
     do replication/validate_nominal_gdp_linked.do
 
-The World Bank indicator is NY.GDP.MKTP.CN.AD (GDP, current LCU).
+The World Bank indicator is NY.GDP.MKTP.CN.AD (GDP, linked series, current LCU).
 It is an annual current-price series. This diagnostic compares annual
 log growth and within-country level ratios; pooled LCU levels across
 different countries are not economically comparable.
@@ -271,9 +271,9 @@ log using "outputs/tables/nominal_gdp_linked_validation_overall.txt", ///
     replace text name(validation_results_log)
 
 display as text "Independent validation of the BIS-implied nominal-GDP denominator"
-display as text "World Bank indicator: NY.GDP.MKTP.CN.AD (GDP, current LCU)"
+display as text "World Bank indicator: NY.GDP.MKTP.CN.AD (GDP, linked series, current LCU)"
 display as text "BIS-implied denominator: Q4 credit stock divided by Q4 credit-to-GDP ratio"
-display as text "World Bank series: annual current-price GDP in local currency"
+display as text "World Bank series: linked annual current-price GDP in local currency"
 display as result "BIS panel observations: `panel_observations'"
 display as result "BIS panel countries: `panel_countries'"
 display as result "Positive matched nominal-GDP levels: `level_observations'"
