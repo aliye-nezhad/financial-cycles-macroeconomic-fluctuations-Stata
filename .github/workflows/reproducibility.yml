@@ -106,6 +106,9 @@ jobs:
           grep -Fq "credit_growth_nominal" replication/denominator_diagnostic.do
           grep -Fq "nominal_gdp_growth_implied" replication/denominator_diagnostic.do
           grep -Fq "ratio_identity_error" replication/denominator_diagnostic.do
+          grep -Fq "abs_ratio_source_difference" replication/denominator_diagnostic.do
+          grep -Fq "abs_gap_reconstruction_error" replication/denominator_diagnostic.do
+          grep -Fq "exit 459" replication/denominator_diagnostic.do
           grep -Fq "ratio_component_growth" replication/denominator_diagnostic.do
           grep -Fq "ratio_component_coefficients" replication/denominator_diagnostic.do
           if grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do; then
