@@ -38,7 +38,8 @@ The observation window is 1990–2024. The BIS reports 44 economies in its credi
 | Credit-to-GDP gap | Bank for International Settlements | WS_CREDIT_GAP; quarterly; private non-financial sector borrowers; all lenders; actual-minus-trend gap |
 | Real GDP growth | World Bank, World Development Indicators | NY.GDP.MKTP.KD.ZG |
 | CPI inflation | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
-| Nominal GDP (archival comparison) | World Bank, World Development Indicators | NY.GDP.MKTP.CN (unlinked current LCU) |\n| Nominal GDP (preferred linked validation) | World Bank, World Development Indicators | NY.GDP.MKTP.CN.AD (linked current LCU) |
+| Nominal GDP (archival comparison) | World Bank, World Development Indicators | NY.GDP.MKTP.CN (unlinked current LCU) |
+| Nominal GDP (preferred linked validation) | World Bank, World Development Indicators | NY.GDP.MKTP.CN.AD (linked current LCU) |
 
 The BIS credit-gap measure covers borrowing from domestic and foreign sources and is not restricted to bank lending. It is calculated as the credit-to-GDP ratio minus a one-sided, backward-looking Hodrick–Prescott trend. The measure may differ from national-authority credit-gap estimates.
 
