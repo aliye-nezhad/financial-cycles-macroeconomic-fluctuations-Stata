@@ -86,12 +86,27 @@ Several qualifications remain important:
 - The credit-to-GDP gap is a generated measure based on a one-sided HP trend.
 - GDP enters the denominator of the credit-to-GDP ratio. A higher ratio or gap can reflect stronger credit, weaker GDP, or both. Controlling for current and lagged GDP growth does not fully resolve this issue.
 - The estimates use historical, revised data and are not a real-time forecasting exercise.
-- The conventional standard errors are clustered across 43 countries. An initial wild cluster bootstrap test of the baseline credit-gap coefficient has now run in Stata 17 using 9,999 Rademacher replications; it reported t(42) = -6.0638 and a displayed p-value of 0.0000. The displayed p-value is rounded, not literally zero. The asymmetric coefficient and slope-equality bootstrap tests are still pending, and the local boottest ado/Mata files were identified as different versions, so the bootstrap results should remain preliminary until the package installation is made consistent and the diagnostic is rerun.
+- The conventional standard errors are clustered across 43 countries. All four wild cluster bootstrap tests have now run in Stata 17 with 9,999 Rademacher replications. The installed `boottest.ado` identifies itself as version 4.1.0, while `boottest.mata` identifies itself as version 4.0.3. Because these components are from different releases, the successful execution is not sufficient to treat the bootstrap results as final; rerun the diagnostic after installing one consistent release.
 - The current horizon models estimate annual growth in the specific future year, not cumulative or average growth over the forecast interval.
 
-## 6. Next empirical steps
+## 6. Wild cluster bootstrap results
 
-1. Complete the optional wild cluster bootstrap diagnostic in [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do) using Stata 17 and a consistent installation of the `boottest` package.
+The supplementary diagnostic was executed in Stata 17 on the same 1,310-observation, 43-country one-year-ahead sample. Each test used 9,999 Rademacher replications, country-level clustering, and a fixed seed recorded in the do-file.
+
+| Hypothesis | Bootstrap t-statistic | Displayed p-value | 95% bootstrap confidence set |
+|---|---:|---:|---:|
+| Baseline credit-gap coefficient = 0 | -6.0638 | 0.0000 | [-0.03090, -0.01429] |
+| Positive-gap coefficient = 0 | -5.0903 | 0.0000 | [-0.07432, -0.02860] |
+| Negative-gap coefficient = 0 | -0.3795 | 0.7163 | [-0.01367, 0.01219] |
+| Positive-gap slope = negative-gap slope | -3.8545 | 0.0036 | [-0.07609, -0.01773] |
+
+The displayed value 0.0000 is rounded output, not a probability literally equal to zero. The bootstrap test of equal asymmetric slopes rejects equality at the 1% level (p = 0.0036), consistent with the conventional clustered Wald test, (F(1,42)=14.85), p = 0.0004. The positive-gap coefficient remains negative and statistically distinguishable from zero under the bootstrap; the negative-gap coefficient remains statistically indistinguishable from zero.
+
+**Reproducibility qualification:** the execution log reports `boottest.ado` version 4.1.0 and `boottest.mata` version 4.0.3. These are mismatched package components. The tests completed, but the results remain provisional until the components are replaced by one consistent tagged release and all four tests are rerun. The bootstrap does not change the point estimates or identify a causal effect.
+
+## 7. Next empirical steps
+
+1. Install a consistent release of `boottest` and rerun [`replication/inference_diagnostics.do`](../replication/inference_diagnostics.do) to validate the provisional bootstrap results.
 2. Visually inspect the two exported PNG figures and reconcile them with the logged commands.
 3. Investigate the GDP-denominator channel directly by comparing the gap with movements in the underlying credit numerator and GDP denominator. This is the next substantive research question, not an invitation to add unrelated controls.
 4. After these checks, decide whether a real-credit-growth or other alternative financial-cycle measure is justified.
