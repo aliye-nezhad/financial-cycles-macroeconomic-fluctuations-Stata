@@ -37,7 +37,21 @@ do replication/run_analysis.do
 
 The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs. It assigns each figure a distinct Stata graph name, exports each figure to its own PNG file, and also saves an editable `.gph` copy. The built-in `s1mono` scheme and explicit grayscale options give both figures a consistent white, black and gray publication style. Re-running the analysis replaces only the corresponding version of each figure; the two figures do not overwrite one another.
 
-## 4. Data integrity
+## 4. Optional wild cluster bootstrap inference (Stata 18+)
+
+The main analysis remains compatible with Stata 15.1 and uses built-in commands only. For an additional finite-cluster inference check, Stata 18 or later provides the built-in `wildbootstrap` command for fixed-effects panel regressions.
+
+After running `replication/run_analysis.do`, execute:
+
+```stata
+do replication/inference_diagnostics.do
+```
+
+The supplementary script reloads the saved processed panel, reconstructs the one-year-ahead outcome and positive/negative gap components, and applies wild cluster bootstrap inference at the country level. It reports bootstrap inference for the baseline credit-gap coefficient and for the positive-gap, negative-gap and slope-equality hypotheses. The script uses a fixed random seed and 10,000 replications.
+
+This diagnostic is optional and does not alter the main estimates or the Stata 15.1-compatible workflow. On Stata versions earlier than 18, the script exits with an explanatory message. The output is written to `outputs/tables/wild_cluster_bootstrap.txt`. The wild-bootstrap results should be reported alongside, not substituted silently for, the conventional country-clustered estimates.
+
+## 5. Data integrity
 
 After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
 
@@ -60,7 +74,7 @@ Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA25
 
 The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
 
-## 5. Expected outputs
+## 6. Expected outputs
 
 | Path | Contents |
 |---|---|
@@ -72,6 +86,7 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
 | outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
 | outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
+| outputs/tables/wild_cluster_bootstrap.txt | Optional wild cluster bootstrap inference (Stata 18+) |
 | outputs/figures/mean_credit_gap_by_year.png | Monochrome PNG of the unweighted mean credit gap by year |
 | outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
 | outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
@@ -80,16 +95,16 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
-## 6. GitHub Actions
+## 7. GitHub Actions
 
 The workflow performs static repository checks, including required-file checks, expected script commands, and documentation paths. It does not run Stata, execute the regressions, or verify numerical results because a licensed Stata runtime is not configured in GitHub Actions.
 
 A successful workflow run therefore confirms only that the static repository checks passed.
 
-## 7. Reproducibility and source vintages
+## 8. Reproducibility and source vintages
 
 The BIS and World Bank sources may revise historical observations. The source files used for an analysis should be retained with their checksums and retrieval date. If the data are refreshed, regenerate the outputs and record the new data vintage. Results from different vintages should not be silently mixed.
 
-## 8. Interpretation
+## 9. Interpretation
 
 The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
