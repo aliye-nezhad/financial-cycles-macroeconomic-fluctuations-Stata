@@ -51,7 +51,43 @@ local tc_ratio_url "https://stats.bis.org/api/v2/data/dataflow/BIS/WS_TC/2.0/Q..
 1. Retrieve the four BIS component series if needed
 ***********************************************************************/
 
-local need_download 0
+if lower("`c(os)'") == "windows" {
+    display as text "Checking and retrieving the four BIS component files with Windows PowerShell..."
+    capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -File "replication/download_denominator_sources.ps1" -Refresh `refresh'
+    local download_rc = _rc
+    if `download_rc' {
+        display as error "PowerShell BIS source retrieval failed with return code `download_rc'."
+        display as error "Check the PowerShell message above and verify internet access to the BIS API."
+        log close main_log
+        exit `download_rc'
+    }
+}
+else {
+    capture confirm file "data/raw/bis_credit_gap_ratio.csv"
+    if _rc | `refresh' {
+        display as text "Downloading BIS credit-to-GDP actual ratio..."
+        copy "`gap_ratio_url'" "data/raw/bis_credit_gap_ratio.csv", replace
+    }
+
+    capture confirm file "data/raw/bis_credit_gap_trend.csv"
+    if _rc | `refresh' {
+        display as text "Downloading BIS credit-to-GDP trend..."
+        copy "`gap_trend_url'" "data/raw/bis_credit_gap_trend.csv", replace
+    }
+
+    capture confirm file "data/raw/bis_total_credit_xdc.csv"
+    if _rc | `refresh' {
+        display as text "Downloading BIS private non-financial-sector credit stock in domestic currency..."
+        copy "`tc_stock_url'" "data/raw/bis_total_credit_xdc.csv", replace
+    }
+
+    capture confirm file "data/raw/bis_total_credit_gdp.csv"
+    if _rc | `refresh' {
+        display as text "Downloading BIS private non-financial-sector credit-to-GDP ratio..."
+        copy "`tc_ratio_url'" "data/raw/bis_total_credit_gdp.csv", replace
+    }
+}
+
 foreach source_file in ///
     "data/raw/bis_credit_gap_ratio.csv" ///
     "data/raw/bis_credit_gap_trend.csv" ///
