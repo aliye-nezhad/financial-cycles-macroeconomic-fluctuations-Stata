@@ -27,8 +27,10 @@ Growth windows:
     level year in the common window.
 
 The common-period growth filter is intentionally separate from the
-level filter. Including 2006 growth would use the 2005 GDP level and
-would not represent the stated 2006-2024 common-period comparison.
+level filter only in the variable overlap condition. Growth observations
+are indexed by the year of the annual change: the 2006 growth rate uses
+the 2005 GDP level as its lag input and is valid in a 2006-2024 growth
+comparison. No 2005 growth observation is included.
 
 This script does not alter source data, the main analysis, or the
 original linked-GDP validation panel.
@@ -212,16 +214,16 @@ foreach sample_name of local sample_names {
     }
     else if "`sample_name'" == "balanced31_common" {
         local level_if "balanced31 == 1 & level_overlap == 1 & inrange(year, 2006, 2024)"
-        local growth_if "balanced31 == 1 & growth_overlap == 1 & inrange(year, 2007, 2024)"
+        local growth_if "balanced31 == 1 & growth_overlap == 1"
         local expected_levels = 589
-        local expected_growth = 558
+        local expected_growth = 589
         local expected_countries = 31
     }
     else if "`sample_name'" == "all43_common" {
         local level_if "level_overlap == 1 & inrange(year, 2006, 2024)"
-        local growth_if "growth_overlap == 1 & inrange(year, 2007, 2024)"
+        local growth_if "growth_overlap == 1"
         local expected_levels = 817
-        local expected_growth = 774
+        local expected_growth = 817
         local expected_countries = 43
     }
 
