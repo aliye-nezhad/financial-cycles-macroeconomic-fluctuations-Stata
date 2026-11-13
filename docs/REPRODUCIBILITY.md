@@ -177,7 +177,7 @@ Official references: [World Bank indicator definition](https://databank.worldban
 
 ## 7. Preferred independent nominal-GDP validation using the linked WDI series (Stata 15.1+)
 
-The first-pass validation in Section 7 used `NY.GDP.MKTP.CN`, the unlinked GDP (current LCU) indicator. Keep its outputs for transparency, but do not treat its historical growth discontinuities as a decisive test of the BIS-implied denominator. The World Bank explicitly publishes a linked current-LCU GDP series to reduce breaks caused by changes in national-accounts base years, source data and methodologies.
+The first-pass validation in Section 6 used `NY.GDP.MKTP.CN`, the unlinked GDP (current LCU) indicator. Keep its outputs for transparency, but do not treat its historical growth discontinuities as a decisive test of the BIS-implied denominator. The World Bank explicitly publishes a linked current-LCU GDP series to reduce breaks caused by changes in national-accounts base years, source data and methodologies.
 
 After `replication/denominator_diagnostic.do` has created the BIS denominator panel, run:
 
@@ -313,10 +313,10 @@ sha256sum --check data/linked_nominal_gdp.sha256
 Windows PowerShell:
 
 ```powershell
-Get-FileHash .\\data\\raw\\wb_gdp_current_lcu.zip -Algorithm SHA256
-Get-FileHash .\\data\\raw\\wb_gdp_current_lcu.csv -Algorithm SHA256
-Get-FileHash .\\data\\raw\\wb_gdp_linked_current_lcu.zip -Algorithm SHA256
-Get-FileHash .\\data\\raw\\wb_gdp_linked_current_lcu.csv -Algorithm SHA256
+Get-FileHash .\data\raw\\wb_gdp_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\data\raw\\wb_gdp_current_lcu.csv -Algorithm SHA256
+Get-FileHash .\data\raw\\wb_gdp_linked_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\data\raw\\wb_gdp_linked_current_lcu.csv -Algorithm SHA256
 ```
 
 The per-source metadata files already store the archive and canonical-CSV hashes. Retain those files with the corresponding source vintage. Do not regenerate a retrieval date simply because a validation script was rerun.
