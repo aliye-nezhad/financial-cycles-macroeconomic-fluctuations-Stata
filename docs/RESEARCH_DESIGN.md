@@ -20,9 +20,15 @@ The empirical motivation draws on the following literature:
 2. **Jordà, Ò., Schularick, M. and Taylor, A. M. (2013).** "When Credit Bites Back." *Journal of Money, Credit and Banking*, 45(s2), 3–28. [https://doi.org/10.1111/jmcb.12069](https://doi.org/10.1111/jmcb.12069). Studies the relationship between credit-intensive expansions, recessions and recoveries.
 3. **Mian, A., Sufi, A. and Verner, E. (2017).** "Household Debt and Business Cycles Worldwide." *The Quarterly Journal of Economics*, 132(4), 1755–1817. [https://doi.org/10.1093/qje/qjx017](https://doi.org/10.1093/qje/qjx017). Examines household debt and subsequent macroeconomic outcomes across countries.
 4. **Jordà, Ò., Schularick, M. and Taylor, A. M. (2017).** "Macrofinancial History and the New Business Cycle Facts." NBER Working Paper 22743. [https://www.nber.org/papers/w22743](https://www.nber.org/papers/w22743). Connects leverage and financial conditions with business-cycle dynamics.
-5. **Drehmann, M. and Yetman, J. (2020).** "Which Credit Gap Is Better at Predicting Financial Crises?" BIS Working Papers. The paper motivates care in the construction and interpretation of credit-gap measures.
+5. **Drehmann, M. and Yetman, J. (2021).** "Which Credit Gap Is Better at Predicting Financial Crises? A Comparison of Univariate Filters." *International Journal of Central Banking*, 17(4), 1–31. [Published article](https://www.ijcb.org/journal/v17n4/which-credit-gap-better-predicting-financial-crises-comparison-univariate-filters). An earlier version is BIS Working Paper 878 (2020). This paper is particularly important for the measurement limitations of credit-to-GDP gaps.
 
 This is a focused literature map rather than a claim to have completed a systematic review. The papers motivate the question and measurement choices; they do not establish that this project's specification is novel.
+
+### A central measurement issue: the GDP denominator
+
+The credit-to-GDP gap is built from a ratio whose denominator is GDP. As a result, movements in GDP can affect the measured credit-to-GDP ratio even when the numerator does not change proportionately. Drehmann and Yetman (2021) discuss this criticism explicitly, alongside concerns about HP-filter dynamics and endpoint behavior. This is not a minor footnote: it is a central reason to interpret the estimates as predictive associations rather than causal effects.
+
+The baseline therefore controls for current GDP growth and its one-year lag, in addition to inflation, country fixed effects and outcome-year fixed effects. These controls do not eliminate the denominator issue or establish exogeneity. A separate real-credit-growth robustness measure may be considered if a consistent BIS credit-stock series can be acquired and validated without compromising the project's scope.
 
 ## Data and sample
 
@@ -56,6 +62,7 @@ Let i index countries, t index the predictor year, and h denote the forecast hor
 g_{i,t+h}=\alpha_i+\lambda_{t+h}
 +\beta_h Gap_{i,t}
 +\rho_h g_{i,t}
++\delta_h g_{i,t-1}
 +\gamma_h \pi_{i,t}
 +\varepsilon_{i,t+h},
 \]
@@ -65,6 +72,7 @@ where:
 - \(g_{i,t+h}\) is annual real GDP growth h years after the credit-gap observation;
 - \(Gap_{i,t}\) is the fourth-quarter BIS credit-to-GDP gap in year t;
 - \(g_{i,t}\) is current-year real GDP growth;
+- \(g_{i,t-1}\) is the previous year's real GDP growth;
 - \(\pi_{i,t}\) is current-year CPI inflation;
 - \(\alpha_i\) are country fixed effects;
 - \(\lambda_{t+h}\) are fixed effects for the outcome year.
@@ -88,7 +96,7 @@ Replace the single gap term with both components:
 g_{i,t+1}=\alpha_i+\lambda_{t+1}
 +\beta^+ Gap^+_{i,t}
 +\beta^- Gap^-_{i,t}
-+\rho g_{i,t}+\gamma\pi_{i,t}+\varepsilon_{i,t+1}.
++\rho g_{i,t}+\delta g_{i,t-1}+\gamma\pi_{i,t}+\varepsilon_{i,t+1}.
 \]
 
 The equality of the two slopes is tested directly. A negative gap is not automatically interpreted as a credit contraction; it means the observed credit-to-GDP ratio is below the BIS-estimated trend.
@@ -98,6 +106,7 @@ The equality of the two slopes is tested directly. A negative gap is not automat
 1. Replace the fourth-quarter gap with the annual mean of the four quarterly gap observations, requiring all four quarters.
 2. Re-estimate the one-year-ahead specification after excluding outcome years 2020 and 2021, to assess sensitivity to the pandemic period.
 3. Report the one-, two- and three-year-ahead estimates separately rather than treating the overlapping horizons as independent observations in a pooled regression.
+4. Compare the baseline with a specification omitting the lagged GDP-growth control, to show whether the main coefficient is sensitive to additional conditioning for output-growth persistence.
 
 The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators merely to increase the number of procedures. Any additional estimator must be motivated by the research question and the properties of the data.
 
