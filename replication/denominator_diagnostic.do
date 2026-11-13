@@ -2,7 +2,8 @@
 Project:  Financial Cycles and Macroeconomic Fluctuations
 File:     denominator_diagnostic.do
 Purpose:  Separate credit-numerator and nominal-GDP-denominator movements
-Requires: Stata 15.1+ and an internet connection if source files are absent
+Requires: Stata 15.1+ and internet access if source files are absent
+On Windows, supplementary BIS downloads use the included PowerShell helper
 
 Run from the repository root, after run_analysis.do:
     do replication/denominator_diagnostic.do
