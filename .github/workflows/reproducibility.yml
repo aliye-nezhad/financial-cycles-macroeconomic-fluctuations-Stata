@@ -63,6 +63,8 @@ jobs:
           grep -Fq "F3.gdp_growth" replication/run_analysis.do
           grep -Fq "i.outcome_year_h1" replication/run_analysis.do
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
+          grep -Fq "L.gdp_growth" replication/run_analysis.do
+          grep -Fq "estimates store NO_LAG" replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
 
