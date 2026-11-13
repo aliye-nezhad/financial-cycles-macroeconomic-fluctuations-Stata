@@ -120,7 +120,7 @@ After the main analysis has run, execute:
 do replication/denominator_diagnostic.do
 ```
 
-This supplementary script downloads four additional BIS series when the files are absent. On Windows, it delegates retrieval to `replication/download_denominator_sources.ps1`, using PowerShell's native `Invoke-WebRequest` instead of Stata's Java-dependent HTTPS `copy` command. The helper downloads each file to a temporary path, checks that the response is a nonempty CSV with the columns required by the Stata import code, and only then replaces the destination file. Existing files are preserved unless the do-file's `refresh` setting is changed to `1`. On non-Windows systems, the do-file retains the Stata `copy` fallback.
+This supplementary script downloads four additional BIS series when the files are absent. On Windows, it delegates retrieval to `replication/download_denominator_sources.ps1`, using PowerShell's native `Invoke-WebRequest` instead of Stata's Java-dependent HTTPS `copy` command. The helper checks all four files on each Windows run, preserves valid existing files, and redownloads missing or invalid files. Downloads are written to temporary paths and validated as nonempty CSVs with the columns required by the Stata import code before replacing the destination. Changing the do-file's `refresh` setting to `1` forces a new download of all four series. On non-Windows systems, the do-file retains the Stata `copy` fallback.
 
 - `WS_CREDIT_GAP` actual credit-to-GDP ratio and HP-filter trend (dataflow 1.0; `CG_DTYPE=A` and `B`);
 - `WS_TC` private non-financial-sector credit stock in domestic currency (dataflow 2.0; all lenders, market valuation, adjusted for breaks, `UNIT_TYPE=XDC`);
