@@ -67,6 +67,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── tables/
 │   └── README.md
 └── replication/
+    ├── denominator_diagnostic.do
     ├── download_data.do
     ├── inference_diagnostics.do
     └── run_analysis.do
@@ -89,11 +90,20 @@ Download the source data:
 do replication/download_data.do
 ```
 
-Run the analysis:
+Run the main analysis:
 
 ```stata
 do replication/run_analysis.do
 ```
+
+The supplementary diagnostics can then be run separately:
+
+```stata
+do replication/inference_diagnostics.do
+do replication/denominator_diagnostic.do
+```
+
+The inference diagnostic requires a consistent installation of David Roodman's `boottest` package. The denominator diagnostic downloads additional BIS credit and ratio series, checks their alignment with the main gap data, reconstructs the trailing-four-quarter nominal-GDP denominator, and produces a matched-sample component analysis. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) before running either diagnostic.
 
 The repository also includes a GitHub Actions data-acquisition workflow. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits the source files to the private repository. The Stata download script preserves existing raw archives by default; set its refresh option to 1 only when intentionally retrieving a new vintage. The retrieval date and checksums are retained with the source files.
 
@@ -103,7 +113,7 @@ See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotat
 
 The complete Stata analysis was executed on 13 November 2026. The one-, two- and three-year-ahead samples match the pre-estimation audit exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The asymmetric specification indicates that the negative association is concentrated in above-trend credit observations. Annual-average-gap, pandemic-exclusion, control-variable and country-influence sensitivities have been run; the asymmetric result remains statistically distinguishable across the Ireland and Luxembourg exclusion checks. See [docs/RESULTS.md](docs/RESULTS.md) for the estimates and interpretation.
 
-The analysis script generated the expected tables, figures, processed dataset and logs locally, and its output-existence checks passed. These local outputs have not yet been committed; the PNG figures still require visual inspection. The optional [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) is separate from the Stata 15.1-compatible main pipeline and uses David Roodman's user-written `boottest` package. It can run in Stata 17; the main pipeline does not depend on this package. The next substantive research check is to investigate whether the credit-gap result reflects movements in the credit numerator, the GDP denominator, or both.
+The latest analysis run generated all four figures separately, along with the expected tables, processed dataset and logs; the output-existence checks passed. These local outputs have not yet been committed, and the four PNGs still require visual inspection. The optional [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) has produced baseline and asymmetric tests with 9,999 Rademacher replications, but its installed ado and Mata components are different versions; rerun it after installing one consistent release. The supplementary [denominator diagnostic](replication/denominator_diagnostic.do) has now been added but not yet executed. It uses BIS credit stocks and credit-to-GDP ratios to reconstruct the nominal-GDP denominator and test whether the main predictive association is more closely related to credit growth, denominator growth, or both.
 
 All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity; it does not execute Stata or verify numerical estimates.
 
