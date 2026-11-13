@@ -185,17 +185,22 @@ at row 6 with generated variable names. The expected annual columns are
 1960 onward; 1989-2024 map to v34-v69.
 ***********************************************************************/
 
-local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
-local cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
+local gdp_file "API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv"
+local cpi_file "API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv"
 
-if "`gdp_files'" == "" | "`cpi_files'" == "" {
-    display as error "One or both World Bank CSV members are missing. Run replication/download_data.do."
+capture confirm file "data/raw/`gdp_file'"
+if _rc {
+    display as error "World Bank GDP CSV is missing: `gdp_file'. Run replication/download_data.do."
     log close main_log
     exit 601
 }
 
-local gdp_file : word 1 of `gdp_files'
-local cpi_file : word 1 of `cpi_files'
+capture confirm file "data/raw/`cpi_file'"
+if _rc {
+    display as error "World Bank CPI CSV is missing: `cpi_file'. Run replication/download_data.do."
+    log close main_log
+    exit 601
+}
 
 tempfile gdp_long cpi_long
 
