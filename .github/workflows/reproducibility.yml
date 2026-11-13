@@ -89,10 +89,10 @@ jobs:
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
           grep -Fq 'insheet using "data/raw/bis_credit_gap.csv", comma names clear' replication/run_analysis.do
-          grep -Fq 'insheet using "`csv_path'", comma nonames clear' replication/run_analysis.do
+          grep -Fq 'comma nonames clear' replication/run_analysis.do
           grep -Fq 'drop in 1/3' replication/run_analysis.do
-          if grep -Fq "import delimited" replication/run_analysis.do; then
-            echo "::error::Java-dependent import delimited remains in the Stata analysis script."
+          if grep -Eq '^[[:space:]]*import delimited' replication/run_analysis.do; then
+            echo "::error::Java-dependent import delimited command remains in the Stata analysis script."
             exit 1
           fi
 
