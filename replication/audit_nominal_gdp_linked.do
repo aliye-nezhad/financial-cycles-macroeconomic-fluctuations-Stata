@@ -159,7 +159,7 @@ save "data/processed/nominal_gdp_linked_validation_country_audit.dta", replace
 4. Graph: BIS-implied versus World Bank annual nominal-GDP growth
 ***********************************************************************/
 
-restore, not
+restore
 
 twoway ///
     (scatter wb_nominal_gdp_growth nominal_gdp_growth_implied ///
@@ -266,7 +266,6 @@ graph hbar mean_abs_growth_difference, ///
         color(gs6) size(small)) ///
     xtitle("Mean absolute difference (percentage points)") ///
     xlabel(, labsize(small)) ///
-    ylabel(, labsize(small)) ///
     graphregion(color(white)) plotregion(color(white)) ///
     name(gdp_validation_country_growth_mae, replace)
 
