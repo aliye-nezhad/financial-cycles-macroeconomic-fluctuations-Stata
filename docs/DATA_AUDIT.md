@@ -135,5 +135,5 @@ The WDI GDP-growth series used here is not replaced with Irish GNI*. The baselin
 - [x] Linear influence sensitivities excluding Ireland, Luxembourg and both jointly executed.
 - [x] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly; slope-equality tests remain statistically significant.
 - [ ] Exported figures visually inspected and selected output artifacts prepared for publication.
-- [ ] Optional wild cluster bootstrap inference completed (requires Stata 18+).
-- [ ] Credit-numerator versus GDP-denominator sensitivity investigated.
+- [ ] Rerun and validate wild cluster bootstrap inference for the matched-sample denominator-component model (Stata 15.1+ with `boottest`; not Stata 18's built-in command).
+- [x] Credit-numerator versus GDP-denominator sensitivity investigated; source alignment and the numerator-denominator identity passed the checks recorded in docs/RESULTS.md.
