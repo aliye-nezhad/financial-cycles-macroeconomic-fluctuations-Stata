@@ -56,10 +56,10 @@ jobs:
             replication/inference_diagnostics.do \
             replication/run_analysis.do \
             replication/validate_nominal_gdp.do \
-            replication/validate_balanced_panel_samples.do; do
+            replication/validate_balanced_panel_samples.do \
             replication/audit_nominal_gdp_linked.do \
             replication/download_linked_nominal_gdp.ps1 \
-            replication/validate_nominal_gdp_linked.do \
+            replication/validate_nominal_gdp_linked.do; do
             if [[ ! -s "$path" ]]; then
               echo "::error::Missing or empty required file: $path"
               exit 1
