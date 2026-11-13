@@ -3,7 +3,7 @@
 ## Requirements
 
 - Licensed Stata 15.1 or later.
-- Internet access for the initial data download.
+- Internet access is needed only if source files are missing or a new data vintage is requested. The current repository includes the downloaded source files.
 - A working directory set to the repository root.
 
 The analysis uses built-in Stata commands. No user-written ado packages are required.
@@ -42,7 +42,7 @@ After downloading source files, calculate SHA-256 checksums from the repository 
 Linux or macOS:
 
 ```bash
-sha256sum data/raw/bis_credit_gap.csv data/raw/wb_gdp_growth.zip data/raw/wb_cpi_inflation.zip > data/raw.sha256
+sha256sum data/raw/bis_credit_gap.csv data/raw/wb_gdp_growth.zip data/raw/wb_cpi_inflation.zip data/raw/API_NY.GDP.MKTP.KD.ZG*.csv data/raw/API_FP.CPI.TOTL.ZG*.csv > data/raw.sha256
 sha256sum --check data/raw.sha256
 ```
 
@@ -68,7 +68,7 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
 | outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
 | outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
-| outputs/figures/credit_gap_by_country.png | Credit-gap series by country |
+| outputs/figures/mean_credit_gap_by_year.png | Credit-gap series by country |
 | outputs/figures/credit_gap_gdp_scatter.png | Credit gap and subsequent GDP growth |
 | outputs/logs/analysis.log | Main execution log |
 
