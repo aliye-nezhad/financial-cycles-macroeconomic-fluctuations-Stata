@@ -72,7 +72,7 @@ try {
     }
 
     if ($shouldDownload) {
-        $temporaryRoot = Join-Path $env:TEMP ("wb-gdp-current-lcu-" + [guid]::NewGuid().ToString("N"))
+        $temporaryRoot = Join-Path $env:TEMP ("wb-gdp-linked-current-lcu-" + [guid]::NewGuid().ToString("N"))
         New-Item -ItemType Directory -Path $temporaryRoot -Force | Out-Null
 
         try {
@@ -147,7 +147,7 @@ try {
         "World Bank last-updated date from API metadata: $lastUpdated",
         "Archive SHA-256: $archiveHash",
         "CSV SHA-256: $csvHash",
-        "The Stata validation script retains 1989-2024 and matches the 43 BIS economies."
+        "The Stata validation script retains 1990-2024 and matches the 43 BIS economies."
     )
 
     $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
