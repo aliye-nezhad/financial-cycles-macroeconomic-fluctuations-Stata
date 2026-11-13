@@ -46,8 +46,10 @@ jobs:
             docs/RESEARCH_DESIGN.md \
             docs/LITERATURE_NOTES.md \
             docs/REPRODUCIBILITY.md \
+            docs/RESULTS.md \
             outputs/README.md \
             replication/download_data.do \
+            replication/inference_diagnostics.do \
             replication/run_analysis.do; do
             if [[ ! -s "$path" ]]; then
               echo "::error::Missing or empty required file: $path"
@@ -64,6 +66,8 @@ jobs:
           grep -Fq "docs/RESEARCH_DESIGN.md" README.md
           grep -Fq "docs/LITERATURE_NOTES.md" README.md
           grep -Fq "docs/REPRODUCIBILITY.md" README.md
+          grep -Fq "docs/RESULTS.md" README.md
+          grep -Fq "replication/inference_diagnostics.do" README.md
 
           grep -Fq "version 15.1" replication/download_data.do
           grep -Fq "version 15.1" replication/run_analysis.do
@@ -81,6 +85,9 @@ jobs:
           grep -Fq "F3.gdp_growth" replication/run_analysis.do
           grep -Fq "i.outcome_year_h1" replication/run_analysis.do
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
+          grep -Fq "wildbootstrap xtreg" replication/inference_diagnostics.do
+          grep -Fq "version 18.0" replication/inference_diagnostics.do
+          grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
           grep -Fq "gdp_growth_lag1" replication/run_analysis.do
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
           grep -Fq "estimates store NO_INFLATION" replication/run_analysis.do
