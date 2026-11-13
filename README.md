@@ -38,6 +38,7 @@ The observation window is 1990–2024. The BIS reports 44 economies in its credi
 | Credit-to-GDP gap | Bank for International Settlements | WS_CREDIT_GAP; quarterly; private non-financial sector borrowers; all lenders; actual-minus-trend gap |
 | Real GDP growth | World Bank, World Development Indicators | NY.GDP.MKTP.KD.ZG |
 | CPI inflation | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
+| Nominal GDP (supplementary validation) | World Bank, World Development Indicators | NY.GDP.MKTP.CN (current LCU) |
 
 The BIS credit-gap measure covers borrowing from domestic and foreign sources and is not restricted to bank lending. It is calculated as the credit-to-GDP ratio minus a one-sided, backward-looking Hodrick–Prescott trend. The measure may differ from national-authority credit-gap estimates.
 
@@ -70,8 +71,10 @@ Source documentation, download instructions, transformations, and attribution re
     ├── denominator_diagnostic.do
     ├── download_denominator_sources.ps1
     ├── download_data.do
+    ├── download_nominal_gdp.ps1
     ├── inference_diagnostics.do
-    └── run_analysis.do
+    ├── run_analysis.do
+    └── validate_nominal_gdp.do
 ```
 
 ## Reproducing the project
@@ -102,9 +105,10 @@ The supplementary diagnostics can then be run separately:
 ```stata
 do replication/denominator_diagnostic.do
 do replication/inference_diagnostics.do
+do replication/validate_nominal_gdp.do
 ```
 
-The inference diagnostic requires a working installation of David Roodman's `boottest` package. It loads the installed Mata source before estimation and, when the denominator-components panel exists, also tests the matched-sample baseline and numerator-denominator model. Run the denominator diagnostic first to enable those additional tests. The denominator diagnostic downloads additional BIS credit and ratio series, checks their alignment with the main gap data, reconstructs the trailing-four-quarter nominal-GDP denominator, and produces a matched-sample component analysis. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) before running either diagnostic.
+The inference diagnostic requires a working installation of David Roodman's `boottest` package. It loads the installed Mata source before estimation and, when the denominator-components panel exists, also tests the matched-sample baseline and numerator-denominator model. Run the denominator diagnostic first to enable those additional tests. The denominator diagnostic downloads additional BIS credit and ratio series, checks their alignment with the main gap data, reconstructs the trailing-four-quarter nominal-GDP denominator, and produces a matched-sample component analysis. The independent nominal-GDP validation then compares that reconstructed denominator with World Bank GDP in current local currency. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for the execution sequence.
 
 The repository also includes a GitHub Actions data-acquisition workflow. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits the source files to the private repository. The Stata download script preserves existing raw archives by default; set its refresh option to 1 only when intentionally retrieving a new vintage. The retrieval date and checksums are retained with the source files.
 
@@ -114,7 +118,7 @@ See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotat
 
 The complete Stata analysis was executed on 13 November 2026. The one-, two- and three-year-ahead samples match the pre-estimation audit exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The asymmetric specification indicates that the negative association is concentrated in above-trend credit observations. Annual-average-gap, pandemic-exclusion, control-variable and country-influence sensitivities have been run; the asymmetric result remains statistically distinguishable across the Ireland and Luxembourg exclusion checks. See [docs/RESULTS.md](docs/RESULTS.md) for the estimates and interpretation.
 
-The main analysis generated its four figures separately, along with the expected tables, processed dataset and logs; the output-existence checks passed. These local outputs have not yet been committed and still require visual inspection. The supplementary [denominator diagnostic](replication/denominator_diagnostic.do) was executed successfully on 13 November 2026. Its supplied log reports 1,377 matched Q4 country-year observations across 43 economies and 1,268 observations in the common regression sample. The maximum discrepancy between the two BIS actual-ratio sources was 0.05005 percentage points, and the maximum credit-gap reconstruction error was 0.00011 percentage points. It generated two additional figures, two result tables, a processed panel and an execution log; these local outputs also require visual inspection and checksum recording. The [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) has been extended to test the matched-sample baseline and both component coefficients, including their joint null. The installed `boottest.ado` 4.1.0 and `boottest.mata` 4.0.3 headers are the pairing in the official upstream v4.1.0 tag, so the header difference alone is not evidence of a mixed installation. The full diagnostic should now be rerun to verify that the Mata library is loaded and to obtain bootstrap inference for the new component model.
+The main analysis generated its four figures separately, along with the expected tables, processed dataset and logs; the output-existence checks passed. These local outputs have not yet been committed and still require visual inspection. The supplementary [denominator diagnostic](replication/denominator_diagnostic.do) was executed successfully on 13 November 2026. Its supplied log reports 1,377 matched Q4 country-year observations across 43 economies and 1,268 observations in the common regression sample. The maximum discrepancy between the two BIS actual-ratio sources was 0.05005 percentage points, and the maximum credit-gap reconstruction error was 0.00011 percentage points. It generated two additional figures, two result tables, a processed panel and an execution log; these local outputs also require visual inspection and checksum recording. The [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) was executed successfully on 13 November 2026. All eight tests completed with 9,999 Rademacher replications across 43 country clusters. The positive-gap coefficient and asymmetric slope difference remain significant; the negative-gap coefficient does not. In the component model, nominal credit growth is individually significant (bootstrap p = 0.0178), implied nominal-GDP growth is not (p = 0.1592), and the joint test is marginal at 10% (p = 0.0952), not significant at 5%. See [docs/RESULTS.md](docs/RESULTS.md) for the complete statistics. The new [independent nominal-GDP validation](replication/validate_nominal_gdp.do) has been added but has not yet been executed.
 
 All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity and tests the supplementary BIS downloader on Windows. It does not execute Stata or verify numerical estimates.
 
