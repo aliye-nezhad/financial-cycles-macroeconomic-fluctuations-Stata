@@ -1,0 +1,82 @@
+name: Stata repository checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-validation:
+    name: Validate project structure and analysis specification
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Validate required files and documented workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for path in \
+            README.md \
+            LICENSE \
+            .gitignore \
+            .gitattributes \
+            data/README.md \
+            docs/RESEARCH_DESIGN.md \
+            docs/REPRODUCIBILITY.md \
+            outputs/README.md \
+            replication/download_data.do \
+            replication/run_analysis.do; do
+            if [[ ! -s "$path" ]]; then
+              echo "::error::Missing or empty required file: $path"
+              exit 1
+            fi
+          done
+
+          grep -Fq "Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps" README.md
+          grep -Fq "do replication/download_data.do" README.md
+          grep -Fq "do replication/run_analysis.do" README.md
+          grep -Fq "docs/RESEARCH_DESIGN.md" README.md
+          grep -Fq "docs/REPRODUCIBILITY.md" README.md
+
+          grep -Fq "version 15.1" replication/download_data.do
+          grep -Fq "version 15.1" replication/run_analysis.do
+          grep -Fq "WS_CREDIT_GAP" replication/download_data.do
+          grep -Fq "NY.GDP.MKTP.KD.ZG" replication/download_data.do
+          grep -Fq "FP.CPI.TOTL.ZG" replication/download_data.do
+          grep -Fq "Q..P.A.C" replication/download_data.do
+
+          grep -Fq "keep if tc_borrowers == \"P\"" replication/run_analysis.do
+          grep -Fq "keep if tc_lenders == \"A\"" replication/run_analysis.do
+          grep -Fq "keep if cg_dtype == \"C\"" replication/run_analysis.do
+          grep -Fq "keep if quarter == 4" replication/run_analysis.do
+          grep -Fq "F1.gdp_growth" replication/run_analysis.do
+          grep -Fq "F2.gdp_growth" replication/run_analysis.do
+          grep -Fq "F3.gdp_growth" replication/run_analysis.do
+          grep -Fq "i.outcome_year_h1" replication/run_analysis.do
+          grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
+          grep -Fq "gap_positive" replication/run_analysis.do
+          grep -Fq "gap_negative" replication/run_analysis.do
+
+          grep -Fq "predictive regressions, not causal designs" docs/RESEARCH_DESIGN.md
+          grep -Fq "one-sided" docs/RESEARCH_DESIGN.md
+          grep -Fq "denominator" docs/RESEARCH_DESIGN.md
+
+          tracked_non_stata="$(git ls-files -- '*.py' '*.R' '*.r' '*.m')"
+          if [[ -n "$tracked_non_stata" ]]; then
+            echo "::error::Unexpected non-Stata source files in this Stata project:"
+            echo "$tracked_non_stata"
+            exit 1
+          fi
+
+          if [[ -f data/raw.sha256 ]]; then
+            sha256sum --check data/raw.sha256
+          fi
+
+          echo "Static repository checks passed. This workflow does not execute Stata or validate numerical estimates."
