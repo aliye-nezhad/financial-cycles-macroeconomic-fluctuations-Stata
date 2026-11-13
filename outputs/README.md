@@ -11,7 +11,7 @@ The analysis now exports four separate figures:
 
 Each PNG has a separately named native Stata `.gph` counterpart for editing. The do-file explicitly supplies the graph name to each export and save command, then lists all four names with `graph dir`. Stata's Graph window displays one active graph at a time; switching the active display does not mean that the other graph's file has been replaced. To compare the figures simultaneously, open the four PNG files from `outputs/figures/` in separate image windows.
 
-The generated output artifacts have not yet been committed. All six PNGs (four main-analysis figures and two denominator-diagnostic figures) still need visual inspection before they are treated as final presentation outputs. The wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; after the denominator panel exists, it also tests the matched-sample baseline and numerator-denominator component model. It writes `tables/wild_cluster_bootstrap.txt`.
+The generated figure artifacts have not yet been committed. All six PNGs (four main-analysis figures and two denominator-diagnostic figures) still need visual inspection before they are treated as final presentation outputs. The wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; after the denominator panel exists, it tests the matched-sample baseline and numerator-denominator component model. The eight-test diagnostic completed successfully on 13 November 2026; results are recorded in `docs/RESULTS.md`. The independent World Bank nominal-GDP validation script has been added but has not yet been executed.
 
 Expected outputs:
 
@@ -45,5 +45,18 @@ Running `replication/denominator_diagnostic.do` after the main analysis creates 
 - `../data/processed/denominator_components_panel.dta` — matched annual panel with the reconstructed denominator and component growth rates.
 
 The source-alignment checks must be reviewed before interpreting the component regressions. The diagnostic does not alter the main analysis outputs.
+
+## Independent nominal-GDP validation outputs
+
+Running `replication/validate_nominal_gdp.do` after the denominator diagnostic creates:
+
+- `tables/nominal_gdp_validation_overall.txt` — matched coverage, within-country level-ratio diagnostics, annual log-growth differences, mean absolute error, root mean squared error, and correlation.
+- `tables/nominal_gdp_validation_by_country.csv` — country-level overlap counts, median implied-to-World-Bank level ratio, mean growth difference, median absolute growth difference, and median absolute scale-adjusted level deviation.
+- `../data/processed/nominal_gdp_validation_panel.dta` — merged BIS and World Bank country-year validation panel.
+- `../data/processed/nominal_gdp_validation_by_country.dta` — Stata country-level summary.
+- `../data/raw/wb_gdp_current_lcu.zip`, `wb_gdp_current_lcu.csv`, and `wb_gdp_current_lcu_metadata.txt` — retained source archive, canonical CSV, retrieval metadata, and SHA-256 hashes.
+- `logs/nominal_gdp_validation.log` — execution record.
+
+The script has been committed but has not yet been run. Its outputs must be generated and reviewed before the denominator is treated as independently validated.
 
 These are descriptive and inferential outputs from the specified observational design. They must not be described as causal estimates.
