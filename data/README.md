@@ -68,7 +68,7 @@ GDP^{4Q}_{i,t}=100\times\frac{Credit_{i,t}}{Credit/GDP_{i,t}}.
 
 At Q4, the trailing four-quarter denominator corresponds to calendar-year nominal GDP. This is an implied denominator reconstructed from BIS credit and ratio series, not a separately published BIS GDP series. The script applies the SDMX unit multiplier to the domestic-currency credit stock before computing log changes.
 
-The diagnostic checks that the `WS_TC` ratio aligns with the `WS_CREDIT_GAP` actual ratio and that actual ratio minus trend reproduces the published gap. Differences above 0.10 percentage points are flagged for review. Source vintages must be aligned before the resulting component regressions are interpreted.
+The diagnostic checks that the `WS_TC` ratio aligns with the `WS_CREDIT_GAP` actual ratio and that actual ratio minus trend reproduces the published gap. If either discrepancy exceeds 0.10 percentage points, the script stops before estimating component regressions. Source vintages must be aligned before the results are interpreted.
 
 Official references:
 
