@@ -386,16 +386,38 @@ summarize ratio_identity_error if component_sample, detail
 
 log close decomposition_log
 
+count if !missing(abs_ratio_source_difference)
+if r(N) == 0 {
+    display as error "No overlapping observations are available to compare the two BIS ratio sources."
+    display as error "Inspect denominator_decomposition.txt and the downloaded source files."
+    log close main_log
+    exit 459
+}
+
 quietly summarize abs_ratio_source_difference
 if r(max) > 0.10 {
-    display as error "WARNING: WS_TC and WS_CREDIT_GAP actual ratios differ by more than 0.10 percentage points."
-    display as error "Inspect denominator_decomposition.txt before interpreting the component estimates."
+    display as error "WS_TC and WS_CREDIT_GAP actual ratios differ by more than 0.10 percentage points."
+    display as error "The component regressions have been stopped to prevent mixing incompatible source series or vintages."
+    display as error "Inspect denominator_decomposition.txt and the downloaded source files."
+    log close main_log
+    exit 459
+}
+
+count if !missing(abs_gap_reconstruction_error)
+if r(N) == 0 {
+    display as error "No overlapping observations are available to reconstruct the published BIS credit gap."
+    display as error "Inspect denominator_decomposition.txt and the downloaded source files."
+    log close main_log
+    exit 459
 }
 
 quietly summarize abs_gap_reconstruction_error
 if r(max) > 0.10 {
-    display as error "WARNING: The published gap does not reconstruct as actual ratio minus trend within 0.10 points."
-    display as error "Inspect the source vintage and series alignment before interpreting the component estimates."
+    display as error "The published gap does not reconstruct as actual ratio minus trend within 0.10 points."
+    display as error "The component regressions have been stopped to prevent mixing incompatible source vintages."
+    display as error "Inspect denominator_decomposition.txt and the downloaded source files."
+    log close main_log
+    exit 459
 }
 
 /***********************************************************************
