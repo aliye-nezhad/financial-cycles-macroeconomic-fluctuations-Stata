@@ -145,4 +145,4 @@ The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched t
 
 - [x] Linked WDI current-LCU source downloaded, validated and checksum recorded.
 - [x] BIS-implied nominal-GDP denominator compared with linked WDI levels and annual growth.
-- [ ] Country-year outlier audit and visual inspection of the five validation figures.
+- [ ] Complete the country-year outlier audit and visually inspect all five validation figures. The first run on 13 November 2026 produced both outlier tables, the country summary and the first three figures, then stopped at the fourth figure because of an overlength Stata graph name; the name has been shortened in the current script and the audit must be rerun.
