@@ -11,7 +11,7 @@ The analysis now exports four separate figures:
 
 Each PNG has a separately named native Stata `.gph` counterpart for editing. The do-file explicitly supplies the graph name to each export and save command, then lists all four names with `graph dir`. Stata's Graph window displays one active graph at a time; switching the active display does not mean that the other graph's file has been replaced. To compare the figures simultaneously, open the four PNG files from `outputs/figures/` in separate image windows.
 
-The generated output artifacts have not yet been committed. The PNGs still need visual inspection before they are treated as final presentation outputs. The optional wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; it writes `tables/wild_cluster_bootstrap.txt`.
+The generated output artifacts have not yet been committed. All six PNGs (four main-analysis figures and two denominator-diagnostic figures) still need visual inspection before they are treated as final presentation outputs. The wild cluster bootstrap diagnostic is run separately with Stata 15.1 or later and David Roodman's `boottest` package; after the denominator panel exists, it also tests the matched-sample baseline and numerator-denominator component model. It writes `tables/wild_cluster_bootstrap.txt`.
 
 Expected outputs:
 
@@ -35,7 +35,7 @@ Expected outputs:
 
 ## Optional denominator diagnostic outputs
 
-Running `replication/denominator_diagnostic.do` after the main analysis creates a separate set of supplementary outputs. The script has been added to the repository but has not yet been executed, so these files are not yet available:
+Running `replication/denominator_diagnostic.do` after the main analysis creates a separate set of supplementary outputs. The script completed successfully on 13 November 2026. The supplied Stata log confirms that the source-alignment checks passed, both matched-sample regressions ran, and the two figures were exported separately. The generated files are local and have not yet been committed:
 
 - `tables/denominator_decomposition.txt` — source-alignment checks, reconstructed denominator, and annual component-growth summaries.
 - `tables/denominator_component_models.txt` — matched-sample baseline and numerator-denominator predictive regressions.
