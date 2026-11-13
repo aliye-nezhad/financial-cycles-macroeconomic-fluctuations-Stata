@@ -191,7 +191,7 @@ The component model indicates a negative conditional association between nominal
 
 The component model omits current real GDP growth and CPI inflation, while retaining lagged real GDP growth. The common matched sample nevertheless requires current GDP growth and inflation so that the baseline and component specifications use the same observations.
 
-These estimates are predictive associations, not causal effects. In particular, the implied denominator is constructed from credit-related BIS series. Independent validation against a separately published nominal-GDP series is still required before interpreting the component coefficients as evidence about an economic transmission mechanism.
+These estimates are predictive associations, not causal effects. In particular, the implied denominator is constructed from credit-related BIS series. The linked World Bank cross-source validation is now reported in Section 10; it supports the denominator's measurement consistency but does not establish fully independent underlying source construction or identify an economic transmission mechanism.
 
 ### 8.4 Generated outputs and remaining checks
 
