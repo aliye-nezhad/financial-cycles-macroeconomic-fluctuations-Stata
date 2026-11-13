@@ -3,7 +3,14 @@ name: Stata repository checks
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - data/ACQUIRE_DATA
   pull_request:
+    branches: [main]
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Acquire source data"]
+    types: [completed]
     branches: [main]
 
 permissions:
@@ -11,6 +18,7 @@ permissions:
 
 jobs:
   static-validation:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     name: Validate project structure and analysis specification
     runs-on: ubuntu-24.04
     steps:
