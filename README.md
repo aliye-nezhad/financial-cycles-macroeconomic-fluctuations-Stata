@@ -18,11 +18,12 @@ The baseline horizon-specific specification is:
 g_{i,t+h}=\alpha_i+\lambda_{t+h}
 +\beta_h Gap_{i,t}
 +\rho_h g_{i,t}
++\delta_h g_{i,t-1}
 +\gamma_h \pi_{i,t}
 +\varepsilon_{i,t+h},
 \]
 
-where \(g\) is annual real GDP growth, \(Gap\) is the BIS credit-to-GDP gap, \(\pi\) is CPI inflation, \(\alpha_i\) denotes country fixed effects, and \(\lambda_{t+h}\) denotes fixed effects for the outcome year. The primary horizon is one year ahead; two- and three-year-ahead specifications are extensions. Standard errors are clustered by country.
+where \(g\) is annual real GDP growth, \(Gap\) is the BIS credit-to-GDP gap, \(\pi\) is CPI inflation, \(\alpha_i\) denotes country fixed effects, and \(\lambda_{t+h}\) denotes fixed effects for the outcome year. Current and lagged GDP growth are included to condition on output-growth persistence and to address, but not eliminate, concerns arising from GDP's appearance in the credit-to-GDP denominator. The primary horizon is one year ahead; two- and three-year-ahead specifications are extensions. Standard errors are clustered by country.
 
 An asymmetric specification separates positive and negative credit gaps. A robustness specification uses the annual mean of the four quarterly gap observations rather than the fourth-quarter observation.
 
