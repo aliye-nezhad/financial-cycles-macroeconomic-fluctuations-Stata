@@ -3,7 +3,7 @@
 **Audit date:** 13 November 2026  
 **Source vintage:** World Bank WDI files last updated 11 November 2026; BIS series downloaded 13 November 2026. Exact file hashes are stored in data/raw.sha256.
 
-This audit was computed from the downloaded source CSV files before Stata estimation. It describes data availability and distribution only; it does not report regression estimates. The Stata pipeline should reproduce the reported sample counts. Any discrepancy must be resolved before interpreting estimates.
+This audit was computed from the downloaded source CSV files before Stata estimation. The first complete Stata run on 13 November 2026 reproduced the expected horizon-specific sample counts exactly. The baseline estimates and the initial robustness results have been reviewed; additional influence checks for the asymmetric specification remain outstanding.
 
 ## 1. Source-file integrity and BIS coverage
 
@@ -54,7 +54,7 @@ The no-inflation sensitivity model is included to show whether this small but co
 
 ## 4. Expected regression samples
 
-The following counts apply the model's stated sample rules to the source data: Q4 gap, current and previous-year GDP growth, current-year CPI inflation, and the future GDP-growth outcome. These are pre-estimation observation counts, not regression results. Stata output should confirm them.
+The following counts apply the model's stated sample rules to the source data: Q4 gap, current and previous-year GDP growth, current-year CPI inflation, and the future GDP-growth outcome. These counts were calculated before estimation and were reproduced exactly in the first complete Stata run on 13 November 2026.
 
 | Specification | Predictor years | Outcome years | Observations | Countries |
 |---|---|---|---:|---:|
@@ -130,5 +130,7 @@ The WDI GDP-growth series used here is not replaced with Irish GNI*. The baselin
 - [x] GDP, lagged GDP and inflation missingness audited.
 - [x] Expected regression sample counts calculated.
 - [x] Extreme credit-gap observations identified.
-- [ ] Stata do-file executed and its sample counts reconciled with this audit.
-- [ ] Regression results and output diagnostics reviewed.
+- [x] Stata do-file executed and its sample counts reconciled with this audit.
+- [x] Baseline regression results and the initial pandemic, missing-inflation and country-exclusion sensitivities reviewed.
+- [ ] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly.
+- [ ] Exported figures visually inspected and selected output artifacts prepared for publication.
