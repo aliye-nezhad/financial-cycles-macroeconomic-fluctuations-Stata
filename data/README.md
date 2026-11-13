@@ -77,7 +77,7 @@ Official references:
 - [BIS statistical API documentation](https://stats.bis.org/api-doc/v2/)
 - [BIS FAQ on the credit-to-GDP denominator](https://data.bis.org/faq)
 
-These supplementary files are required only for the denominator diagnostic, not for the main analysis. On Windows, the Stata script calls `replication/download_denominator_sources.ps1`, which uses PowerShell's `Invoke-WebRequest` rather than Stata's Java-dependent HTTPS `copy` path. The helper downloads to temporary files, validates the required CSV columns, and then moves the files into `data/raw`. On non-Windows systems, the Stata script retains its native `copy` fallback. Existing files are preserved by default; set the refresh option to 1 only when intentionally retrieving a new source vintage.
+These supplementary files are required only for the denominator diagnostic, not for the main analysis. On Windows, the Stata script calls `replication/download_denominator_sources.ps1`, which uses PowerShell's `Invoke-WebRequest` rather than Stata's Java-dependent HTTPS `copy` path. The helper checks all four files on each Windows run, preserves valid existing files, and redownloads missing or invalid files. Downloads are written to temporary paths and validated for the required CSV columns before replacing the destination. On non-Windows systems, the Stata script retains its native `copy` fallback. Set the refresh option to 1 only when intentionally retrieving a new source vintage.
 
 ### BIS-to-World Bank country-code crosswalk
 
