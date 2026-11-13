@@ -35,7 +35,7 @@ For CSV ingestion, the analysis uses Stata's built-in `insheet` command rather t
 do replication/run_analysis.do
 ```
 
-The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs. It assigns each figure a distinct Stata graph name and explicitly supplies that name to both `graph export` and `graph save`; this prevents export/save commands from relying on whichever graph window is currently active. Each figure is written to its own PNG file and editable `.gph` file. The script finishes the figure section with `graph dir`, which lists the named graphs retained in memory. In Stata, either graph can be reopened with `graph display mean_credit_gap_by_year` or `graph display credit_gap_gdp_scatter`. The built-in `s1mono` scheme and explicit grayscale options give both figures a consistent white, black and gray publication style. Re-running the analysis replaces only the corresponding version of each figure; the two figures do not overwrite one another.
+The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs. It assigns each figure a distinct Stata graph name and explicitly supplies that name to both `graph export` and `graph save`; this prevents export/save commands from relying on whichever graph window is currently active. Each figure is written to its own PNG file and editable `.gph` file. The script finishes the figure section with `graph dir`, which lists all four named graphs retained in memory. Reopen them individually in Stata with `graph display mean_credit_gap_by_year`, `graph display credit_gap_gdp_scatter`, `graph display fe_horizon_coefficients`, or `graph display asymmetric_gap_coefficients`. The built-in `s1mono` scheme and explicit grayscale options give all four figures a consistent white, black and gray publication style. Re-running the analysis replaces only the corresponding version of each figure; the four files do not overwrite one another.
 
 ## 4. Optional wild cluster bootstrap inference (Stata 15.1+)
 
@@ -112,7 +112,38 @@ The supplementary script reloads the processed panel and estimates the baseline 
 
 This diagnostic is optional and does not alter the main estimates or the Stata 15.1-compatible workflow. The output is written to `outputs/tables/wild_cluster_bootstrap.txt`. Report bootstrap results alongside, not as a silent replacement for, the conventional country-clustered estimates.
 
-## 5. Data integrity
+## 5. Optional credit-numerator and GDP-denominator diagnostic (Stata 15.1+)
+
+After the main analysis has run, execute:
+
+```stata
+do replication/denominator_diagnostic.do
+```
+
+This supplementary script downloads four additional BIS series when the files are absent:
+
+- `WS_CREDIT_GAP` actual credit-to-GDP ratio and HP-filter trend (dataflow 1.0; `CG_DTYPE=A` and `B`);
+- `WS_TC` private non-financial-sector credit stock in domestic currency (dataflow 2.0; all lenders, market valuation, adjusted for breaks, `UNIT_TYPE=XDC`);
+- `WS_TC` credit-to-GDP ratio (same dimensions, `UNIT_TYPE=770`).
+
+The BIS defines the credit-to-GDP ratio as end-of-quarter outstanding credit divided by the sum of nominal GDP over the previous four quarters. The script therefore reconstructs the four-quarter nominal-GDP denominator as `100 × credit stock / credit-to-GDP ratio`. At Q4, the denominator corresponds to calendar-year nominal GDP. The underlying nominal-GDP series is reconstructed from BIS credit and ratio data; it is not a separately published BIS GDP series.
+
+Before estimation, the script compares the WS_TC ratio with the WS_CREDIT_GAP actual ratio and checks that actual ratio minus trend reproduces the published gap. Differences above 0.10 percentage points trigger warnings. Do not interpret the component regressions until the source-alignment checks are satisfactory; the files must represent compatible data vintages.
+
+The script then calculates annual log changes in nominal credit, the implied nominal-GDP denominator, and the credit-to-GDP ratio. It estimates a matched-sample baseline gap model and a joint component model with nominal credit growth and implied nominal-GDP growth, country fixed effects, outcome-year fixed effects, lagged real GDP growth, and country-clustered standard errors. Current real GDP growth and CPI inflation are omitted from the joint component model because nominal GDP growth already combines real activity and price movements. The specification is a diagnostic of predictive components, not a causal decomposition.
+
+Outputs are written to:
+
+- `outputs/tables/denominator_decomposition.txt`
+- `outputs/tables/denominator_component_models.txt`
+- `outputs/figures/ratio_component_growth.png` and `.gph`
+- `outputs/figures/ratio_component_coefficients.png` and `.gph`
+- `outputs/logs/denominator_diagnostic.log`
+- `data/processed/denominator_components_panel.dta`
+
+This supplementary script does not alter the main analysis pipeline or the original BIS credit-gap series.
+
+## 6. Data integrity
 
 After a fresh download or source refresh, calculate SHA-256 checksums from the repository root.
 
@@ -135,7 +166,7 @@ Get-ChildItem .\data\raw\API_FP.CPI.TOTL.ZG*.csv | Get-FileHash -Algorithm SHA25
 
 The checksum file records the exact source-file vintage used for an analysis. Regenerate it only when the source files are intentionally refreshed. Do not copy checksum values from a different data vintage.
 
-## 6. Expected outputs
+## 7. Expected outputs
 
 | Path | Contents |
 |---|---|
@@ -156,16 +187,16 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
 
-## 7. GitHub Actions
+## 8. GitHub Actions
 
 The workflow performs static repository checks, including required-file checks, expected script commands, and documentation paths. It does not run Stata, execute the regressions, or verify numerical results because a licensed Stata runtime is not configured in GitHub Actions.
 
 A successful workflow run therefore confirms only that the static repository checks passed.
 
-## 8. Reproducibility and source vintages
+## 9. Reproducibility and source vintages
 
 The BIS and World Bank sources may revise historical observations. The source files used for an analysis should be retained with their checksums and retrieval date. If the data are refreshed, regenerate the outputs and record the new data vintage. Results from different vintages should not be silently mixed.
 
-## 9. Interpretation
+## 10. Interpretation
 
 The regressions estimate predictive associations. Country fixed effects, outcome-year fixed effects and country-clustered standard errors do not establish causality. The BIS credit-to-GDP gap is a financial-cycle indicator, not an exogenous credit-supply or monetary-policy shock.
