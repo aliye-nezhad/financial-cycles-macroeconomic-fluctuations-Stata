@@ -79,7 +79,7 @@ Source documentation, download instructions, transformations, and attribution re
 
 ## Reproducing the project
 
-A licensed installation of Stata 15.1 or later is required. The project uses built-in Stata commands and does not require user-written ado packages.
+A licensed installation of Stata 15.1 or later is required. The main analysis and supplementary measurement diagnostics use built-in Stata commands. The optional wild cluster bootstrap diagnostic requires David Roodman's user-written `boottest` package.
 
 Clone the repository and change the working directory to its root:
 
