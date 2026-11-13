@@ -146,5 +146,6 @@ The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched t
 - [x] Linked WDI current-LCU source downloaded, validated and checksum recorded.
 - [x] BIS-implied nominal-GDP denominator compared with linked WDI levels and annual growth.
 - [x] Execute the linked nominal-GDP country-year outlier audit. The Stata 17 run on 13 November 2026 generated both top-20 discrepancy tables, the 43-country summary, the processed country-audit dataset, and all five figures in PNG and GPH formats; the final output-existence checks passed.
-- [ ] Visually inspect all five validation figures, confirm legibility and consistency with the numerical tables, and commit the reviewed outputs.
+- [x] Visually inspect all five linked nominal-GDP validation figures; labels are legible, exports are separate, and the monochrome styling is consistent.
+- [ ] Rerun the corrected audit do-file to regenerate the two top-20 CSVs with only relevant fields, then commit the reviewed linked-validation outputs.
 - [ ] Run the balanced-panel cross-source sensitivity described in [docs/RESULTS.md](RESULTS.md): 31 economies over 1990–2024 and all 43 economies over the common 2006–2024 level period (2007–2024 for growth).
