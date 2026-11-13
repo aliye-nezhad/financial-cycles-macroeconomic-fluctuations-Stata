@@ -1,6 +1,7 @@
 # Source-data vintage
 
 - Retrieved (UTC): 2026-11-13 09:01:59
+- World Bank WDI last-updated date shown in both downloaded CSV files: 2026-11-11
 - BIS dataset: WS_CREDIT_GAP, series key Q..P.A.C, 1990-Q1 to 2024-Q4
 - World Bank GDP growth: NY.GDP.MKTP.KD.ZG
 - World Bank CPI inflation: FP.CPI.TOTL.ZG
