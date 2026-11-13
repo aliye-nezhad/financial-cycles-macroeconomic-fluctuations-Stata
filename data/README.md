@@ -158,7 +158,7 @@ On Windows, `replication/download_nominal_gdp.ps1` downloads and validates the W
 
 The validation reports country-year coverage, within-country ratios between the BIS-implied and WDI GDP levels, annual log-growth differences, mean absolute error, root mean squared error, and the correlation between the two growth series. Raw LCU level ratios are reported by country because currency units are not comparable across countries. A country-specific median scale factor is used to assess whether the level ratio is stable over time; it is not used to alter either source series.
 
-The validation uses a separately retrieved WDI vintage. Its retrieval date and source update date must be considered when interpreting differences from the GDP-growth series used in the main regressions. It does not overwrite the original GDP-growth or CPI source archives.
+The validation uses a separately retrieved WDI vintage. Its retrieval date and source update date must be considered when interpreting differences from the GDP-growth series used in the main regressions. It does not overwrite the original GDP-growth or CPI source archives. The World Bank series is compiled from country official statistics, national statistical organizations and central banks, OECD national-accounts files, and World Bank staff estimates. It is a separate published series, but its underlying national-accounts inputs may overlap with those used by the BIS; treat the exercise as a cross-source consistency check, not proof of fully independent underlying measurement.
 
 Official references:
 
