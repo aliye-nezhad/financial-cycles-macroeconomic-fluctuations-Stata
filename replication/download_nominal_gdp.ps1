@@ -86,6 +86,47 @@ function Test-WbWideCsv {
     }
 }
 
+function Test-WbArchive {
+    param(
+        [Parameter(Mandatory = $true)][string]$ArchivePath,
+        [Parameter(Mandatory = $true)][string]$ExpectedCsvPattern,
+        [Parameter(Mandatory = $true)][string]$CanonicalCsvPath
+    )
+
+    if (-not (Test-Path -LiteralPath $ArchivePath -PathType Leaf)) {
+        throw "World Bank source archive is missing: $ArchivePath"
+    }
+
+    $temporaryRoot = Join-Path $env:TEMP ("wb-archive-verify-" + [guid]::NewGuid().ToString("N"))
+    New-Item -ItemType Directory -Path $temporaryRoot -Force | Out-Null
+
+    try {
+        Expand-Archive -LiteralPath $ArchivePath -DestinationPath $temporaryRoot -Force
+        $csvMatches = @(
+            Get-ChildItem -LiteralPath $temporaryRoot -Recurse -File |
+            Where-Object {
+                $_.Name -like $ExpectedCsvPattern -and
+                $_.Name -notmatch "Metadata"
+            }
+        )
+
+        if ($csvMatches.Count -ne 1) {
+            throw "Expected exactly one $ExpectedCsvPattern data CSV in the retained archive; found $($csvMatches.Count)."
+        }
+
+        $archiveCsvHash = (Get-FileHash -LiteralPath $csvMatches[0].FullName -Algorithm SHA256).Hash
+        $canonicalCsvHash = (Get-FileHash -LiteralPath $CanonicalCsvPath -Algorithm SHA256).Hash
+        if ($archiveCsvHash -ne $canonicalCsvHash) {
+            throw "The canonical World Bank CSV does not match the data member retained in the source archive."
+        }
+    }
+    finally {
+        if (Test-Path -LiteralPath $temporaryRoot) {
+            Remove-Item -LiteralPath $temporaryRoot -Recurse -Force
+        }
+    }
+}
+
 try {
     $shouldDownload = ($Refresh -eq "1") -or
         (-not (Test-Path -LiteralPath $archivePath -PathType Leaf)) -or
@@ -94,6 +135,7 @@ try {
     if (-not $shouldDownload) {
         try {
             Test-WbWideCsv -Path $csvPath -ExpectedIndicatorCode $indicatorCode -RequiredYears $requiredYears
+    Test-WbArchive -ArchivePath $archivePath -ExpectedCsvPattern $expectedCsvPattern -CanonicalCsvPath $csvPath
             Write-Host "Preserving existing validated World Bank source CSV."
         }
         catch {
