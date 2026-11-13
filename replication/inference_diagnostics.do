@@ -17,7 +17,7 @@ set more off
 set linesize 100
 capture log close _all
 
-if real(c(stata_version)) < 18 {
+if c(stata_version) < 18 {
     display as error "This diagnostic requires Stata 18 or later."
     display as text "The main analysis remains available in Stata 15.1 or later."
     exit 9
