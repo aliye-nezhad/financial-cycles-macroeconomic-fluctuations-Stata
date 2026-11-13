@@ -291,9 +291,10 @@ display as text "Within-country nominal-GDP level comparison"
 display as text "Raw level ratios are reported by country; pooled LCU levels across countries are not comparable."
 display as text "The following statistic measures deviations from each country's median implied/WDI level ratio."
 summarize scale_adjusted_pct_deviation if level_overlap, detail
-generate double absolute_scale_adjusted_deviation = ///
+* Keep generated variable names within Stata's 32-character limit.
+generate double abs_scale_adj_dev = ///
     abs(scale_adjusted_pct_deviation) if level_overlap
-summarize absolute_scale_adjusted_deviation if level_overlap, detail
+summarize abs_scale_adj_dev if level_overlap, detail
 
 display as text "------------------------------------------------------------"
 display as text "Annual nominal-GDP log-growth comparison"
@@ -327,13 +328,13 @@ collapse (count) level_observations=level_ratio ///
                  growth_observations=growth_difference ///
          (mean) mean_growth_difference=growth_difference ///
          (median) median_level_ratio=level_ratio ///
-                  median_absolute_growth_difference=absolute_growth_difference ///
-                  median_absolute_scale_deviation=absolute_scale_adjusted_deviation, ///
+                  median_abs_growth_diff=absolute_growth_difference ///
+                  median_absolute_scale_deviation=abs_scale_adj_dev, ///
          by(iso3c)
 
 sort iso3c
 list iso3c level_observations growth_observations median_level_ratio ///
-    mean_growth_difference median_absolute_growth_difference ///
+    mean_growth_difference median_abs_growth_diff ///
     median_absolute_scale_deviation, noobs abbreviate(24) separator(0)
 
 export delimited using "outputs/tables/nominal_gdp_validation_by_country.csv", replace
