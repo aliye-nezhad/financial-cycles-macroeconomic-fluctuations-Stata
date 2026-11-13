@@ -159,7 +159,7 @@ The Stata script retains 1989–2024, computes annual log changes in nominal GDP
 
 Do not pool or compare nominal LCU levels across countries: the currency units differ. The raw level ratio is therefore reported by country. The country-specific median ratio absorbs a constant unit-scale difference only for the purpose of assessing whether the ratio is stable over time; it does not rescale or replace either source series. Annual log-growth comparisons are invariant to a constant currency-unit scale.
 
-This is an independent measurement check, not an additional regression or a causal test. Differences may reflect national-account definitions, revisions, currency redenominations, coverage, or source-vintage differences. Review the recorded WDI update date and retrieval metadata before interpreting discrepancies. The new WDI download does not overwrite the GDP-growth or CPI archives used by the main analysis.
+This is a cross-source measurement check, not an additional regression or a causal test. The World Bank series is compiled from country official statistics, national statistical organizations and central banks, OECD national-accounts files, and World Bank staff estimates; its underlying national-accounts inputs may overlap with those used by the BIS. Differences may reflect national-account definitions, revisions, currency redenominations, coverage, or source-vintage differences. Review the recorded WDI update date and retrieval metadata before interpreting discrepancies. The new WDI download does not overwrite the GDP-growth or CPI archives used by the main analysis.
 
 Expected outputs:
 
