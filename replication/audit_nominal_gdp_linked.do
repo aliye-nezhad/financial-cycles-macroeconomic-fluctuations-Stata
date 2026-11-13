@@ -173,6 +173,7 @@ twoway ///
         color(gs6) size(small)) ///
     xtitle("BIS-implied nominal GDP growth (%)") ///
     ytitle("World Bank linked nominal GDP growth (%)") ///
+    xscale(range(-25 115)) yscale(range(-25 115)) aspect(1) ///
     xlabel(-20(20)100, labsize(small)) ///
     ylabel(-20(20)100, labsize(small) angle(horizontal)) ///
     legend(order(1 "Country-year observations" ///
