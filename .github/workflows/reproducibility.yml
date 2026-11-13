@@ -57,6 +57,9 @@ jobs:
             replication/run_analysis.do \
             replication/validate_nominal_gdp.do \
             replication/validate_balanced_panel_samples.do; do
+            replication/audit_nominal_gdp_linked.do \
+            replication/download_linked_nominal_gdp.ps1 \
+            replication/validate_nominal_gdp_linked.do \
             if [[ ! -s "$path" ]]; then
               echo "::error::Missing or empty required file: $path"
               exit 1
@@ -76,6 +79,9 @@ jobs:
           grep -Fq "replication/inference_diagnostics.do" README.md
           grep -Fq "replication/denominator_diagnostic.do" README.md
           grep -Fq "replication/validate_nominal_gdp.do" README.md
+          grep -Fq "replication/validate_nominal_gdp_linked.do" README.md
+          grep -Fq "replication/audit_nominal_gdp_linked.do" README.md
+          grep -Fq "replication/download_linked_nominal_gdp.ps1" data/README.md
           grep -Fq "replication/balanced_panel_sensitivity.do" README.md
           grep -Fq "replication/validate_balanced_panel_samples.do" README.md
 
@@ -121,6 +127,14 @@ jobs:
           grep -Fq "NY.GDP.MKTP.CN" replication/validate_nominal_gdp.do
           grep -Fq "download_nominal_gdp.ps1" replication/validate_nominal_gdp.do
           grep -Fq "NY.GDP.MKTP.CN" replication/download_nominal_gdp.ps1
+          grep -Fq "NY.GDP.MKTP.CN.AD" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "Indicator Code" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "Archive SHA-256" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "CSV SHA-256" replication/download_linked_nominal_gdp.ps1
+          grep -Fq "NY.GDP.MKTP.CN.AD" replication/validate_nominal_gdp_linked.do
+          grep -Fq "download_linked_nominal_gdp.ps1" replication/validate_nominal_gdp_linked.do
+          grep -Fq "nominal_gdp_linked_level_outliers_top20.csv" replication/audit_nominal_gdp_linked.do
+          grep -Fq "nominal_gdp_linked_growth_outliers_top20.csv" replication/audit_nominal_gdp_linked.do
           grep -Fq "download_denominator_sources.ps1" replication/denominator_diagnostic.do
           if grep -Fq "need_download" replication/denominator_diagnostic.do; then
             echo "::error::Obsolete need_download logic remains in denominator_diagnostic.do"
@@ -228,20 +242,63 @@ jobs:
             }
           }
 
-          .\replication\download_nominal_gdp.ps1
+          function Assert-WdiSource {
+            param(
+              [string]$Indicator,
+              [string]$CsvPath,
+              [string]$ArchivePath,
+              [string]$MetadataPath
+            )
 
-          $nominalGdpCsv = "data/raw/wb_gdp_current_lcu.csv"
-          $nominalGdpArchive = "data/raw/wb_gdp_current_lcu.zip"
-          $nominalGdpMetadata = "data/raw/wb_gdp_current_lcu_metadata.txt"
+            foreach ($path in @($CsvPath, $ArchivePath, $MetadataPath)) {
+              if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
+                throw "Missing World Bank source artifact: $path"
+              }
+            }
 
-          foreach ($path in @($nominalGdpCsv, $nominalGdpArchive, $nominalGdpMetadata)) {
-            if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
-              throw "Missing World Bank nominal-GDP source artifact: $path"
+            if ((Get-Item -LiteralPath $CsvPath).Length -lt 1000) {
+              throw "World Bank CSV is unexpectedly small: $CsvPath"
+            }
+
+            $metadata = Get-Content -LiteralPath $MetadataPath -Raw
+            if ($metadata -notmatch "(?m)^Indicator: $([regex]::Escape($Indicator))$") {
+              throw "Metadata does not identify the expected indicator $Indicator."
+            }
+
+            $actualCsvHash = (Get-FileHash -LiteralPath $CsvPath -Algorithm SHA256).Hash
+            $actualArchiveHash = (Get-FileHash -LiteralPath $ArchivePath -Algorithm SHA256).Hash
+            if ($metadata -notmatch "(?m)^CSV SHA-256: $actualCsvHash$") {
+              throw "CSV checksum in metadata does not match $CsvPath."
+            }
+            if ($metadata -notmatch "(?m)^Archive SHA-256: $actualArchiveHash$") {
+              throw "Archive checksum in metadata does not match $ArchivePath."
             }
           }
 
-          if ((Get-Item -LiteralPath $nominalGdpCsv).Length -lt 1000) {
-            throw "World Bank nominal-GDP CSV is unexpectedly small."
+          .\replication\download_nominal_gdp.ps1
+          $nominalMetaBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu_metadata.txt" -Algorithm SHA256).Hash
+          $nominalCsvBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu.csv" -Algorithm SHA256).Hash
+          $nominalArchiveBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu.zip" -Algorithm SHA256).Hash
+          Assert-WdiSource -Indicator "NY.GDP.MKTP.CN" -CsvPath "data/raw/wb_gdp_current_lcu.csv" -ArchivePath "data/raw/wb_gdp_current_lcu.zip" -MetadataPath "data/raw/wb_gdp_current_lcu_metadata.txt"
+          .\replication\download_nominal_gdp.ps1
+          $nominalMetaAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu_metadata.txt" -Algorithm SHA256).Hash
+          $nominalCsvAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu.csv" -Algorithm SHA256).Hash
+          $nominalArchiveAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_current_lcu.zip" -Algorithm SHA256).Hash
+          if ($nominalMetaBefore -ne $nominalMetaAfter -or $nominalCsvBefore -ne $nominalCsvAfter -or $nominalArchiveBefore -ne $nominalArchiveAfter) {
+            throw "The unlinked WDI downloader changed validated source files or provenance metadata on a no-refresh rerun."
           }
 
-          Write-Host "Windows BIS and World Bank supplementary source checks passed."
+          .\replication\download_linked_nominal_gdp.ps1
+          $linkedMetaBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu_metadata.txt" -Algorithm SHA256).Hash
+          $linkedCsvBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu.csv" -Algorithm SHA256).Hash
+          $linkedArchiveBefore = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu.zip" -Algorithm SHA256).Hash
+          Assert-WdiSource -Indicator "NY.GDP.MKTP.CN.AD" -CsvPath "data/raw/wb_gdp_linked_current_lcu.csv" -ArchivePath "data/raw/wb_gdp_linked_current_lcu.zip" -MetadataPath "data/raw/wb_gdp_linked_current_lcu_metadata.txt"
+          .\replication\download_linked_nominal_gdp.ps1
+          $linkedMetaAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu_metadata.txt" -Algorithm SHA256).Hash
+          $linkedCsvAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu.csv" -Algorithm SHA256).Hash
+          $linkedArchiveAfter = (Get-FileHash -LiteralPath "data/raw/wb_gdp_linked_current_lcu.zip" -Algorithm SHA256).Hash
+          if ($linkedMetaBefore -ne $linkedMetaAfter -or $linkedCsvBefore -ne $linkedCsvAfter -or $linkedArchiveBefore -ne $linkedArchiveAfter) {
+            throw "The linked WDI downloader changed validated source files or provenance metadata on a no-refresh rerun."
+          }
+
+          Write-Host "Windows BIS and World Bank source checks, including linked GDP and downloader idempotence, passed."
