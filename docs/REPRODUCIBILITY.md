@@ -126,6 +126,8 @@ This supplementary script downloads four additional BIS series when the files ar
 - `WS_TC` private non-financial-sector credit stock in domestic currency (dataflow 2.0; all lenders, market valuation, adjusted for breaks, `UNIT_TYPE=XDC`);
 - `WS_TC` credit-to-GDP ratio (same dimensions, `UNIT_TYPE=770`).
 
+The `UNIT_TYPE` code `770` is numeric in the source CSV. Because `insheet` may infer this column as numeric, the do-file converts it to a string before applying the dimension filter; this avoids a string/numeric type mismatch across Stata imports.
+
 The BIS defines the credit-to-GDP ratio as end-of-quarter outstanding credit divided by the sum of nominal GDP over the previous four quarters. The script therefore reconstructs the four-quarter nominal-GDP denominator as `100 × credit stock / credit-to-GDP ratio`. At Q4, the denominator corresponds to calendar-year nominal GDP. The underlying nominal-GDP series is reconstructed from BIS credit and ratio data; it is not a separately published BIS GDP series.
 
 Before estimation, the script compares the WS_TC ratio with the WS_CREDIT_GAP actual ratio and checks that actual ratio minus trend reproduces the published gap. If either source comparison differs by more than 0.10 percentage points, the script stops before estimating the component regressions. Resolve the source-vintage or series mismatch first; the files must represent compatible data vintages.
