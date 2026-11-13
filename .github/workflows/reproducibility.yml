@@ -46,6 +46,7 @@ jobs:
             docs/RESEARCH_DESIGN.md \
             docs/LITERATURE_NOTES.md \
             docs/REPRODUCIBILITY.md \
+            docs/RESEARCH_NOTE_DRAFT.md \
             docs/RESULTS.md \
             outputs/README.md \
             replication/balanced_panel_sensitivity.do \
@@ -75,6 +76,7 @@ jobs:
           grep -Fq "docs/RESEARCH_DESIGN.md" README.md
           grep -Fq "docs/LITERATURE_NOTES.md" README.md
           grep -Fq "docs/REPRODUCIBILITY.md" README.md
+          grep -Fq "docs/RESEARCH_NOTE_DRAFT.md" README.md
           grep -Fq "docs/RESULTS.md" README.md
           grep -Fq "replication/inference_diagnostics.do" README.md
           grep -Fq "replication/denominator_diagnostic.do" README.md
