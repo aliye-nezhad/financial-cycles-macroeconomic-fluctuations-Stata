@@ -2,7 +2,7 @@
 
 ## Source files
 
-The analysis uses three public source datasets:
+The main analysis uses three public source datasets. The optional denominator diagnostic adds four supplementary BIS series, documented below:
 
 | Local file | Source | Series |
 |---|---|---|
