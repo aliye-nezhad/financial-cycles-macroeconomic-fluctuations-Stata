@@ -31,7 +31,7 @@ These are predictive regressions, not causal designs. The BIS gap is an indicato
 
 ## Data
 
-The provisional observation window is 1990–2024. The BIS reports 44 economies in its credit-gap dataset; the euro-area aggregate is excluded so that the analytical sample contains at most 43 individual economies. The actual unbalanced-panel sample is determined by the intersection of available BIS and World Bank observations after validation.
+The observation window is 1990–2024. The BIS reports 44 economies in its credit-gap dataset; the euro-area aggregate is excluded so that the analytical sample contains 43 individual economies. The downloaded vintage contains 1,377 Q4 country-year observations. After requiring current and previous-year GDP growth, inflation and the future outcome, the one-year-ahead complete-case sample contains 1,310 observations; see the data audit for the full horizon-specific counts.
 
 | Variable | Source | Indicator or series |
 |---|---|---|
