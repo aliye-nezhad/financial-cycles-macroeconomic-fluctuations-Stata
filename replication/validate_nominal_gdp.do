@@ -120,16 +120,40 @@ if _rc {
     exit 111
 }
 
-keep v1 v2 v34-v69
+* Retain the ISO3 code and the 1989-2024 year columns only.
+* The first remaining CSV row is the column header, not a country.
+* Drop it explicitly before converting the annual values to numeric.
+keep v2 v34-v69
+
+count if trim(v2) == "Country Code"
+if r(N) != 1 {
+    display as error "Expected exactly one World Bank CSV header row; found " r(N) "."
+    log close validation_main_log
+    exit 459
+}
+drop if trim(v2) == "Country Code"
+
 rename v2 iso3c
+drop if missing(iso3c)
+
+* WDI represents unavailable observations as "..". Convert that marker
+* to Stata missing, then destring every year column so all reshape
+* variables have the same numeric storage type.
+foreach yearvar of varlist v34-v69 {
+    capture confirm string variable `yearvar'
+    if !_rc {
+        replace `yearvar' = "" if trim(`yearvar') == ".."
+        destring `yearvar', replace
+    }
+}
+
+isid iso3c
 
 forvalues y = 1989/2024 {
     local source_column = `y' - 1955
     rename v`source_column' v`y'
 }
 
-drop if missing(iso3c)
-isid iso3c
 reshape long v, i(iso3c) j(year)
 rename v wb_nominal_gdp_lcu
 
