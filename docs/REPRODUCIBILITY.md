@@ -98,7 +98,7 @@ Get-Content (Join-Path $plus "b\boottest.mata") -TotalCount 1
 Write-Host "Backup of replaced files: $backup"
 ```
 
-The `PLUS` directory can be confirmed in Stata with `sysdir`; adjust `$plus` if your PLUS path differs. The two version lines printed at the end should identify the same release. Do not mix `boottest.ado`, `boottest.mata` and `lboottest.mlib` from different releases.
+The `PLUS` directory can be confirmed in Stata with `sysdir`; adjust `$plus` if your PLUS path differs. For the v4.5.3 installation block above, both version lines should identify v4.5.3. More generally, use the official tagged release as the authority: the upstream v4.1.0 tag, for example, intentionally contains `boottest.ado` 4.1.0 and `boottest.mata` 4.0.3. Different header numbers alone therefore do not establish that files were mixed. Do not combine files or a compiled Mata library from different tagged releases.
 
 The diagnostic checks for these files and loads the installed Mata source before estimating the models. This order matters: loading the Mata source after estimation can remove the active estimation results.
 
@@ -108,7 +108,7 @@ After running `replication/run_analysis.do`, execute:
 do replication/inference_diagnostics.do
 ```
 
-The supplementary script reloads the processed panel and estimates the baseline and asymmetric one-year-ahead fixed-effects models. It applies 9,999 Rademacher wild cluster bootstrap replications at the country level to (i) the baseline credit-gap coefficient, (ii) the positive-gap coefficient, (iii) the negative-gap coefficient, and (iv) the equality of the positive- and negative-gap slopes. Fixed random seeds are recorded in the do-file.
+The supplementary script reloads the processed panel and estimates the baseline and asymmetric one-year-ahead fixed-effects models. It applies 9,999 Rademacher wild cluster bootstrap replications at the country level to (i) the baseline credit-gap coefficient, (ii) the positive-gap coefficient, (iii) the negative-gap coefficient, and (iv) the equality of the positive- and negative-gap slopes. If `denominator_diagnostic.do` has already generated `data/processed/denominator_components_panel.dta`, the same script also tests the matched-sample baseline credit-gap coefficient, the nominal-credit-growth coefficient, the implied nominal-GDP-growth coefficient, and the joint null that both component coefficients equal zero. The component tests use the exact common sample and specifications reported by the denominator diagnostic. Fixed random seeds are recorded in the do-file.
 
 This diagnostic is optional and does not alter the main estimates or the Stata 15.1-compatible workflow. The output is written to `outputs/tables/wild_cluster_bootstrap.txt`. Report bootstrap results alongside, not as a silent replacement for, the conventional country-clustered estimates.
 
@@ -132,7 +132,7 @@ The BIS defines the credit-to-GDP ratio as end-of-quarter outstanding credit div
 
 Before estimation, the script compares the WS_TC ratio with the WS_CREDIT_GAP actual ratio and checks that actual ratio minus trend reproduces the published gap. If either source comparison differs by more than 0.10 percentage points, the script stops before estimating the component regressions. Resolve the source-vintage or series mismatch first; the files must represent compatible data vintages.
 
-The script then calculates annual log changes in nominal credit, the implied nominal-GDP denominator, and the credit-to-GDP ratio. It estimates a matched-sample baseline gap model and a joint component model with nominal credit growth and implied nominal-GDP growth, country fixed effects, outcome-year fixed effects, lagged real GDP growth, and country-clustered standard errors. Current real GDP growth and CPI inflation are omitted from the joint component model because nominal GDP growth already combines real activity and price movements. The specification is a diagnostic of predictive components, not a causal decomposition.
+The script then calculates annual log changes in nominal credit, the implied nominal-GDP denominator, and the credit-to-GDP ratio. It estimates a matched-sample baseline gap model and a joint component model with nominal credit growth and implied nominal-GDP growth, country fixed effects, outcome-year fixed effects, lagged real GDP growth, and country-clustered standard errors. Current real GDP growth and CPI inflation are omitted from the joint component regression; the common matched sample nevertheless requires those variables so that the baseline and component specifications are compared on the same observations. The component model is a diagnostic of predictive associations, not a causal decomposition.
 
 Outputs are written to:
 
