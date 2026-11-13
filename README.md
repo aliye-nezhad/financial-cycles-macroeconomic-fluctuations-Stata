@@ -115,7 +115,7 @@ The complete Stata analysis was executed on 13 November 2026. The one-, two- and
 
 The latest analysis run generated all four figures separately, along with the expected tables, processed dataset and logs; the output-existence checks passed. These local outputs have not yet been committed, and the four PNGs still require visual inspection. The optional [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) has produced baseline and asymmetric tests with 9,999 Rademacher replications, but its installed ado and Mata components are different versions; rerun it after installing one consistent release. The supplementary [denominator diagnostic](replication/denominator_diagnostic.do) has now been added but not yet executed. It uses BIS credit stocks and credit-to-GDP ratios to reconstruct the nominal-GDP denominator and test whether the main predictive association is more closely related to credit growth, denominator growth, or both.
 
-All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity; it does not execute Stata or verify numerical estimates.
+All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity and tests the supplementary BIS downloader on Windows. It does not execute Stata or verify numerical estimates.
 
 ## Data attribution
 
