@@ -133,6 +133,8 @@ jobs:
           grep -Fq "CSV SHA-256" replication/download_linked_nominal_gdp.ps1
           grep -Fq "NY.GDP.MKTP.CN.AD" replication/validate_nominal_gdp_linked.do
           grep -Fq "download_linked_nominal_gdp.ps1" replication/validate_nominal_gdp_linked.do
+          grep -Fq 'trim(v4) != "NY.GDP.MKTP.CN.AD"' replication/validate_nominal_gdp_linked.do
+          grep -Fq 'trim(v4) != "NY.GDP.MKTP.CN"' replication/validate_nominal_gdp.do
           grep -Fq "nominal_gdp_linked_level_outliers_top20.csv" replication/audit_nominal_gdp_linked.do
           grep -Fq "nominal_gdp_linked_growth_outliers_top20.csv" replication/audit_nominal_gdp_linked.do
           grep -Fq "download_denominator_sources.ps1" replication/denominator_diagnostic.do
