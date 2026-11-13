@@ -373,6 +373,9 @@ display as result "Maximum absolute gap-reconstruction error (percentage points)
 display as text "Matched Q4 panel and denominator-component coverage"
 count if !missing(credit_stock_local, credit_gdp_ratio_tc, implied_nominal_gdp_4q)
 count if component_sample
+egen byte component_country_tag = tag(panel_id) if component_sample
+count if component_country_tag == 1
+drop component_country_tag
 
 display as text "Annual log changes, common matched regression sample"
 summarize credit_growth_nominal nominal_gdp_growth_implied ratio_growth_log ///
