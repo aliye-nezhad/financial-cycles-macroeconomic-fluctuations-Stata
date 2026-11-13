@@ -28,11 +28,11 @@ This is a focused literature map rather than a claim to have completed a systema
 
 The credit-to-GDP gap is built from a ratio whose denominator is GDP. As a result, movements in GDP can affect the measured credit-to-GDP ratio even when the numerator does not change proportionately. Drehmann and Yetman (2021) discuss this criticism explicitly, alongside concerns about HP-filter dynamics and endpoint behavior. This is not a minor footnote: it is a central reason to interpret the estimates as predictive associations rather than causal effects.
 
-The baseline therefore controls for current GDP growth and its one-year lag, in addition to inflation, country fixed effects and outcome-year fixed effects. These controls do not eliminate the denominator issue or establish exogeneity. A separate real-credit-growth robustness measure may be considered if a consistent BIS credit-stock series can be acquired and validated without compromising the project's scope.
+The baseline therefore controls for current GDP growth and its one-year lag, in addition to inflation, country fixed effects and outcome-year fixed effects. These controls do not eliminate the denominator issue or establish exogeneity. In the downloaded WDI vintage, CPI inflation is missing for Argentina from 1994 through 2017 (24 country-year observations); a no-inflation sensitivity model assesses the effect of this concentrated sample loss. The Q4 gap distribution also contains extreme observations for Ireland and Luxembourg. The baseline retains both countries, while separate influence checks exclude Ireland, Luxembourg, and both jointly. Ireland's GDP denominator deserves particular caution because the Irish Central Statistics Office documents large globalisation-related distortions in GDP and publishes modified GNI (GNI*) to exclude specified effects. See docs/DATA_AUDIT.md for the observations and source references.
 
 ## Data and sample
 
-The provisional outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving at most 43 country units. The final sample is unbalanced and is determined by the overlap of BIS and World Bank observations.
+The provisional outcome window is 1990–2024. The BIS credit-gap dataset covers 44 economies, including the euro-area aggregate. The aggregate is excluded to avoid double-counting countries represented individually, leaving at most 43 country units. The preliminary source-data audit confirms 43 individual economies and 1,377 Q4 country-year observations. The panel is unbalanced: 31 countries have Q4 observations for all years from 1990 through 2024, while 12 begin later. The one-year-ahead complete-case sample has 1,310 observations across all 43 countries; the two- and three-year-ahead samples have 1,267 and 1,224 observations, respectively. See docs/DATA_AUDIT.md for country coverage, missingness, data distributions and pre-estimation sample counts.
 
 ### Main variables
 
@@ -107,16 +107,18 @@ The equality of the two slopes is tested directly. A negative gap is not automat
 2. Re-estimate the one-year-ahead specification after excluding outcome years 2020 and 2021, to assess sensitivity to the pandemic period.
 3. Report the one-, two- and three-year-ahead estimates separately rather than treating the overlapping horizons as independent observations in a pooled regression.
 4. Compare the baseline with a specification omitting the lagged GDP-growth control, to show whether the main coefficient is sensitive to additional conditioning for output-growth persistence.
+5. Omit the CPI control to recover the Argentina observations missing from the WDI inflation series.
+6. Re-estimate the one-year model excluding Ireland, Luxembourg, and both jointly as influence diagnostics. These are sensitivities, not preferred sample definitions.
 
 The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators merely to increase the number of procedures. Any additional estimator must be motivated by the research question and the properties of the data.
 
 ## Interpretation and limitations
 
 1. **No causal identification.** Credit gaps can respond to expected output, financial conditions, policy, and other shocks. Country and year fixed effects do not eliminate all time-varying confounding or reverse causality.
-2. **Measurement.** The BIS gap is a generated indicator based on a one-sided HP trend. It is not directly observed and may be revised as the source data are updated.
+2. **Measurement.** The BIS gap is a generated indicator based on a one-sided HP trend. It is not directly observed and may be revised as the source data are updated. The retrieved sample contains extreme values, including large positive gaps for Luxembourg and large negative gaps for Ireland; these are retained in the baseline and examined through influence sensitivities.
 3. **Credit composition.** The measure includes household and non-financial corporate borrowing and all lender sectors. It cannot isolate bank lending, household debt, corporate debt, or speculative credit allocation.
 4. **Cross-country comparability.** BIS harmonization improves comparability, but national data sources and institutional settings still differ.
-5. **Unbalanced coverage.** The effective sample may vary by horizon and specification. Observation counts, country counts and year coverage must be reported for every model.
+5. **Unbalanced coverage.** The effective sample may vary by horizon and specification. In the retrieved vintage, CPI is missing for Argentina in 1994–2017, and observation coverage starts later than 1990 for 12 countries. Observation counts, country counts and year coverage must be reported for every model.
 6. **Inference.** Country clustering is appropriate for within-country dependence, but the effective number of clusters and sample composition must be reported. Robustness of inference should be discussed rather than assumed.
 7. **Outcome scope.** The main outcome is real GDP growth. The title refers to macroeconomic fluctuations broadly, but the empirical analysis does not claim to measure every dimension of macroeconomic volatility.
 
