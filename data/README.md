@@ -159,6 +159,8 @@ Source/API endpoint:
 
 The files and outputs from this first pass use the `wb_gdp_current_lcu` and `nominal_gdp_validation` prefixes. Do not interpret its largest growth discrepancies as evidence of a BIS denominator construction error without checking the linked series.
 
+The Windows helper `replication/download_nominal_gdp.ps1` validates the indicator code, required annual columns, extracted archive member, and source-file checksums. On a no-refresh rerun, it preserves the original retrieval metadata when the stored hashes still match. If existing files have no verifiable metadata, it records the retrieval date as unknown rather than substituting the date on which metadata was generated.
+
 ### Preferred linked current-LCU series
 
 The preferred supplementary script is `replication/validate_nominal_gdp_linked.do`. It uses WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU). The World Bank explicitly describes this series as linked to produce a consistent time series and counteract breaks due to changes in base years, source data and methodologies. It remains a current-price nominal GDP series in local currency; it is not a real GDP measure.
@@ -171,7 +173,7 @@ Source/API endpoint:
 
 `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CN.AD?source=2&downloadformat=csv`
 
-On Windows, `replication/download_linked_nominal_gdp.ps1` downloads and validates the WDI archive, retains the ZIP and canonical extracted CSV, and records the retrieval date, the World Bank update date when available, and SHA-256 hashes in `data/raw/wb_gdp_linked_current_lcu_metadata.txt`. The Stata script retains 1990–2024 and matches the series to the 43-country BIS panel by ISO3 code. The first annual growth observation is 1991 because a preceding 1990 level is required.
+On Windows, `replication/download_linked_nominal_gdp.ps1` downloads and validates the WDI archive, checks the indicator code and required annual columns in the extracted CSV, retains the ZIP and canonical CSV, and records source metadata and SHA-256 hashes in `data/raw/wb_gdp_linked_current_lcu_metadata.txt`. A no-refresh rerun preserves that metadata when the recorded hashes match the source files; it does not reset the retrieval date. If files predate verifiable metadata, the helper records the original retrieval date as unknown. The Stata script also checks the indicator code before reshaping, retains 1990–2024, and matches the series to the 43-country BIS panel by ISO3 code. The first annual growth observation is 1991 because a preceding 1990 level is required.
 
 The validation reports country-year coverage, within-country ratios between the BIS-implied and WDI GDP levels, annual log-growth differences, mean absolute error, root mean squared error, and the correlation between the two growth series. Raw LCU level ratios are reported by country because currency units are not comparable across countries. A country-specific median scale factor is used to assess whether the level ratio is stable over time; it does not rescale or replace either source series.
 
