@@ -307,16 +307,17 @@ Linux, macOS or Git Bash:
 ```bash
 sha256sum data/raw/wb_gdp_current_lcu.zip data/raw/wb_gdp_current_lcu.csv > data/unlinked_nominal_gdp.sha256
 sha256sum data/raw/wb_gdp_linked_current_lcu.zip data/raw/wb_gdp_linked_current_lcu.csv > data/linked_nominal_gdp.sha256
+sha256sum --check data/unlinked_nominal_gdp.sha256
 sha256sum --check data/linked_nominal_gdp.sha256
 ```
 
 Windows PowerShell:
 
 ```powershell
-Get-FileHash .\data\raw\\wb_gdp_current_lcu.zip -Algorithm SHA256
-Get-FileHash .\data\raw\\wb_gdp_current_lcu.csv -Algorithm SHA256
-Get-FileHash .\data\raw\\wb_gdp_linked_current_lcu.zip -Algorithm SHA256
-Get-FileHash .\data\raw\\wb_gdp_linked_current_lcu.csv -Algorithm SHA256
+Get-FileHash .\data\raw\wb_gdp_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\data\raw\wb_gdp_current_lcu.csv -Algorithm SHA256
+Get-FileHash .\data\raw\wb_gdp_linked_current_lcu.zip -Algorithm SHA256
+Get-FileHash .\data\raw\wb_gdp_linked_current_lcu.csv -Algorithm SHA256
 ```
 
 The per-source metadata files already store the archive and canonical-CSV hashes. Retain those files with the corresponding source vintage. Do not regenerate a retrieval date simply because a validation script was rerun.
