@@ -44,13 +44,6 @@ if _rc {
 }
 local boottest_mata `"`r(fn)'"'
 
-capture findfile lboottest.mlib
-if _rc {
-    display as error "lboottest.mlib was not found on the Stata ado-path."
-    display as text "Check the boottest installation before running this diagnostic."
-    exit 601
-}
-
 display as text "Stata version: " c(stata_version)
 display as text "Installed boottest ado-file:"
 which boottest
@@ -62,6 +55,13 @@ local mata_rc = _rc
 if `mata_rc' != 0 {
     display as error "Could not load the boottest Mata source."
     exit `mata_rc'
+}
+
+capture findfile lboottest.mlib
+if _rc {
+    display as error "The boottest Mata source ran, but lboottest.mlib was not created or found."
+    display as text "Check write access to the Stata PLUS directory."
+    exit 601
 }
 
 /***********************************************************************
