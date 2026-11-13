@@ -2,14 +2,15 @@
 
 ## Source files
 
-The main analysis uses three public source datasets. The optional denominator diagnostic adds four supplementary BIS series, and the independent denominator-validation diagnostic adds one World Bank nominal-GDP series:
+The main analysis uses three public source datasets. The optional denominator diagnostic adds four supplementary BIS series. The nominal-GDP validation work retains both the unlinked WDI current-LCU series as an archival comparison and the linked WDI current-LCU series as the preferred time-series benchmark:
 
 | Local file | Source | Series |
 |---|---|---|
 | bis_credit_gap.csv | Bank for International Settlements (BIS) | WS_CREDIT_GAP |
 | wb_gdp_growth.zip | World Bank, World Development Indicators | NY.GDP.MKTP.KD.ZG |
 | wb_cpi_inflation.zip | World Bank, World Development Indicators | FP.CPI.TOTL.ZG |
-| wb_gdp_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN (supplementary validation) |
+| wb_gdp_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN (unlinked current-LCU comparison) |
+| wb_gdp_linked_current_lcu.zip | World Bank, World Development Indicators | NY.GDP.MKTP.CN.AD (linked current-LCU validation) |
 
 The main-analysis source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. That workflow commits the main-analysis archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. The supplementary BIS components and nominal-GDP validation series use separate acquisition helpers and are not added to the main-analysis source vintage. Existing local raw archives are not overwritten unless the relevant refresh option is enabled.
 
@@ -148,21 +149,37 @@ The WDI files are distributed in wide format, with country identifiers followed 
 
 ## Independent nominal-GDP validation
 
-The supplementary `replication/validate_nominal_gdp.do` script compares the BIS-implied four-quarter nominal-GDP denominator with World Bank GDP in current local currency (WDI indicator `NY.GDP.MKTP.CN`). The World Bank defines this as GDP at current prices, expressed in local currency units; it is an annual nominal series and is not adjusted for price changes.
+### First-pass unlinked current-LCU series (archival comparison)
+
+The initial supplementary `replication/validate_nominal_gdp.do` script uses World Bank WDI indicator `NY.GDP.MKTP.CN` (GDP, current LCU). This is a valid current-price national-accounts series, but it is not linked across historical changes in national-accounts base years, source data and methodologies. The World Bank documents that such breaks can create artificial jumps in current-price GDP and derived growth rates. The first-pass results are therefore retained for transparency, but this unlinked series is not the preferred benchmark for time-series growth validation.
 
 Source/API endpoint:
 
 `https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CN?source=2&downloadformat=csv`
 
-On Windows, `replication/download_nominal_gdp.ps1` downloads and validates the WDI CSV archive, retains the archive and a canonical extracted CSV, and records retrieval date, the World Bank last-updated date when present, and SHA-256 hashes in `data/raw/wb_gdp_current_lcu_metadata.txt`. The Stata script retains 1989–2024, using 1989 to calculate the first available annual log change, and matches the WDI series to the project's 43-country BIS panel by ISO3 code.
+The files and outputs from this first pass use the `wb_gdp_current_lcu` and `nominal_gdp_validation` prefixes. Do not interpret its largest growth discrepancies as evidence of a BIS denominator construction error without checking the linked series.
 
-The validation reports country-year coverage, within-country ratios between the BIS-implied and WDI GDP levels, annual log-growth differences, mean absolute error, root mean squared error, and the correlation between the two growth series. Raw LCU level ratios are reported by country because currency units are not comparable across countries. A country-specific median scale factor is used to assess whether the level ratio is stable over time; it is not used to alter either source series.
+### Preferred linked current-LCU series
 
-The validation uses a separately retrieved WDI vintage. Its retrieval date and source update date must be considered when interpreting differences from the GDP-growth series used in the main regressions. It does not overwrite the original GDP-growth or CPI source archives. The World Bank series is compiled from country official statistics, national statistical organizations and central banks, OECD national-accounts files, and World Bank staff estimates. It is a separate published series, but its underlying national-accounts inputs may overlap with those used by the BIS; treat the exercise as a cross-source consistency check, not proof of fully independent underlying measurement.
+The preferred supplementary script is `replication/validate_nominal_gdp_linked.do`. It uses WDI indicator `NY.GDP.MKTP.CN.AD` (GDP, linked series, current LCU). The World Bank explicitly describes this series as linked to produce a consistent time series and counteract breaks due to changes in base years, source data and methodologies. It remains a current-price nominal GDP series in local currency; it is not a real GDP measure.
+
+Official metadata:
+- [World Bank definition: GDP, linked series (current LCU), NY.GDP.MKTP.CN.AD](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD)
+- [World Bank explanation of linked current-price GDP series](https://documents1.worldbank.org/curated/en/661311618822193354/pdf/World-Development-Indicators-2017.pdf)
+
+Source/API endpoint:
+
+`https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CN.AD?source=2&downloadformat=csv`
+
+On Windows, `replication/download_linked_nominal_gdp.ps1` downloads and validates the WDI archive, retains the ZIP and canonical extracted CSV, and records the retrieval date, the World Bank update date when available, and SHA-256 hashes in `data/raw/wb_gdp_linked_current_lcu_metadata.txt`. The Stata script retains 1990–2024 and matches the series to the 43-country BIS panel by ISO3 code. The first annual growth observation is 1991 because a preceding 1990 level is required.
+
+The validation reports country-year coverage, within-country ratios between the BIS-implied and WDI GDP levels, annual log-growth differences, mean absolute error, root mean squared error, and the correlation between the two growth series. Raw LCU level ratios are reported by country because currency units are not comparable across countries. A country-specific median scale factor is used to assess whether the level ratio is stable over time; it does not rescale or replace either source series.
+
+The linked series is a better benchmark for assessing historical growth continuity, but it remains a separately constructed WDI series. Its underlying national-accounts inputs may overlap with those used by the BIS, and its historical levels may not match other national-accounts series exactly. Treat the exercise as a cross-source consistency check, not proof of fully independent underlying measurement. The linked-series download does not overwrite the original GDP-growth, CPI or unlinked nominal-GDP archives.
 
 Official references:
-
-- [World Bank indicator definition: GDP (current LCU), NY.GDP.MKTP.CN](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN)
+- [World Bank linked-series metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD)
+- [World Bank unlinked current-LCU metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN)
 - [World Bank Indicators API documentation](https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation)
 - [World Bank API basic call structures](https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures)
 
