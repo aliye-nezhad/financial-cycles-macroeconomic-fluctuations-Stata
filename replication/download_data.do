@@ -87,32 +87,45 @@ foreach source_file in ///
 
 local root "`c(pwd)'"
 
-* Remove extracted WDI members before unpacking the retained archives.
-* This prevents an older CSV from being selected after a source refresh.
-local old_gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
-local old_cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
+* Keep valid extracted WDI members when the source vintage is unchanged.
+* Remove them only when an intentional refresh has been requested.
+local gdp_files : dir "data/raw" files "API_NY.GDP.MKTP.KD.ZG*.csv"
+local cpi_files : dir "data/raw" files "API_FP.CPI.TOTL.ZG*.csv"
 
-foreach old_file of local old_gdp_files {
-    erase "data/raw/`old_file'"
+if `refresh' {
+    foreach old_file of local gdp_files {
+        erase "data/raw/`old_file'"
+    }
+    foreach old_file of local cpi_files {
+        erase "data/raw/`old_file'"
+    }
+    local gdp_files ""
+    local cpi_files ""
 }
-foreach old_file of local old_cpi_files {
-    erase "data/raw/`old_file'"
-}
 
-cd "data/raw"
+* Extract only when one or both required CSV members are absent.
+* On Windows, use PowerShell's native ZIP support so Java is not required.
+* On other platforms, retain Stata's unzipfile implementation.
+if "`gdp_files'" == "" | "`cpi_files'" == "" {
+    if "`c(os)'" == "Windows" {
+        display as text "Extracting World Bank archives with Windows PowerShell..."
+        capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_gdp_growth.zip' -DestinationPath 'data/raw' -Force"
+        capture noisily shell powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath 'data/raw/wb_cpi_inflation.zip' -DestinationPath 'data/raw' -Force"
+    }
+    else {
+        cd "data/raw"
+        capture noisily unzipfile "wb_gdp_growth.zip", replace
+        local unzip_gdp_rc = _rc
+        capture noisily unzipfile "wb_cpi_inflation.zip", replace
+        local unzip_cpi_rc = _rc
+        cd "`root'"
 
-capture noisily unzipfile "wb_gdp_growth.zip", replace
-local unzip_gdp_rc = _rc
-
-capture noisily unzipfile "wb_cpi_inflation.zip", replace
-local unzip_cpi_rc = _rc
-
-cd "`root'"
-
-if `unzip_gdp_rc' != 0 | `unzip_cpi_rc' != 0 {
-    display as error "At least one World Bank archive could not be extracted."
-    log close download_log
-    exit 612
+        if `unzip_gdp_rc' != 0 | `unzip_cpi_rc' != 0 {
+            display as error "At least one World Bank archive could not be extracted."
+            log close download_log
+            exit 612
+        }
+    }
 }
 
 * Metadata members are retained inside the original ZIP archives and are
