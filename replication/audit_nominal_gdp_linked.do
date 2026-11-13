@@ -268,7 +268,7 @@ graph hbar mean_abs_growth_difference, ///
     xtitle("Mean absolute difference (percentage points)") ///
     xlabel(, labsize(small)) ///
     graphregion(color(white)) plotregion(color(white)) ///
-    name(gdp_validation_country_growth_mae, replace)
+    name(gdp_val_country_mae, replace)
 
 graph export ///
     "outputs/figures/nominal_gdp_validation_country_growth_mae.png", ///
