@@ -86,6 +86,11 @@ jobs:
           grep -Fq "estimates store NO_INFLATION" replication/run_analysis.do
           grep -Fq "NO_IRL_LUX" replication/run_analysis.do
           grep -Fq "influence_sensitivity.txt" replication/run_analysis.do
+          grep -Fq "set scheme s1mono" replication/run_analysis.do
+          grep -Fq "name(mean_credit_gap_by_year, replace)" replication/run_analysis.do
+          grep -Fq "name(credit_gap_gdp_scatter, replace)" replication/run_analysis.do
+          grep -Fq 'graph save "outputs/figures/mean_credit_gap_by_year.gph", replace' replication/run_analysis.do
+          grep -Fq 'graph save "outputs/figures/credit_gap_gdp_scatter.gph", replace' replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
           grep -Fq 'insheet using "data/raw/bis_credit_gap.csv", comma names clear' replication/run_analysis.do
