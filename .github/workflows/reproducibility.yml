@@ -27,6 +27,7 @@ jobs:
             LICENSE \
             .gitignore \
             .gitattributes \
+            .github/workflows/data-acquisition.yml \
             data/README.md \
             docs/RESEARCH_DESIGN.md \
             docs/LITERATURE_NOTES.md \
