@@ -206,14 +206,14 @@ The run generated:
 
 The execution log confirms separate exports and both graph names in memory. It does not establish that the figures are visually publication-ready. The component-model bootstrap tests have now been completed; their results are reported in Section 6.
 
-## 9. Next empirical steps
+## 9. Remaining empirical and presentation work
 
-1. **Audit country-year discrepancies in the linked nominal-GDP validation.** Run `replication/audit_nominal_gdp_linked.do` to identify the largest level and growth discrepancies, produce country-level error summaries, and export five separate monochrome figures. Inspect the top-20 country-year observations before deciding whether any differences require source-specific investigation.
-2. **Review the validation figures and outputs.** Inspect the five linked-GDP audit figures alongside the four main-analysis figures and two denominator-diagnostic figures. Confirm that scales, labels, tails, and country coverage are legible and consistent with the numerical tables.
-3. **Complete the linked-GDP sample-composition check.** The corrected runner is `replication/validate_balanced_panel_samples.do`; it separates the 2006–2024 level window from the 2006–2024 growth window. Execute it in Stata and inspect all four sample results.
-4. **Only then consider alternative measures.** Decide whether real-credit growth or a denominator-adjusted credit measure adds information beyond the current component model.
+1. **Complete the 43-country common-period linked-GDP comparison.** The 31-country common-period statistics are already calculated in the supplied log: 589 levels, 589 growth observations, correlation 0.99098, MAE 0.22043 percentage points, and RMSE 0.67067 percentage points. The earlier stop was caused by an incorrect expected count, not an invalid 2006 growth observation. Run the corrected `replication/balanced_panel_sensitivity.do` to verify the 43-country common-period sample and produce the consolidated four-sample CSV and log.
+2. **Regenerate the narrowed outlier tables.** The revised `replication/audit_nominal_gdp_linked.do` exports only relevant fields in the top-20 level and growth discrepancy tables. Re-run that audit against the existing processed linked-validation panel; source downloads and regressions are not required.
+3. **Inspect the remaining figures.** The five linked-GDP audit figures have already been visually inspected. The four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures still need review against their numerical tables.
+4. **Freeze the reproducibility package.** Confirm source metadata and checksums, inspect final logs and CSVs, and commit only outputs that have been regenerated and reviewed.
 
-The linked-series comparison is strongly supportive of the reconstructed denominator. The country-year tail audit is complete, while the balanced/common-period linked-GDP comparison still requires its corrected Stata run. The results remain predictive associations, not causal estimates.
+The main analysis, bootstrap diagnostic, denominator decomposition, linked-GDP validation, and linked-GDP outlier audit have already been executed. They should not be repeated unless the relevant source vintage or upstream processed data change. The remaining Stata execution is concentrated in the corrected balanced-panel comparison and the narrowed outlier-table export. All estimates remain conditional predictive associations, not causal effects.
 
 ## 10. Linked nominal-GDP validation using the World Bank linked current-LCU series
 
