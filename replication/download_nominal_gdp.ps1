@@ -131,8 +131,8 @@ try {
     if (-not $shouldDownload) {
         try {
             Test-WbWideCsv -Path $csvPath -ExpectedIndicatorCode $indicatorCode -RequiredYears $requiredYears
-    Test-WbArchive -ArchivePath $archivePath -ExpectedCsvPattern $expectedCsvPattern -CanonicalCsvPath $csvPath
-            Write-Host "Preserving existing validated World Bank source CSV."
+            Test-WbArchive -ArchivePath $archivePath -ExpectedCsvPattern $expectedCsvPattern -CanonicalCsvPath $csvPath
+            Write-Host "Preserving existing validated World Bank source CSV and archive."
         }
         catch {
             Write-Warning ("Existing World Bank CSV failed validation and will be downloaded again: " + $_.Exception.Message)
