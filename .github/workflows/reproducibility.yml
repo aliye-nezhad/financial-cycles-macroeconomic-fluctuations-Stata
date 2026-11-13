@@ -88,7 +88,13 @@ jobs:
           grep -Fq "influence_sensitivity.txt" replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
-          grep -Fq "rowrange(6:)" replication/run_analysis.do
+          grep -Fq 'insheet using "data/raw/bis_credit_gap.csv", comma names clear' replication/run_analysis.do
+          grep -Fq 'insheet using "`csv_path'", comma nonames clear' replication/run_analysis.do
+          grep -Fq 'drop in 1/3' replication/run_analysis.do
+          if grep -Fq "import delimited" replication/run_analysis.do; then
+            echo "::error::Java-dependent import delimited remains in the Stata analysis script."
+            exit 1
+          fi
 
           grep -Fq "No causal identification." docs/RESEARCH_DESIGN.md
           grep -Fq "1,310" docs/DATA_AUDIT.md

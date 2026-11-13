@@ -106,8 +106,9 @@ restore
 2. Import and validate BIS quarterly credit-gap observations
 ***********************************************************************/
 
-import delimited using "data/raw/bis_credit_gap.csv", ///
-    clear varnames(1) case(lower) stringcols(_all)
+* Use insheet to avoid the Java-dependent import delimited backend.
+* The BIS header is read as variable names; quoted CSV fields remain intact.
+insheet using "data/raw/bis_credit_gap.csv", comma names clear
 
 foreach required_var in freq borrowers_cty tc_borrowers tc_lenders ///
     cg_dtype time_period obs_value {
@@ -127,7 +128,10 @@ keep if cg_dtype == "C"
 
 generate int year = real(substr(time_period, 1, 4))
 generate byte quarter = real(substr(time_period, 7, 1))
-destring obs_value, replace force
+capture confirm string variable obs_value
+if !_rc {
+    destring obs_value, replace force
+}
 rename borrowers_cty bis_iso2
 rename obs_value credit_gap
 
@@ -179,10 +183,12 @@ save `annual_gap', replace
 /***********************************************************************
 4. Import World Bank wide CSV files and reshape 1989-2024 to long format
 
-The WDI CSV archive has four metadata rows before the column header.
-The header is row 5 and the first country observation is row 6; import begins
-at row 6 with generated variable names. The expected annual columns are
-1960 onward; 1989-2024 map to v34-v69.
+The World Bank CSV files contain two metadata records, blank separator
+lines, a header row, and then country observations. The `insheet` command
+skips blank lines, leaving three pre-data records (source metadata, update
+date, and header); the analysis drops those three records. The files currently
+include annual columns through 2025 and a trailing empty field. The analysis
+retains only 1989-2024, which map to v34-v69; 2025 is excluded by design.
 ***********************************************************************/
 
 local gdp_file "API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv"
@@ -207,8 +213,11 @@ tempfile gdp_long cpi_long
 program define import_wdi_long
     args csv_path value_variable output_path
 
-    import delimited using "`csv_path'", clear ///
-        varnames(nonames) rowrange(6:) stringcols(_all)
+    * insheet skips blank CSV lines. The three remaining pre-data records are
+    * the source metadata, update date and column header.
+    * This also avoids the Java-dependent import delimited backend.
+    insheet using "`csv_path'", comma nonames clear
+    drop in 1/3
 
     capture confirm variable v69
     if _rc {
@@ -228,7 +237,10 @@ program define import_wdi_long
     isid iso3c
     reshape long v, i(iso3c) j(year)
     rename v `value_variable'
-    destring `value_variable', replace force
+    capture confirm string variable `value_variable'
+    if !_rc {
+        destring `value_variable', replace force
+    }
     keep iso3c year `value_variable'
     keep if inrange(year, 1989, 2024)
     isid iso3c year
