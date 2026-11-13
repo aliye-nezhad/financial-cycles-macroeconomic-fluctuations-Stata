@@ -100,6 +100,11 @@ jobs:
           grep -Fq "wild_cluster_bootstrap.txt" replication/inference_diagnostics.do
           grep -Fq "version 15.1" replication/denominator_diagnostic.do
           grep -Fq "download_denominator_sources.ps1" replication/denominator_diagnostic.do
+          if grep -Fq "need_download" replication/denominator_diagnostic.do; then
+            echo "::error::Obsolete need_download logic remains in denominator_diagnostic.do"
+            exit 1
+          fi
+          test "$(grep -Fc 'shell powershell.exe' replication/denominator_diagnostic.do)" -eq 1
           grep -Fq "Invoke-WebRequest" replication/download_denominator_sources.ps1
           grep -Fq "bis_credit_gap_ratio.csv" replication/download_denominator_sources.ps1
           grep -Fq "bis_total_credit_xdc.csv" replication/download_denominator_sources.ps1
