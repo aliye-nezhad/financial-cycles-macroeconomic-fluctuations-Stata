@@ -12,6 +12,7 @@ Expected outputs:
 - tables/baseline_models.txt
 - tables/asymmetric_model.txt
 - tables/robustness_models.txt
+- tables/influence_sensitivity.txt
 - figures/credit_gap_by_country.png
 - figures/credit_gap_gdp_scatter.png
 - logs/analysis.log
