@@ -79,7 +79,7 @@ where:
 
 The primary specification uses h = 1. The h = 2 and h = 3 specifications are secondary horizon extensions. The coefficient \(\beta_h\) is a predictive association: a one-percentage-point increase in the credit gap is associated with a \(\beta_h\)-percentage-point difference in subsequent annual GDP growth, conditional on the included controls and fixed effects.
 
-Country fixed effects absorb time-invariant country characteristics. Outcome-year fixed effects absorb shocks common to countries in the same outcome year. Standard errors are clustered by country to allow heteroskedasticity and serial correlation within countries.
+Country fixed effects absorb time-invariant country characteristics. Outcome-year fixed effects absorb shocks common to countries in the same outcome year. Standard errors are clustered by country to allow heteroskedasticity and serial correlation within countries. The current sample contains 43 country clusters. Because finite-cluster performance depends on the number and balance of clusters, an optional wild cluster bootstrap diagnostic is provided for Stata 18 or later; it supplements rather than replaces the baseline clustered inference.
 
 ### Asymmetric specification
 
@@ -122,12 +122,17 @@ The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators
 6. **Inference.** Country clustering is appropriate for within-country dependence, but the effective number of clusters and sample composition must be reported. Robustness of inference should be discussed rather than assumed.
 7. **Outcome scope.** The main outcome is real GDP growth. The title refers to macroeconomic fluctuations broadly, but the empirical analysis does not claim to measure every dimension of macroeconomic volatility.
 
-## Remaining implementation checks
+## Implementation status and next diagnostics
 
-- Execute the Stata do-file and reconcile its sample counts with docs/DATA_AUDIT.md.
-- Inspect the baseline coefficients, clustered standard errors and the test of equal slopes.
-- Review the pandemic, CPI-missingness and country-influence sensitivities.
-- Inspect all logs and exported tables before writing an interpretation.
-- Decide whether a supplementary real-credit-growth measure is worth adding only if the baseline results or referee-style diagnostics make it necessary.
+The complete analysis script has been executed. Its one-, two- and three-year-ahead sample counts match the pre-estimation data audit, and the baseline, asymmetric, annual-average-gap, pandemic-exclusion, control-variable and country-influence specifications have been reviewed. The asymmetric specification has also been re-estimated after excluding Ireland, Luxembourg and both jointly; the difference between the positive- and negative-gap slopes remains statistically significant in each restricted sample.
 
-No empirical result or finding should be written until the Stata do-file has been executed and its output reconciled with the source-data audit.
+The results are recorded in [docs/RESULTS.md](RESULTS.md). They remain preliminary as a research contribution, even though the programmed models have run successfully.
+
+The next steps are deliberately limited to questions that affect interpretation:
+
+1. Run the optional wild cluster bootstrap diagnostic, if Stata 18 or later is available, to assess finite-cluster inference for the baseline gap coefficient and asymmetric slope tests.
+2. Inspect the exported PNG figures and compare them with the numerical tables.
+3. Investigate the credit-to-GDP denominator issue directly. The BIS gap is constructed from a credit-to-GDP ratio, so a positive gap can reflect stronger credit accumulation, weaker GDP, or both. A focused supplementary analysis should distinguish these channels before the project makes a substantive claim about credit booms.
+4. Only after these checks, decide whether any additional specification is justified. Do not add estimators merely to enlarge the model list.
+
+The project remains an observational predictive exercise. No result should be described as a causal effect.
