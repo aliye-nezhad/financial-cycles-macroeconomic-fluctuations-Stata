@@ -290,4 +290,26 @@ Expected outputs:
 - `outputs/tables/nominal_gdp_linked_validation_by_country.csv`
 - `outputs/logs/nominal_gdp_linked_validation.log`
 
+### Follow-up country-year discrepancy audit
+
+After the linked validation has completed, run:
+
+```stata
+do replication/audit_nominal_gdp_linked.do
+```
+
+This script reads the saved validation panel and does not download or modify source data. It exports the top 20 country-year level deviations, the top 20 annual growth discrepancies, a 43-country summary, and five separately named monochrome figures. Every figure is saved as both PNG and editable Stata GPH. No observations are deleted, winsorized, or adjusted.
+
+Key outputs:
+
+- `outputs/tables/nominal_gdp_linked_level_outliers_top20.csv`
+- `outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv`
+- `outputs/tables/nominal_gdp_linked_validation_country_audit.csv`
+- `outputs/figures/nominal_gdp_validation_scatter.png` and `.gph`
+- `outputs/figures/nominal_gdp_validation_median_growth_difference.png` and `.gph`
+- `outputs/figures/nominal_gdp_validation_p95_growth_difference.png` and `.gph`
+- `outputs/figures/nominal_gdp_validation_country_growth_mae.png` and `.gph`
+- `outputs/figures/nominal_gdp_validation_country_level_deviation.png` and `.gph`
+- `outputs/logs/nominal_gdp_linked_outlier_audit.log`
+
 Official references: [World Bank linked-series metadata](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.MKTP.CN.AD) and [World Bank explanation of linked current-price GDP series](https://documents1.worldbank.org/curated/en/661311618822193354/pdf/World-Development-Indicators-2017.pdf).
