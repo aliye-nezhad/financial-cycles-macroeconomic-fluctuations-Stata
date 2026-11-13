@@ -72,6 +72,17 @@ try {
         $destination = Join-Path $rawDirectory $item.FileName
         $shouldDownload = ($Refresh -eq "1") -or (-not (Test-Path -LiteralPath $destination -PathType Leaf))
 
+        if (-not $shouldDownload) {
+            try {
+                Test-BisCsv -Path $destination -RequiredColumns $item.RequiredColumns
+                Write-Host "Preserving existing validated source file: $($item.FileName)"
+            }
+            catch {
+                Write-Warning ("Existing file failed validation and will be downloaded again: " + $_.Exception.Message)
+                $shouldDownload = $true
+            }
+        }
+
         if ($shouldDownload) {
             $temporary = "$destination.download"
             if (Test-Path -LiteralPath $temporary) {
