@@ -68,6 +68,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── tables/
 │   └── README.md
 └── replication/
+    ├── audit_nominal_gdp_linked.do
     ├── denominator_diagnostic.do
     ├── download_denominator_sources.ps1
     ├── download_data.do
@@ -109,6 +110,7 @@ do replication/denominator_diagnostic.do
 do replication/inference_diagnostics.do
 do replication/validate_nominal_gdp.do
 do replication/validate_nominal_gdp_linked.do
+do replication/audit_nominal_gdp_linked.do
 ```
 
 The inference diagnostic requires a working installation of David Roodman's `boottest` package. It loads the installed Mata source before estimation and, when the denominator-components panel exists, also tests the matched-sample baseline and numerator-denominator model. Run the denominator diagnostic first to enable those additional tests. The denominator diagnostic downloads additional BIS credit and ratio series, checks their alignment with the main gap data, reconstructs the trailing-four-quarter nominal-GDP denominator, and produces a matched-sample component analysis. The linked nominal-GDP validation compares that reconstructed denominator with World Bank linked GDP in current local currency. The follow-up `replication/audit_nominal_gdp_linked.do` reports the largest country-year discrepancies and exports five separately named monochrome figures. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for the execution sequence.
