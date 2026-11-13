@@ -35,7 +35,7 @@ For CSV ingestion, the analysis uses Stata's built-in `insheet` command rather t
 do replication/run_analysis.do
 ```
 
-The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs.
+The analysis script imports and filters the source data, constructs the country crosswalk and annual panel, validates identifiers and sample coverage, estimates the models, and exports tables, figures, processed data and logs. It assigns each figure a distinct Stata graph name, exports each figure to its own PNG file, and also saves an editable `.gph` copy. The built-in `s1mono` scheme and explicit grayscale options give both figures a consistent white, black and gray publication style. Re-running the analysis replaces only the corresponding version of each figure; the two figures do not overwrite one another.
 
 ## 4. Data integrity
 
@@ -72,8 +72,10 @@ The checksum file records the exact source-file vintage used for an analysis. Re
 | outputs/tables/asymmetric_model.txt | Positive- and negative-gap slopes |
 | outputs/tables/robustness_models.txt | Annual-average gap, pandemic-exclusion, lag-control and CPI-control sensitivities |
 | outputs/tables/influence_sensitivity.txt | Excluding Ireland and Luxembourg separately and jointly |
-| outputs/figures/mean_credit_gap_by_year.png | Unweighted mean credit gap across available economies by year |
-| outputs/figures/credit_gap_gdp_scatter.png | Credit gap and subsequent GDP growth |
+| outputs/figures/mean_credit_gap_by_year.png | Monochrome PNG of the unweighted mean credit gap by year |
+| outputs/figures/mean_credit_gap_by_year.gph | Editable Stata graph for the mean credit gap figure |
+| outputs/figures/credit_gap_gdp_scatter.png | Monochrome PNG of the credit gap and subsequent GDP growth |
+| outputs/figures/credit_gap_gdp_scatter.gph | Editable Stata graph for the credit-gap/GDP-growth scatter figure |
 | outputs/logs/analysis.log | Main execution log |
 
 The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-, two- and three-year-ahead models, respectively, before Stata estimation. See docs/DATA_AUDIT.md. The final output list is checked by the Stata script. A successful file-presence check does not establish that the numerical estimates are correct; the log and tables must be inspected.
