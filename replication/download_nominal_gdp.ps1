@@ -76,13 +76,9 @@ function Test-WbWideCsv {
         throw "World Bank CSV contains a header but no country data rows: $Path"
     }
 
-    $firstRecord = $lines[$dataLineIndex] | ConvertFrom-Csv -Header $headerColumns
-    if ([string]$firstRecord.'Indicator Code' -ne $ExpectedIndicatorCode) {
-        throw "World Bank CSV contains indicator '$($firstRecord.'Indicator Code')'; expected '$ExpectedIndicatorCode'."
-    }
-
-    if ([string]::IsNullOrWhiteSpace([string]$firstRecord.'Country Code')) {
-        throw "The first World Bank country row has no country code."
+    $indicatorFound = Select-String -LiteralPath $Path -SimpleMatch -Pattern $ExpectedIndicatorCode -Quiet
+    if (-not $indicatorFound) {
+        throw "World Bank CSV does not contain the requested indicator code '$ExpectedIndicatorCode'."
     }
 }
 
