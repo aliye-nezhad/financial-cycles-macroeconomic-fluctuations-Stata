@@ -117,13 +117,17 @@ try {
 
     Test-WbWideCsv -Path $csvPath
 
-    $firstLines = @(Get-Content -LiteralPath $csvPath -TotalCount 3)
-    $lastUpdatedLine = $firstLines | Where-Object { $_ -match "Last Updated Date" } | Select-Object -First 1
-    $lastUpdated = "Not found in archive header"
+    $metadataUrl = "https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CN?source=2&date=2024&format=json&per_page=1"
+    $lastUpdated = "Not returned by World Bank API"
 
-    if ($lastUpdatedLine) {
-        $parts = $lastUpdatedLine.Split(",")
-        $lastUpdated = $parts[$parts.Count - 1].Trim().Trim('"')
+    try {
+        $apiMetadata = Invoke-RestMethod -Uri $metadataUrl -UseBasicParsing -Headers @{ "User-Agent" = "financial-cycles-macroeconomic-fluctuations-Stata/1.0" } -ErrorAction Stop
+        if ($apiMetadata.Count -gt 0 -and $apiMetadata[0].lastupdated) {
+            $lastUpdated = [string]$apiMetadata[0].lastupdated
+        }
+    }
+    catch {
+        Write-Warning ("Could not retrieve the World Bank source update date: " + $_.Exception.Message)
     }
 
     $archiveHash = "Not available"
@@ -140,7 +144,7 @@ try {
         "Unit: current local currency units; current prices; annual frequency",
         "Source URL: $sourceUrl",
         "Retrieval date (UTC): $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss'))",
-        "World Bank last-updated date from archive: $lastUpdated",
+        "World Bank last-updated date from API metadata: $lastUpdated",
         "Archive SHA-256: $archiveHash",
         "CSV SHA-256: $csvHash",
         "The Stata validation script retains 1989-2024 and matches the 43 BIS economies."
