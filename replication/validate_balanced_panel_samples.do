@@ -21,16 +21,15 @@ Level windows:
     all43_common:      2006-2024, all 43 economies
 
 Growth windows:
-    Full-period samples begin in 1991 because annual growth requires
-    the preceding year's GDP level.
-    Common-period samples begin in 2007 because 2006 is the first
-    level year in the common window.
+    Full-period samples begin in 1991 because the BIS-implied denominator
+    panel begins in 1990 and annual growth requires a preceding level.
+    Common-period samples cover 2006-2024. The 2006 annual growth rate
+    uses the 2005 GDP level as a lag input; it is still a 2006 observation.
 
-The common-period growth filter is intentionally separate from the
-level filter only in the variable overlap condition. Growth observations
-are indexed by the year of the annual change: the 2006 growth rate uses
-the 2005 GDP level as its lag input and is valid in a 2006-2024 growth
-comparison. No 2005 growth observation is included.
+The common-period growth comparison is indexed by the year of the annual
+change. The 2006 growth rate uses the 2005 GDP level as its lag input and
+is valid in a 2006-2024 comparison. The 2005 growth observation itself is
+not included.
 
 This script does not alter source data, the main analysis, or the
 original linked-GDP validation panel.
