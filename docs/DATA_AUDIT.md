@@ -69,6 +69,8 @@ Additional sample checks:
 | Annual-average credit gap, requiring four quarters | 1,305 | 43 |
 | Exclude outcome years 2020 and 2021 | 1,224 | 43 |
 | Omit CPI control | 1,334 | 43 |
+| Exclude Ireland only | 1,276 | 42 |
+| Exclude Luxembourg only | 1,291 | 42 |
 | Exclude Ireland and Luxembourg jointly | 1,257 | 41 |
 
 The pandemic-exclusion model removes 86 one-year-ahead observations whose outcome years are 2020 or 2021.
