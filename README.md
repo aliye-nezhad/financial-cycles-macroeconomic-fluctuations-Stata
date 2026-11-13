@@ -59,6 +59,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── DATA_AUDIT.md
 │   ├── LITERATURE_NOTES.md
 │   ├── RESEARCH_DESIGN.md
+│   ├── RESULTS.md
 │   └── REPRODUCIBILITY.md
 ├── outputs/
 │   ├── figures/
@@ -67,6 +68,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   └── README.md
 └── replication/
     ├── download_data.do
+    ├── inference_diagnostics.do
     └── run_analysis.do
 ```
 
@@ -99,7 +101,11 @@ See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotat
 
 ## Current status
 
-The BIS and World Bank source files have been downloaded, committed with SHA-256 checksums, and audited. The first complete Stata run was executed on 13 November 2026. It reproduced the expected one-, two- and three-year-ahead samples exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The initial asymmetric specification suggests that this relationship is concentrated in above-trend credit conditions. Additional asymmetric influence checks excluding Ireland and Luxembourg have now been added to the analysis script and remain to be run before the asymmetry result is treated as established. Generated tables, figures and logs are currently local outputs pending final review. GitHub Actions validates repository structure and source-file checksums; it does not execute Stata or verify numerical estimates.
+The complete Stata analysis was executed on 13 November 2026. The one-, two- and three-year-ahead samples match the pre-estimation audit exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The asymmetric specification indicates that the negative association is concentrated in above-trend credit observations. Annual-average-gap, pandemic-exclusion, control-variable and country-influence sensitivities have been run; the asymmetric result remains statistically distinguishable across the Ireland and Luxembourg exclusion checks. See [docs/RESULTS.md](docs/RESULTS.md) for the estimates and interpretation.
+
+The analysis script generated the expected tables, figures, processed dataset and logs locally, and its output-existence checks passed. These local outputs have not yet been committed; the PNG figures still require visual inspection. The optional [wild cluster bootstrap diagnostic](replication/inference_diagnostics.do) is separate from the Stata 15.1-compatible main pipeline and requires Stata 18 or later. The next substantive research check is to investigate whether the credit-gap result reflects movements in the credit numerator, the GDP denominator, or both.
+
+All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity; it does not execute Stata or verify numerical estimates.
 
 ## Data attribution
 
