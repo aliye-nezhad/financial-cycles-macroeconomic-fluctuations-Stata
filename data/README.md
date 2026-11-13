@@ -106,7 +106,7 @@ https://api.worldbank.org/v2/country/all/indicator/FP.CPI.TOTL.ZG?source=2&downl
 
 The World Bank API documentation is available at https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures.
 
-The WDI files are distributed in wide format, with country identifiers followed by annual columns. Stata reshapes the 1990–2024 columns into country-year observations. The ISO3 country code is used for merging.
+The WDI files are distributed in wide format, with country identifiers followed by annual columns. Stata reshapes the 1989–2024 columns into country-year observations. The 1989 GDP-growth observation is retained solely to construct the one-year lag for the first predictor year (1990); the analytical panel itself remains restricted to 1990–2024. The ISO3 country code is used for merging.
 
 ## Annual construction
 
