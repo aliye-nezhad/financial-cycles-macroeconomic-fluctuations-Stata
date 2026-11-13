@@ -257,6 +257,8 @@ The level and growth comparisons use separate overlap indicators but the same ca
 
 These validation counts are distinct from the predictive-regression sample sizes. For example, the 31-country H1 regression uses predictor years 2006–2023 to predict outcomes in 2007–2024, so it contains 558 regression observations; the linked-GDP validation separately compares 19 calendar-year growth observations from 2006 through 2024 for each country.
 
+A separate audit of the balanced-panel regression output found that the earlier 31-country common-period H1 linear and asymmetric estimates were reported with 589 observations. This conflicts with the 2006–2023 predictor window, which permits at most 558 observations (31 × 18). The combined do-file now asserts 558 for both H1 specifications. Treat the earlier coefficients as provisional until that script is rerun. This regression-count issue does not invalidate the 589 level and growth observations in the linked-GDP validation, which use calendar years 2006–2024.
+
 Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
 
 The combined script produces:
