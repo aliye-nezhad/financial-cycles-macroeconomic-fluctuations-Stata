@@ -197,28 +197,28 @@ local sample_names ///
 foreach sample_name of local sample_names {
 
     if "`sample_name'" == "full43_unbalanced" {
-        local level_if "inrange(year, 1990, 2024)"
+        local level_if "level_overlap == 1 & inrange(year, 1990, 2024)"
         local growth_if "growth_overlap == 1"
         local expected_levels = 1377
         local expected_growth = 1334
         local expected_countries = 43
     }
     else if "`sample_name'" == "balanced31_full" {
-        local level_if "balanced31 == 1 & inrange(year, 1990, 2024)"
+        local level_if "balanced31 == 1 & level_overlap == 1 & inrange(year, 1990, 2024)"
         local growth_if "balanced31 == 1 & growth_overlap == 1"
         local expected_levels = 1085
         local expected_growth = 1054
         local expected_countries = 31
     }
     else if "`sample_name'" == "balanced31_common" {
-        local level_if "balanced31 == 1 & inrange(year, 2006, 2024)"
+        local level_if "balanced31 == 1 & level_overlap == 1 & inrange(year, 2006, 2024)"
         local growth_if "balanced31 == 1 & growth_overlap == 1 & inrange(year, 2007, 2024)"
         local expected_levels = 589
         local expected_growth = 558
         local expected_countries = 31
     }
     else if "`sample_name'" == "all43_common" {
-        local level_if "inrange(year, 2006, 2024)"
+        local level_if "level_overlap == 1 & inrange(year, 2006, 2024)"
         local growth_if "growth_overlap == 1 & inrange(year, 2007, 2024)"
         local expected_levels = 817
         local expected_growth = 774
