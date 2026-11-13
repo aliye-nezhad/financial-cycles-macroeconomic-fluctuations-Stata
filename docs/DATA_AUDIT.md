@@ -149,6 +149,7 @@ The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched t
 - [x] Visually inspect all five linked nominal-GDP validation figures; labels are legible, exports are separate, and the monochrome styling is consistent.
 - [ ] Rerun the corrected audit do-file to regenerate the two top-20 CSVs with only relevant fields, then commit the reviewed linked-validation outputs.
 - [x] Re-estimate the baseline and asymmetric regressions across the 43-country unbalanced, 31-country full-period, 31-country common-period, and 43-country common-period samples; all 12 linear and four asymmetric specifications completed.
+- [ ] Re-run the 31-country common-period H1 linear and asymmetric regressions. The earlier output reports N=589, but the committed predictor window (2006–2023) allows at most 558 observations; the updated combined do-file now asserts N=558.
 - [x] Confirm linked-GDP level and growth counts for the full 43-country sample and the 31-country full-period sample.
 - [x] Confirm 589 level and 589 calendar-year growth observations for the 31-country 2006–2024 common-period sample from the Stata execution log; the earlier stop was caused by an incorrect expected count of 558.
 - [ ] Execute `replication/balanced_panel_sensitivity.do` in Stata to complete the 43-country 2006–2024 common-period linked-GDP comparison and generate the consolidated four-sample output. The 2006 annual growth observation uses the 2005 GDP level as its lag input. See [docs/REPRODUCIBILITY.md](REPRODUCIBILITY.md) and [docs/RESULTS.md](RESULTS.md).
