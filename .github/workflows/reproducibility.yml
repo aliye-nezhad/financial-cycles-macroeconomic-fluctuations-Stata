@@ -64,10 +64,11 @@ jobs:
           grep -Fq "F3.gdp_growth" replication/run_analysis.do
           grep -Fq "i.outcome_year_h1" replication/run_analysis.do
           grep -Fq "vce(cluster panel_id)" replication/run_analysis.do
-          grep -Fq "L.gdp_growth" replication/run_analysis.do
+          grep -Fq "gdp_growth_lag1" replication/run_analysis.do
           grep -Fq "estimates store NO_LAG" replication/run_analysis.do
           grep -Fq "gap_positive" replication/run_analysis.do
           grep -Fq "gap_negative" replication/run_analysis.do
+          grep -Fq "rowrange(6:)" replication/run_analysis.do
 
           grep -Fq "No causal identification." docs/RESEARCH_DESIGN.md
           grep -Fq "one-sided" docs/RESEARCH_DESIGN.md
