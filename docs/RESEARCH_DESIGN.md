@@ -108,7 +108,7 @@ The equality of the two slopes is tested directly. A negative gap is not automat
 3. Report the one-, two- and three-year-ahead estimates separately rather than treating the overlapping horizons as independent observations in a pooled regression.
 4. Compare the baseline with a specification omitting the lagged GDP-growth control, to show whether the main coefficient is sensitive to additional conditioning for output-growth persistence.
 5. Omit the CPI control to recover the Argentina observations missing from the WDI inflation series.
-6. Re-estimate the one-year model excluding Ireland, Luxembourg, and both jointly as influence diagnostics. These are sensitivities, not preferred sample definitions.
+6. Re-estimate both the linear and asymmetric one-year specifications excluding Ireland, Luxembourg, and both jointly as influence diagnostics. For the asymmetric models, report the two component slopes and test their equality in each restricted sample. These are sensitivities, not preferred sample definitions.
 
 The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators merely to increase the number of procedures. Any additional estimator must be motivated by the research question and the properties of the data.
 
