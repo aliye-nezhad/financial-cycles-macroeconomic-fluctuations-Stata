@@ -210,10 +210,10 @@ The execution log confirms separate exports and both graph names in memory. It d
 
 1. **Audit country-year discrepancies in the linked nominal-GDP validation.** Run `replication/audit_nominal_gdp_linked.do` to identify the largest level and growth discrepancies, produce country-level error summaries, and export five separate monochrome figures. Inspect the top-20 country-year observations before deciding whether any differences require source-specific investigation.
 2. **Review the validation figures and outputs.** Inspect the five linked-GDP audit figures alongside the four main-analysis figures and two denominator-diagnostic figures. Confirm that scales, labels, tails, and country coverage are legible and consistent with the numerical tables.
-3. **Check sample composition.** Add the number of contributing countries to the annual growth figure and estimate a balanced-panel sensitivity to determine whether changing country coverage affects the descriptive patterns.
+3. **Complete the linked-GDP sample-composition check.** The corrected runner is `replication/validate_balanced_panel_samples.do`; it separates the 2006–2024 level window from the 2007–2024 growth window. Execute it in Stata and inspect all four sample results.
 4. **Only then consider alternative measures.** Decide whether real-credit growth or a denominator-adjusted credit measure adds information beyond the current component model.
 
-The linked-series comparison is strongly supportive of the reconstructed denominator, but the country-year tail audit and figure inspection remain outstanding. The results remain predictive associations, not causal estimates.
+The linked-series comparison is strongly supportive of the reconstructed denominator. The country-year tail audit is complete, while the balanced/common-period linked-GDP comparison still requires its corrected Stata run. The results remain predictive associations, not causal estimates.
 
 ## 10. Linked nominal-GDP validation using the World Bank linked current-LCU series
 
@@ -305,13 +305,45 @@ The country-specific median level ratios identify a different issue from the tim
 
 The audit identifies where source-level investigation should focus, but it does not establish why the discrepancies occur. Possible explanations such as historical national-accounts revisions, source coverage, timing conventions, or changes in underlying series must be checked against source documentation and country-specific data before being asserted. The observations remain in the validation panel unchanged.
 
-### 10.6 Balanced-panel cross-source sensitivity
+### 10.6 Balanced-panel and common-period sensitivity
 
-A balanced-panel sensitivity is warranted before treating the pooled validation metrics as representative of a fixed country composition over time. The current validation is unbalanced: 31 economies have Q4 BIS coverage for all years from 1990 through 2024, while 12 economies enter later, with first observations ranging from 1993 to 2006. The current 1,377 level and 1,334 growth observations therefore combine different country and year coverage.
+A Stata 17 sensitivity run on 13 November 2026 completed all 12 baseline horizon regressions and all four asymmetric one-year-ahead regressions across four sample definitions. The linear models retain country fixed effects, outcome-year fixed effects, current and lagged real GDP growth, CPI inflation, and country-clustered standard errors. The future outcome remains within 2024.
 
-Two complementary balanced samples should be reported:
+#### Linear predictive regressions
 
-1. **Full-period balanced country sample:** the 31 economies with complete 1990–2024 coverage. This implies 1,085 level observations (31 × 35) and 1,054 annual-growth observations (31 × 34).
-2. **All-country common-period sample:** all 43 economies over 2006–2024 for levels (817 observations) and 2007–2024 for annual growth (774 observations), because the BIS-implied growth measure requires a preceding year's level.
+| Sample | H1 coefficient (SE), N | H2 coefficient (SE), N | H3 coefficient (SE), N |
+|---|---:|---:|---:|
+| 43 economies, unbalanced | -0.02280 (0.00376), 1,310 | -0.02901 (0.00357), 1,267 | -0.02675 (0.00348), 1,224 |
+| 31 economies, full period | -0.01950 (0.00412), 1,054 | -0.02658 (0.00408), 1,023 | -0.02454 (0.00404), 992 |
+| 31 economies, common period | -0.03135 (0.00731), 558 | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
+| 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-For each sample, recompute the correlation, mean signed difference, MAE, RMSE, 95th-percentile and maximum absolute growth differences, alongside the country-scale-adjusted level-deviation distribution. Retain all observations and use the same definitions as the full-sample validation. These are measurement-composition sensitivities, not alternative preferred samples; they do not replace the full unbalanced validation or the main econometric specification.
+All 12 credit-gap coefficients are negative and statistically significant at the 1% level. The common-period estimates are larger in absolute value than the corresponding full-period estimates. This is a period sensitivity, not evidence that the association has become causal or that the common-period specification is automatically preferable. The 43-economy common-period regression sample is not strictly balanced because Argentina's CPI observations are missing for 2006–2017.
+
+#### Asymmetric one-year-ahead regressions
+
+| Sample | Positive-gap slope (p) | Negative-gap slope (p) | Slope difference (p) | N |
+|---|---:|---:|---:|---:|
+| 43 economies, unbalanced | -0.05138 (<0.001) | -0.00211 (0.7063) | -0.04927 (0.00039) | 1,310 |
+| 31 economies, full period | -0.04842 (0.00023) | -0.00037 (0.9480) | -0.04806 (0.00205) | 1,054 |
+| 31 economies, common period | -0.05075 (0.03043) | -0.01740 (0.02664) | -0.03335 (0.22805) | 558 |
+| 43 economies, common period | -0.05327 (0.00278) | -0.01783 (0.01064) | -0.03544 (0.08793) | 762 |
+
+The full-period samples reproduce the original asymmetry: the positive-gap slope is negative and significant, the negative-gap slope is close to zero and insignificant, and the equality test rejects equal slopes. In the common-period samples, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. For the 43-economy common sample, the equality test is marginal at 10% (p = 0.08793), not 5%. The asymmetric interpretation is therefore more sensitive to the sample period than the linear negative association.
+
+#### Linked nominal-GDP validation: completed and pending comparisons
+
+The first run of the linked-GDP sample validation produced valid count checks and statistics for the full 43-economy sample and the 31-economy full-period sample:
+
+| Sample | Level observations | Growth observations | Growth correlation | Growth MAE (pp) | Growth RMSE (pp) | Median absolute level deviation | 95th percentile |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 43 economies, unbalanced | 1,377 | 1,334 | 0.99616 | 0.21985 | 0.72444 | 0.05411% | 2.82283% |
+| 31 economies, full period | 1,085 | 1,054 | 0.99039 | 0.23247 | 0.73805 | 0.04398% | 2.80148% |
+
+The 31-economy common-period level comparison also reached its expected 589 observations (31 × 19). Its median and 95th-percentile absolute scale-adjusted level deviations were 0.03398% and 1.29870%, respectively.
+
+The first run then stopped because its growth filter included 2006, even though the common-period level window begins in 2006 and annual growth requires the preceding year's level. It therefore counted 589 growth observations instead of the correct 558 (31 × 18). The growth statistics from that failed common-period pass are not used. The 43-economy common-period validation was not reached in that run.
+
+The corrected standalone runner, `replication/validate_balanced_panel_samples.do`, applies separate conditions: common-period levels cover 2006–2024, while common-period growth covers 2007–2024. Its expected counts are 589 levels and 558 growth observations for the 31-economy sample, and 817 levels and 774 growth observations for all 43 economies. The corrected script has been added to the repository, but it has not yet been executed in Stata. Do not treat the common-period linked-GDP growth metrics as complete until that run passes all four count checks.
+
+These are measurement-composition sensitivities, not alternative preferred samples. They retain all matched observations and do not replace the original full unbalanced validation or the main econometric specification. All estimates remain conditional predictive associations, not causal effects.
