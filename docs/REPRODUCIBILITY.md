@@ -219,9 +219,9 @@ The expected complete-case sample counts are 1,310, 1,267 and 1,224 for the one-
 
 ## 8. GitHub Actions
 
-The workflow performs static repository checks, including required-file checks, expected script commands, and documentation paths. It does not run Stata, execute the regressions, or verify numerical results because a licensed Stata runtime is not configured in GitHub Actions.
+GitHub Actions runs two separate checks. The Ubuntu job performs static repository validation, including required-file checks, expected script commands, documentation paths, and the committed main-source checksums. The Windows job executes `replication/download_denominator_sources.ps1` against the live BIS API and verifies that all four supplementary CSV files are downloaded and nonempty. This tests the Windows download path used by the denominator diagnostic. Neither job runs Stata, executes the regressions, or verifies numerical estimates because a licensed Stata runtime is not configured in GitHub Actions.
 
-A successful workflow run therefore confirms only that the static repository checks passed.
+A successful workflow run therefore confirms repository integrity and the supplementary Windows data-acquisition path, but not Stata execution or numerical reproducibility.
 
 ## 9. Reproducibility and source vintages
 
