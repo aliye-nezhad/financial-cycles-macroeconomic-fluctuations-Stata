@@ -21,6 +21,7 @@ The project is an observational predictive exercise. Its estimates describe cond
 | [Published figures](outputs/figures/) and [CSV outputs](outputs/tables/) | Fourteen PNG/GPH pairs and five reviewed numerical/audit tables |
 | [Reproduction guide](docs/REPRODUCIBILITY.md) | Input requirements, execution order and data-vintage handling |
 | [Final execution record](docs/EXECUTION_VERIFICATION.md) | Successful Stata 17 sensitivity run, output checks and log checksum |
+| [Complete code sample](docs/Financial_Cycles_Stata_Code_Sample.tex) | Full verbatim Stata, PowerShell and GitHub Actions listings; the PDF and source bundle are built as workflow artifacts |
 
 ## Research question
 
@@ -76,6 +77,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   └── README.md
 ├── docs/
 │   ├── DATA_AUDIT.md
+│   ├── Financial_Cycles_Stata_Code_Sample.tex
 │   ├── LITERATURE_NOTES.md
 │   ├── EXECUTION_VERIFICATION.md
 │   ├── OUTPUT_REVIEW.md
