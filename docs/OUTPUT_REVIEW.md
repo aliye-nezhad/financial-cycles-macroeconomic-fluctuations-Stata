@@ -7,7 +7,7 @@
 
 The project is **ready to freeze its present empirical specifications and numerical findings** for an applied macro-finance research portfolio. The reviewed data outputs and figures do not reveal a numerical inconsistency requiring another round of estimation. This is a qualified conclusion, not a claim of independent verification of every statistical assumption or of real-time forecast accuracy.
 
-The remaining publication/repository requirements concern presentation, provenance, and a clean execution record for the latest **combined** sensitivity script.
+The remaining combined-script and figure-release requirements have now been satisfied. All 14 PNG and 14 GPH files are published, and the 14 November 2026 completed combined Stata 17 log has been checked. The run's detailed results and SHA-256 log digest are recorded in [the execution-verification record](EXECUTION_VERIFICATION.md).
 
 ## What was examined
 
@@ -15,7 +15,7 @@ The remaining publication/repository requirements concern presentation, provenan
 - **Two top-20 country-year discrepancy CSVs.** Both have the intended concise columns, exactly 20 rows, ranks 1–20, decreasing absolute discrepancy magnitudes, no duplicate country-year keys, and no missing fields. In the growth table, BIS-implied minus World Bank growth equals the reported signed difference to machine precision. The separate uploads match the copies in the output archive.
 - **Twenty-four regression coefficient records** previously reviewed and committed: 12 horizon-specific linear estimates plus 12 entries for four asymmetric models (positive-gap, negative-gap and their difference). Sample counts, p-values, standard errors and country-cluster confidence intervals are internally consistent.
 - **Four linked-GDP sample-validation records** and **two missing-growth observations** previously reviewed and committed. Brazil and Colombia enter the BIS series in 2006, so their 2006 BIS-implied annual growth cannot be computed without a 2005 BIS level; both 2006 nominal-GDP levels remain in the level comparison.
-- **Execution logs:** the main analysis, denominator diagnostic, preferred linked-GDP validation, linked-GDP outlier audit, and the standalone balanced-panel GDP validation all contain terminal completion messages. The archived **combined** `balanced_panel_sensitivity.log` is from an earlier revision that stopped at the obsolete 558-versus-589 growth assertion. The later standalone GDP validation completed, and the current committed combined script incorporates the corrected growth counts. This archived combined log **must not** be represented as a successful end-to-end run of the final combined script.
+- **Execution logs:** the main analysis, denominator diagnostic, preferred linked-GDP validation, linked-GDP outlier audit, and standalone balanced-panel GDP validation contain terminal completion messages. The earlier archived combined log had stopped at an obsolete count assertion. **A new combined sensitivity run on 14 November 2026 successfully completed all linear and asymmetric models, all four linked-GDP checks, all exports and the final required-file checks.** The uploaded replacement log was read directly; its 12 coefficient summaries, four asymmetry tests and four linked-GDP sample comparisons match the versioned CSVs. See [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md).
 
 ## Quantitative interpretation that can be retained
 
@@ -45,47 +45,17 @@ No new regression estimation is needed to correct these cosmetic issues.
 - `outputs/tables/nominal_gdp_linked_level_outliers_top20.csv`
 - `outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv`
 
-The two top-20 tables have now been inspected and committed alongside the earlier three tables. Their presence does not imply that the locally generated PNGs, GPHs, large log files or processed Stata datasets have been added to GitHub.
+The two top-20 tables have been inspected and committed alongside the earlier three tables. **All fourteen PNGs and fourteen editable GPH figures are now also committed** under [`outputs/figures/`](../outputs/figures/). The full local Stata execution log and processed `.dta` files have not all been committed; the successful combined run is instead documented by its reviewed log digest and results.
 
-## Tasks before describing the repository as fully finalized
+## Release completion record
 
-1. **Archive and publish selected reviewed figures.** The local output archive contains fourteen PNGs (and editable GPH counterparts), but the GitHub repository does not yet contain those images. At minimum, add the main, numerator/denominator and balanced-panel PNG figures. The five validation figures are useful supplementary documentation.
-2. **Do not mislabel the earlier combined script log.** It is an obsolete, intentionally superseded incomplete run. The corrected standalone GDP validation is successfully executed. To claim the **current combined sensitivity entry point** has been executed end to end, run `replication/balanced_panel_sensitivity.do` once using the latest checked-in version and inspect the terminal status. This is a regression *reproduction check*, not a request to extend or redesign the economics.
-3. **Retain provenance.** Prefer versioning the completed standalone validation log and other clean terminal logs only after checking for machine-specific directories or personal metadata. Do not treat GitHub Actions success as evidence that Stata itself ran in CI.
-4. **Freeze the source vintage and research brief.** Check tracked source hashes and keep the observational, sample-window-sensitive interpretation intact.
-
-## Minimal local completion steps
-
-The reviewed figure publisher has been committed as `replication/publish_reviewed_figures.ps1`. It is deliberately non-destructive: it verifies the fourteen PNGs and editable GPH counterparts, creates a separate temporary Git worktree at the latest `origin/main`, and pushes only the reviewed figure files. It does not modify the local Stata data, logs, or other Git changes. Do not use it until the final combined-script run has completed successfully.
-
-1. **PowerShell (get the latest two scripts, without pulling or overwriting generated results):**
-
-   ```powershell
-   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
-   git fetch origin main
-   git restore --source=origin/main --worktree -- replication/balanced_panel_sensitivity.do replication/publish_reviewed_figures.ps1
-   ```
-
-2. **Stata (one release verification, not additional econometric research):**
-
-   ```stata
-   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
-   do "replication/balanced_panel_sensitivity.do"
-   ```
-
-   The log must end with a completion statement, no Stata error return code, and all expected output files. Do **not** publish the old stopped combined log as a successful execution. If the script fails, retain the full log and report the error instead of proceeding to the publisher.
-
-3. **PowerShell (publish only the reviewed figures):**
-
-   ```powershell
-   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
-   powershell -NoProfile -ExecutionPolicy Bypass -File ".\replication\publish_reviewed_figures.ps1"
-   ```
-
-   This commits 14 PNG and 14 GPH files from the local `outputs/figures/` directory to the private repository. It uses a temporary worktree based on the latest remote branch to avoid overwriting local generated result CSVs and other files.
-
-4. **Provide the clean final execution log for audit:** `outputs/logs/balanced_panel_sensitivity.log`, or paste the terminal completion/error section if uploading the full log is impractical. Optional log publication and source checksum checks can be completed after the figure push.
+- [x] Review and commit five numerical/audit output CSVs.
+- [x] Inspect and publish 14 PNG figures and 14 editable Stata GPH files.
+- [x] Execute the latest combined sensitivity script to successful completion on 14 November 2026, in Stata 17, and check all 12 linear, four asymmetric, and four linked-GDP sample results.
+- [x] Inspect the final uploaded log for terminal errors and required-file checks; record its SHA-256 and numerical summaries in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md).
+- [x] Confirm repository GitHub Actions static checks and source acquisition pass after figure publication.
+- [ ] Optional archival enhancement: add the complete log after stripping local machine-specific paths and review the remaining generated processed Stata files and source-vintage records for a fully archived historical reproduction package. This is **not a blocker** to using the research brief as a predoc portfolio sample.
 
 ### Decision
 
-**Proceed to final packaging without additional exploratory regressions.** The five audited numerical CSVs and current research note support that decision. Mark the repo as fully release-ready only after selected visuals are committed and the updated combined-script execution status is accurately represented. A successful complete replay is recommended if the repository will be advertised as end-to-end reproducible.
+**Research-portfolio release: GO.** The five audited numerical CSVs, 14 published PNG/GPH figure pairs, and the successful latest combined sensitivity execution substantiate the main results. Freeze specifications rather than adding exploratory regressions. Qualify reproducibility statements: local Stata 17 execution is now verified, but GitHub Actions itself does not run Stata and no independent third-party data-vintage replay has been performed.
