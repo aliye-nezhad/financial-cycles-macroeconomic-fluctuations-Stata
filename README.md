@@ -129,6 +129,18 @@ The repository also includes a GitHub Actions data-acquisition workflow for the 
 
 See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The concise [research brief](docs/RESEARCH_BRIEF.md) summarizes the confirmed findings and limitations. The longer [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) provides methodological detail. The [output review](docs/OUTPUT_REVIEW.md) documents inspection of the fourteen generated PNGs, the two top-20 outlier tables, execution logs, and the remaining release conditions.
 
+## Final packaging and figure publication
+
+The fourteen output figures have been reviewed, and five numerical/audit CSVs are committed. The images are currently available only in the local Stata `outputs/figures/` directory, not yet on GitHub. A safe publisher is available in `replication/publish_reviewed_figures.ps1`. It copies only the known reviewed figures into an isolated temporary Git worktree so generated data and unrelated local changes remain untouched.
+
+Before presenting the current combined sensitivity script as fully reproduced end to end, run the latest `replication/balanced_panel_sensitivity.do` once through completion in Stata 17. The earlier combined-script log stopped at an obsolete growth-overlap assertion, while the subsequently corrected standalone linked-GDP validation did complete. Then publish the figures with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\replication\publish_reviewed_figures.ps1"
+```
+
+See [final output review and exact release commands](docs/OUTPUT_REVIEW.md). This last combined run is for verification of the committed script, not an invitation to expand the econometric specifications.
+
 ## Current status
 
 The complete Stata analysis was executed on 13 November 2026. The one-, two- and three-year-ahead samples match the pre-estimation audit exactly: 1,310, 1,267 and 1,224 observations across 43 economies. The baseline credit-gap coefficient is negative and statistically significant at all three horizons. The asymmetric specification indicates that the negative association is concentrated in above-trend credit observations. Annual-average-gap, pandemic-exclusion, control-variable and country-influence sensitivities have been run; the asymmetric result remains statistically distinguishable across the Ireland and Luxembourg exclusion checks. See [docs/RESULTS.md](docs/RESULTS.md) for the estimates and interpretation.
