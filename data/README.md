@@ -61,7 +61,7 @@ From the BIS `WS_CREDIT_GAP` dataflow (version 1.0), the script retrieves:
 | A | Actual credit-to-GDP ratio | `bis_credit_gap_ratio.csv` |
 | B | One-sided HP-filter trend | `bis_credit_gap_trend.csv` |
 
-From the BIS `WS_TC` total-credit dataflow (version 2.0), it retrieves the private non-financial sector (`TC_BORROWERS=P`), all lenders (`TC_LENDERS=A)), market valuation (`VALUATION=M`), and break-adjusted series (`TC_ADJUST=A`):
+From the BIS `WS_TC` total-credit dataflow (version 2.0), it retrieves the private non-financial sector (`TC_BORROWERS=P`), all lenders (`TC_LENDERS=A`), market valuation (`VALUATION=M`), and break-adjusted series (`TC_ADJUST=A`):
 
 | `UNIT_TYPE` code | Meaning | Local file |
 |---|---|---|
