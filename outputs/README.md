@@ -67,6 +67,7 @@ Running `replication/balanced_panel_sensitivity.do` creates:
 
 - `tables/balanced_panel_regression_coefficients.csv` — 12 linear horizon regressions and four asymmetric H1 specifications across four country-period samples.
 - `tables/balanced_panel_linked_gdp_validation.csv` — linked-GDP measurement comparisons across the same four country-period samples.
+- `tables/balanced_panel_common_growth_missing.csv` — the two country-years with matching GDP levels but without matching annual growth.
 - `../data/processed/balanced_panel_linked_gdp_validation.dta` — processed four-sample validation results.
 - `figures/balanced_panel_h1_coefficients.png` and `.gph` — H1 linear coefficient sensitivity.
 - `figures/bal_panel_horizon_coef.png` and `.gph` — H1, H2 and H3 coefficient sensitivity.
@@ -75,7 +76,7 @@ Running `replication/balanced_panel_sensitivity.do` creates:
 
 The standalone `replication/validate_balanced_panel_samples.do` produces the linked-GDP validation CSV, processed dataset, and `logs/balanced_panel_linked_gdp_sensitivity.log` without rerunning the regressions.
 
-Two sample-count distinctions must be preserved. The 31-country common-period linked-GDP validation compares 589 levels and 589 calendar-year growth observations from 2006 through 2024. The corresponding H1 regression uses predictor years 2006–2023 and therefore 558 observations (31 × 18). The 14 November Stata excerpt confirms N=558, 31 clusters and p=0.00017 for that linear model, but omits its coefficient and standard error. The asymmetric sensitivity figure was also exported, but its detailed H1 values were not included in the excerpt. The local combined script then stopped in linked-GDP validation because it incorrectly expected 558 rather than 589 growth observations. The checked-in script already expects 589 for the 31-country common-period validation and 817 for the 43-country counterpart. The latter comparison and the consolidated CSV remain pending.
+Two sample-count distinctions must be preserved. The 31-country common-period linked-GDP validation compares 589 levels and 589 calendar-year growth observations from 2006 through 2024. The corresponding H1 regression uses predictor years 2006–2023 and therefore 558 observations (31 × 18). The 14 November Stata excerpt confirms N=558, 31 clusters and p=0.00017 for that linear model, but omits its coefficient and standard error. The asymmetric sensitivity figure was also exported, but its detailed H1 values were not included in the excerpt. The local combined script then stopped in linked-GDP validation because it incorrectly expected 558 rather than 589 growth observations. The 14 November standalone log reached the 43-country common-period comparison, finding 817 matched GDP levels and 815 matched GDP growth observations (correlation 0.99744, MAE 0.20060 pp, RMSE 0.63150 pp). The script stopped because its obsolete assertion expected 817 growth observations. Both checked-in runners now assert 815 and export the two country-years with level matches but missing growth comparisons. The consolidated four-sample CSV is still pending successful execution.
 
 ## Current repository state
 
