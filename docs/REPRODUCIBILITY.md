@@ -253,7 +253,7 @@ The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in eve
 | 31 complete-coverage economies, common period | 2006–2024 | 2006–2024 | 589 | 589 |
 | All 43 economies, common period | 2006–2024 | 2006–2024 | 817 | 815 |
 
-The level and growth comparisons use separate overlap indicators but the same calendar-year window. For the common-period samples, both cover 2006–2024. The 2006 annual growth rate uses the 2005 GDP level as its lag input; it remains a 2006 growth observation. The 2005 growth observation itself is excluded.
+The level and growth comparisons use separate overlap indicators but the same 2006–2024 calendar-year window. The 2006 annual growth rate uses a 2005 GDP level as its lag input. For Brazil (BRA) and Colombia (COL), the BIS series starts in 2006, so there is no 2005 BIS-implied denominator to calculate their 2006 growth. Their 2006 GDP levels are matched, and the World Bank 2006 growth rates are available, but BIS-implied growth is missing. The standalone script retains all 817 matched GDP levels, compares the 815 available annual growth pairs and exports the two unmatched country-year records. No values are filled or dropped from the source panel.
 
 These validation counts are distinct from the predictive-regression sample sizes. For example, the 31-country H1 regression uses predictor years 2006–2023 to predict outcomes in 2007–2024, so it contains 558 regression observations; the linked-GDP validation separately compares 19 calendar-year growth observations from 2006 through 2024 for each country.
 
@@ -271,9 +271,16 @@ The combined script produces:
 - `outputs/figures/balanced_panel_asymmetry.png` and `.gph`
 - `outputs/logs/balanced_panel_sensitivity.log`
 
-The standalone validation-only script produces the linked-GDP CSV, processed dataset, the two-row audit `outputs/tables/balanced_panel_common_growth_missing.csv`, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`. The 14 November 2026 standalone run reached all four samples and found 817 matched levels but only 815 matched annual growth observations in the 43-country 2006–2024 sample. The two missing growth comparisons are genuine missing pairs in the processed series, not observations to impute. Both committed runners now assert 815 for that sample and export its two level-matched but growth-unmatched country-year records for inspection. Re-execute the standalone script to finish the output checks without rerunning the regressions.
+The standalone validation-only script was **successfully executed on 14 November 2026** in Stata 17. All four country-period checks passed, including 817 matched levels, 815 matched growth observations and 43 countries in the all-country common sample. Its reported growth correlation, mean absolute difference and RMSE for that sample were 0.99744, 0.20060 percentage points and 0.63150 percentage points. It exported:
 
-The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
+- `outputs/tables/balanced_panel_linked_gdp_validation.csv`, with four sample-level result rows.
+- `data/processed/balanced_panel_linked_gdp_validation.dta`, the processed comparison table.
+- `outputs/tables/balanced_panel_common_growth_missing.csv`, documenting BRA 2006 and COL 2006.
+- `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`, the successful execution record.
+
+The exported files exist on the local Stata machine and have not yet been uploaded or committed to GitHub. The user-supplied execution transcript confirms their creation and successful output-existence checks. The combined `replication/balanced_panel_sensitivity.do` has the same corrected count assertion and audit logic but does not need to be rerun solely to repeat this completed standalone validation.
+
+The GitHub Actions workflow checks that the scripts and their sample-window conditions are present. It does not execute Stata or validate numerical results. The successful 14 November log confirms output production, but the CSV values still require review before being committed as final repository artifacts.
 
 ## 9. Data integrity
 
