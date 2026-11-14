@@ -117,7 +117,7 @@ do replication/validate_nominal_gdp_linked.do
 do replication/audit_nominal_gdp_linked.do
 do replication/balanced_panel_sensitivity.do
 
-# Optional: rerun only the linked-GDP sample comparison
+* Optional: rerun only the linked-GDP sample comparison
 do replication/validate_balanced_panel_samples.do
 ```
 
