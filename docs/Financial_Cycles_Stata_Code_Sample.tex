@@ -1,0 +1,346 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=0.68in,headheight=14pt,footskip=24pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{minted,xcolor}
+\usemintedstyle{lovelace}
+\definecolor{mintbg}{gray}{0.965}
+\setminted{
+  bgcolor=mintbg,
+  frame=lines,
+  rulecolor=\color{gray!50},
+  fontsize=\scriptsize,
+  breaklines=true,
+  breakanywhere=true,
+  linenos=true,
+  numbersep=5pt,
+  breaksymbolleft={},
+  breaksymbolright={}
+}
+\usepackage{amsmath,booktabs,tabularx,longtable,array}
+\usepackage{xurl}
+\usepackage{hyperref}
+\hypersetup{
+  hidelinks,
+  pdftitle={Financial Cycles and Macroeconomic Fluctuations: Complete Code Sample},
+  pdfsubject={Complete Stata, PowerShell and GitHub Actions source code},
+  pdfauthor={Aliye Nezhad}
+}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[R]{\color{gray}\fontsize{8pt}{8pt}\selectfont Aliye Nezhad\enspace\textbar{}\enspace\thepage}
+\urlstyle{same}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65ex}
+\setlength{\emergencystretch}{2em}
+
+\IfFileExists{build/source_snapshot.tex}{
+  \input{build/source_snapshot.tex}
+}{
+  \newcommand{\SourceCommit}{\texttt{not recorded}}
+  \newcommand{\SourceDate}{not recorded}
+}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{1.15in}
+{\Large\bfseries Financial Cycles and Macroeconomic Fluctuations\par}
+\vspace{0.12in}
+{\large\itshape Cross-Country Evidence from Credit-to-GDP Gaps\par}
+\vspace{0.28in}
+{\LARGE\bfseries Complete Code Sample\par}
+\vspace{0.12in}
+{\large Stata, PowerShell and GitHub Actions\par}
+\vspace{0.55in}
+Aliye Nezhad\par
+\vspace{0.12in}
+\textbf{Repository:} \url{https://github.com/aliye-nezhad/financial-cycles-macroeconomic-fluctuations-Stata}\par
+\vspace{0.15in}
+\textbf{Source snapshot:} \SourceCommit\par
+\textbf{Snapshot date:} \SourceDate\par
+\vfill
+\begin{minipage}{0.92\textwidth}
+\small
+This document retains a short research and reproducibility overview, followed by the complete contents of every tracked Stata do-file, PowerShell helper and GitHub Actions workflow in the repository at the source snapshot above. The listings are imported directly from the repository files at build time; they are not paraphrased or selectively excerpted.
+\end{minipage}
+\end{titlepage}
+
+\tableofcontents
+\clearpage
+
+\section{Research Question and Empirical Design}
+Is a larger credit-to-GDP gap associated with lower real GDP growth one, two, or three years later across economies? Does the association differ between above-trend and below-trend credit conditions?
+
+The baseline horizon-specific model is
+\[
+g_{i,t+h}=\alpha_i+\lambda_{t+h}+\beta_h\mathrm{Gap}_{i,t}
++\rho_hg_{i,t}+\delta_hg_{i,t-1}+\gamma_h\pi_{i,t}
++\varepsilon_{i,t+h},\qquad h\in\{1,2,3\}.
+\]
+Here, \(g\) is annual real GDP growth, \(\mathrm{Gap}\) is the BIS fourth-quarter credit-to-GDP gap in percentage points of GDP, and \(\pi\) is CPI inflation. The specification includes country and outcome-year fixed effects, with standard errors clustered by country. Each outcome is growth in year \(t+h\), not cumulative growth over the forecast horizon.
+
+This is an observational, in-sample predictive design. It does not identify an exogenous credit-supply shock or demonstrate real-time or out-of-sample forecasting performance. Estimated outcome-year fixed effects cannot be assumed available for an unseen forecast year.
+
+\section{Data and Sample Construction}
+The main panel links quarterly BIS credit-gap observations to annual World Bank World Development Indicators. It retains 43 individual economies, excluding the euro-area aggregate, over predictor years 1990--2024. The main panel contains 1,377 fourth-quarter credit-gap country-year observations before regression-specific complete-case restrictions.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth}X}
+\toprule
+Variable & Definition\\
+\midrule
+\texttt{credit\_gap\_q4} & BIS actual-minus-one-sided-trend gap; private non-financial-sector borrowers, all lenders.\\
+\texttt{gdp\_growth\_h1--h3} & Annual real GDP growth in \(t+1\), \(t+2\), or \(t+3\).\\
+\texttt{gdp\_growth} & Annual real GDP growth in year \(t\).\\
+\texttt{gdp\_growth\_lag1} & Real GDP growth in year \(t-1\).\\
+\texttt{inflation} & Annual CPI inflation.\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+GDP growth uses World Bank series \texttt{NY.GDP.MKTP.KD.ZG}; CPI inflation uses \texttt{FP.CPI.TOTL.ZG}. The code constructs fourth-quarter and complete-four-quarter mean gap measures, reshapes annual WDI data, checks country and merge uniqueness, verifies outcome timing, and retains missing values rather than imputing them. The resulting panel is unbalanced.
+
+\section{Main Results and Subsequent Diagnostics}
+The full-sample country-fixed-effects estimates, with outcome-year effects and 43 country clusters, are:
+
+\begin{center}
+\small
+\begin{tabular}{lrrr}
+\toprule
+Future annual GDP growth & Credit-gap slope & Clustered SE & Observations\\
+\midrule
+\(t+1\) & \(-0.02280\) & \(0.0038\) & 1,310\\
+\(t+2\) & \(-0.02901\) & \(0.0036\) & 1,267\\
+\(t+3\) & \(-0.02675\) & \(0.0035\) & 1,224\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The later balanced-panel analysis compares the original 43-country unbalanced sample with a 31-country balanced sample and two 2006--2024 common-period samples. For the one-year horizon, the 31-country common-period coefficient is approximately \(-0.03135\) (\(N=558\)); the 43-country common-period coefficient is approximately \(-0.03381\) (\(N=762\)). The common-period asymmetry tests do not reject equal slopes at 5\%: \(p=0.22805\) for 31 economies and \(p=0.08793\) for 43 economies.
+
+The linked nominal-GDP validation retains 589 level and growth comparisons for the 31-country common period. The 43-country common period has 817 level overlaps and 815 matched growth comparisons. Brazil and Colombia have 2006 level observations but no matched 2006 growth comparisons because their BIS-implied denominator series begin in 2006; those observations are reported rather than imputed.
+
+The denominator diagnostic separately reconstructs the BIS-implied four-quarter nominal-GDP denominator from credit stocks and credit-to-GDP ratios, checks alignment between BIS source series, tests the credit/GDP log-change identity, and estimates matched-sample numerator/denominator models. The linked-GDP audit exports country-year outliers and country-level discrepancy summaries. An optional wild-cluster bootstrap diagnostic uses the user-written \texttt{boottest} package.
+
+The BIS gap is a filtered ratio rather than an exogenous credit shock; GDP also enters its denominator. Country clustering does not eliminate confounding from common shocks or sample composition. All reported regression coefficients are conditional associations, not causal effects.
+
+\section{Code Inventory and Execution}
+The code appendix includes all 15 tracked source files in the repository at the source snapshot: nine Stata do-files, four PowerShell helpers, and two GitHub Actions workflows. It also includes the archived source checksum manifest. No source file is reduced to a summary or replaced by pseudocode.
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.48\textwidth}p{0.46\textwidth}}
+\toprule
+\textbf{Repository file} & \textbf{Role}\\
+\midrule
+\endhead
+\path{replication/run_analysis.do} & Main data, panel, estimation, robustness and figure pipeline.\\
+\path{replication/download_data.do} & Core BIS and WDI source acquisition.\\
+\path{replication/denominator_diagnostic.do} & BIS numerator/denominator decomposition.\\
+\path{replication/download_denominator_sources.ps1} & Supplementary BIS downloads on Windows.\\
+\path{replication/validate_nominal_gdp.do} & Validation against WDI current-LCU GDP.\\
+\path{replication/download_nominal_gdp.ps1} & Current-LCU GDP download and provenance checks.\\
+\path{replication/validate_nominal_gdp_linked.do} & Validation against linked WDI nominal GDP.\\
+\path{replication/download_linked_nominal_gdp.ps1} & Linked nominal-GDP download and provenance checks.\\
+\path{replication/audit_nominal_gdp_linked.do} & Country-year and country-level discrepancy audit.\\
+\path{replication/validate_balanced_panel_samples.do} & Balanced/common-period linked-GDP validation.\\
+\path{replication/balanced_panel_sensitivity.do} & Balanced/common-period regression sensitivity.\\
+\path{replication/inference_diagnostics.do} & Optional wild-cluster bootstrap inference.\\
+\path{replication/publish_reviewed_figures.ps1} & Controlled publication of reviewed PNG/GPH figures.\\
+\path{.github/workflows/data-acquisition.yml} & Manual source-data acquisition and archiving workflow.\\
+\path{.github/workflows/reproducibility.yml} & Static, numerical-reference, WDI-structure and Windows acquisition checks.\\
+\path{data/raw.sha256} & SHA-256 manifest for the archived main input files.\\
+\bottomrule
+\end{longtable}
+
+\subsection*{Execution sequence}
+\begin{enumerate}
+\item From the repository root, run \texttt{do replication/run\_analysis.do}. The main script calls \texttt{replication/download\_data.do}; existing inputs are preserved unless a new vintage is intentionally requested.
+\item Run \texttt{do replication/denominator\_diagnostic.do} to construct and check the credit numerator and implied nominal-GDP denominator.
+\item Run either or both independent GDP validation scripts: \texttt{do replication/validate\_nominal\_gdp.do} and \texttt{do replication/validate\_nominal\_gdp\_linked.do}.
+\item Run \texttt{do replication/audit\_nominal\_gdp\_linked.do} after the linked validation.
+\item Run \texttt{do replication/validate\_balanced\_panel\_samples.do} and \texttt{do replication/balanced\_panel\_sensitivity.do} after the required processed panels have been created.
+\item The optional \texttt{do replication/inference\_diagnostics.do} requires \texttt{boottest}; install it in Stata with \texttt{ssc install boottest, replace}.
+\item Run \texttt{replication/publish\_reviewed\_figures.ps1} only after the reviewed local figures exist and the latest sensitivity scripts have completed successfully.
+\end{enumerate}
+
+The Stata do-files target Stata 15.1 or later; the documented local execution used Stata 17. PowerShell helpers target Windows PowerShell 5.1 or later. GitHub Actions validates repository structure, committed reference tables, source checksums, pinned WDI CSV structure and selected Windows download paths. GitHub Actions does not execute licensed Stata.
+
+\subsection*{Building this document}
+The TeX file uses \texttt{\textbackslash inputminted} to include the exact repository source files at build time. Compile from the repository root with shell escape enabled:
+\begin{center}
+\texttt{latexmk -pdf -shell-escape -interaction=nonstopmode -halt-on-error -outdir=build docs/Financial\_Cycles\_Stata\_Code\_Sample.tex}
+\end{center}
+The resulting PDF is a full code appendix, not a summary. The companion source bundle should retain the repository-relative paths shown in the inventory.
+
+\section*{References}
+Bank for International Settlements. \textit{Credit-to-GDP gaps}. \url{https://data.bis.org/topics/CREDIT_GAPS}.\par
+Jordà, Ò., Schularick, M., and Taylor, A. M. (2013). When credit bites back. \textit{Journal of Money, Credit and Banking}, 45(s2), 3--28. \url{https://doi.org/10.1111/jmcb.12069}.
+
+\clearpage
+\section*{Appendix: Complete Repository Source Code}
+\addcontentsline{toc}{section}{Appendix: Complete Repository Source Code}
+The following listings are imported verbatim from the tracked repository files. Line numbers refer to the source files at the build snapshot, not to line numbers in the PDF.
+
+\clearpage
+\subsection*{1. \texttt{\detokenize{replication/run_analysis.do}}}
+\addcontentsline{toc}{subsection}{1. replication/run\_analysis.do}
+\textit{Main analytical pipeline: BIS/WDI import, panel construction, fixed-effects models, asymmetry, robustness, influence checks, figures and output validation.}
+
+\noindent\textbf{Git blob:} \texttt{9f9da78f31aff9f086e37610b9c941056a8173fb}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/run_analysis.do}
+
+
+\clearpage
+\subsection*{2. \texttt{\detokenize{replication/download_data.do}}}
+\addcontentsline{toc}{subsection}{2. replication/download\_data.do}
+\textit{Core BIS and World Bank data acquisition; preserves archived inputs unless refresh is explicitly enabled.}
+
+\noindent\textbf{Git blob:} \texttt{3028d41f9dfcb8bf3ab6056d3f75eda047cad4d1}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/download_data.do}
+
+
+\clearpage
+\subsection*{3. \texttt{\detokenize{replication/denominator_diagnostic.do}}}
+\addcontentsline{toc}{subsection}{3. replication/denominator\_diagnostic.do}
+\textit{BIS credit numerator and nominal-GDP denominator reconstruction, source-alignment checks and component regressions.}
+
+\noindent\textbf{Git blob:} \texttt{99824d3d7173a9dd460a9fd0cb1eb0ac94b54fae}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/denominator_diagnostic.do}
+
+
+\clearpage
+\subsection*{4. \texttt{\detokenize{replication/download_denominator_sources.ps1}}}
+\addcontentsline{toc}{subsection}{4. replication/download\_denominator\_sources.ps1}
+\textit{Windows acquisition and header validation for the four supplementary BIS component series.}
+
+\noindent\textbf{Git blob:} \texttt{c0dc06f254c0251e4641464ab9ba6ce6b5feba7e}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{powershell}{replication/download_denominator_sources.ps1}
+
+
+\clearpage
+\subsection*{5. \texttt{\detokenize{replication/validate_nominal_gdp.do}}}
+\addcontentsline{toc}{subsection}{5. replication/validate\_nominal\_gdp.do}
+\textit{Independent comparison of the BIS-implied denominator with World Bank GDP in current local currency.}
+
+\noindent\textbf{Git blob:} \texttt{e696ba1296c696e5b41c5c43447da3508a665f92}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/validate_nominal_gdp.do}
+
+
+\clearpage
+\subsection*{6. \texttt{\detokenize{replication/download_nominal_gdp.ps1}}}
+\addcontentsline{toc}{subsection}{6. replication/download\_nominal\_gdp.ps1}
+\textit{Validated acquisition, archive comparison and checksum metadata for NY.GDP.MKTP.CN.}
+
+\noindent\textbf{Git blob:} \texttt{558b3039dabcadc259b70ef255078711e29fd593}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{powershell}{replication/download_nominal_gdp.ps1}
+
+
+\clearpage
+\subsection*{7. \texttt{\detokenize{replication/validate_nominal_gdp_linked.do}}}
+\addcontentsline{toc}{subsection}{7. replication/validate\_nominal\_gdp\_linked.do}
+\textit{Independent validation against the World Bank linked nominal-GDP series.}
+
+\noindent\textbf{Git blob:} \texttt{9dcb7a40614cf000c6f97737b48f4208534ec3b8}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/validate_nominal_gdp_linked.do}
+
+
+\clearpage
+\subsection*{8. \texttt{\detokenize{replication/download_linked_nominal_gdp.ps1}}}
+\addcontentsline{toc}{subsection}{8. replication/download\_linked\_nominal\_gdp.ps1}
+\textit{Validated acquisition and provenance recording for NY.GDP.MKTP.CN.AD.}
+
+\noindent\textbf{Git blob:} \texttt{3a7f715f82b6b29030e44ff5460039e3d7acb44a}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{powershell}{replication/download_linked_nominal_gdp.ps1}
+
+
+\clearpage
+\subsection*{9. \texttt{\detokenize{replication/audit_nominal_gdp_linked.do}}}
+\addcontentsline{toc}{subsection}{9. replication/audit\_nominal\_gdp\_linked.do}
+\textit{Country-year and country-level discrepancy audit, ranked outlier exports and validation figures.}
+
+\noindent\textbf{Git blob:} \texttt{8a593f606d6b542a8e12a551a8d98c06afb9e736}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/audit_nominal_gdp_linked.do}
+
+
+\clearpage
+\subsection*{10. \texttt{\detokenize{replication/validate_balanced_panel_samples.do}}}
+\addcontentsline{toc}{subsection}{10. replication/validate\_balanced\_panel\_samples.do}
+\textit{Linked-GDP validation across the four balanced/full/common-period sample definitions.}
+
+\noindent\textbf{Git blob:} \texttt{0744fa4c559c34ff5aed91241c98a8195e3a2ed0}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/validate_balanced_panel_samples.do}
+
+
+\clearpage
+\subsection*{11. \texttt{\detokenize{replication/balanced_panel_sensitivity.do}}}
+\addcontentsline{toc}{subsection}{11. replication/balanced\_panel\_sensitivity.do}
+\textit{Horizon and asymmetry estimates across balanced and common-period samples; linked-GDP sensitivity.}
+
+\noindent\textbf{Git blob:} \texttt{c4b151fb160116db15634c1c0879e638dafea487}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/balanced_panel_sensitivity.do}
+
+
+\clearpage
+\subsection*{12. \texttt{\detokenize{replication/inference_diagnostics.do}}}
+\addcontentsline{toc}{subsection}{12. replication/inference\_diagnostics.do}
+\textit{Optional wild-cluster bootstrap inference for baseline, asymmetric and denominator-component models.}
+
+\noindent\textbf{Git blob:} \texttt{9a4fdc6429b48167a3de47e63f0fbd4db06902b2}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{stata}{replication/inference_diagnostics.do}
+
+
+\clearpage
+\subsection*{13. \texttt{\detokenize{replication/publish_reviewed_figures.ps1}}}
+\addcontentsline{toc}{subsection}{13. replication/publish\_reviewed\_figures.ps1}
+\textit{Publishes the fourteen reviewed PNG and editable GPH figures without staging unrelated local changes.}
+
+\noindent\textbf{Git blob:} \texttt{3b397e8aad7389457fd199d4eff5ac5d988ad576}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{powershell}{replication/publish_reviewed_figures.ps1}
+
+
+\clearpage
+\subsection*{14. \texttt{\detokenize{.github/workflows/data-acquisition.yml}}}
+\addcontentsline{toc}{subsection}{14. .github/workflows/data-acquisition.yml}
+\textit{Manually triggered BIS/WDI source acquisition, validation, checksums and candidate-vintage artifact.}
+
+\noindent\textbf{Git blob:} \texttt{7b50ba87a23765e8d02ffdc01f09f7b08d303ab0}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{yaml}{.github/workflows/data-acquisition.yml}
+
+
+\clearpage
+\subsection*{15. \texttt{\detokenize{.github/workflows/reproducibility.yml}}}
+\addcontentsline{toc}{subsection}{15. .github/workflows/reproducibility.yml}
+\textit{Repository checks, numerical reference-table checks, pinned WDI structural validation and Windows source-acquisition checks.}
+
+\noindent\textbf{Git blob:} \texttt{90ca78b92392b204f7d03921f6ffe3fe2cb59c27}
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines,breakanywhere]{yaml}{.github/workflows/reproducibility.yml}
+
+
+\clearpage
+\section*{Source-data integrity manifest}
+\addcontentsline{toc}{section}{Source-data integrity manifest}
+The checksum manifest is included as a supporting reproducibility artifact. It identifies the five archived main BIS/WDI source files; supplementary diagnostic downloads have their own metadata and validation procedures.
+
+\inputminted[linenos,fontsize=\scriptsize,breaklines]{text}{data/raw.sha256}
+
+\end{document}
