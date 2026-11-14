@@ -49,6 +49,9 @@ jobs:
             docs/RESEARCH_NOTE_DRAFT.md \
             docs/RESULTS.md \
             outputs/README.md \
+            outputs/tables/balanced_panel_regression_coefficients.csv \
+            outputs/tables/balanced_panel_linked_gdp_validation.csv \
+            outputs/tables/balanced_panel_common_growth_missing.csv \
             replication/balanced_panel_sensitivity.do \
             replication/denominator_diagnostic.do \
             replication/download_denominator_sources.ps1 \
@@ -124,8 +127,54 @@ jobs:
           grep -Fq "31 countries x 18 years = 558 observations" replication/balanced_panel_sensitivity.do
           grep -Fq "Expected 558 observations in the 31-country common-period H1 regression" replication/balanced_panel_sensitivity.do
           grep -Fq "Expected 558 observations in the 31-country common-period asymmetric H1 regression" replication/balanced_panel_sensitivity.do
-          grep -Fq "N=558; p=0.00017; estimate/SE not in supplied log excerpt" docs/RESULTS.md
+          grep -Fq "−0.031353" docs/RESULTS.md
           grep -Fq "compares 589 GDP levels and 589 annual growth observations" outputs/README.md
+
+          # Check that committed Stata coefficient and GDP-validation exports
+          # retain their expected row counts, sample keys, and missing records.
+          awk -F, '
+            NR == 1 { if (NF != 11 || $1 != "sample_name") exit 1; next }
+            {
+              if (NF != 11 || $1 == "" || $2 == "" || $3 == "" || $4 == "" ||
+                  $5 == "" || $6 == "" || $7 == "" || $8 == "" || $9 == "" ||
+                  $10 == "" || $11 == "") exit 1
+              k = $1 FS $2 FS $3 FS $4
+              if (++seen[k] > 1) exit 1
+              if ($2 == "linear") linear++
+              else if ($2 == "asymmetric") asym++
+              else exit 1
+              if ($1 == "balanced31_common" && $4 == 1 &&
+                  $10 == 558 && $11 == 31) common_h1++
+            }
+            END {
+              if (NR != 25 || linear != 12 || asym != 12 || common_h1 != 4) exit 1
+            }
+          ' outputs/tables/balanced_panel_regression_coefficients.csv
+          awk -F, '
+            NR == 1 { if (NF != 16 || $1 != "sample_name") exit 1; next }
+            {
+              if (NF != 16 || ++seen[$1] > 1) exit 1
+              if ($1 == "full43_unbalanced" && $2 == 1377 && $4 == 1334) full43++
+              if ($1 == "balanced31_full" && $2 == 1085 && $4 == 1054) full31++
+              if ($1 == "balanced31_common" && $2 == 589 && $4 == 589) common31++
+              if ($1 == "all43_common" && $2 == 817 && $4 == 815 &&
+                  $3 == 43 && $5 == 43) common43++
+            }
+            END {
+              if (NR != 5 || full43 != 1 || full31 != 1 ||
+                  common31 != 1 || common43 != 1) exit 1
+            }
+          ' outputs/tables/balanced_panel_linked_gdp_validation.csv
+          awk -F, '
+            NR == 1 { if (NF != 4 || $1 != "year" || $2 != "iso3c") exit 1; next }
+            {
+              if (NF != 4 || $1 != 2006 || $3 != "" || $4 == "") exit 1
+              if ($2 == "BRA") bra++
+              else if ($2 == "COL") col++
+              else exit 1
+            }
+            END { if (NR != 3 || bra != 1 || col != 1) exit 1 }
+          ' outputs/tables/balanced_panel_common_growth_missing.csv
           grep -Fq "version 15.1" replication/validate_balanced_panel_samples.do
           grep -Fq 'local level_if "balanced31 == 1 & level_overlap == 1 & inrange(year, 2006, 2024)"' replication/validate_balanced_panel_samples.do
           grep -Fq 'local growth_if "balanced31 == 1 & growth_overlap == 1 & inrange(year, 2006, 2024)"' replication/validate_balanced_panel_samples.do
