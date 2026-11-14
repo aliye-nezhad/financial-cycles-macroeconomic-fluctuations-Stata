@@ -134,7 +134,7 @@ The WDI GDP-growth series used here is not replaced with Irish GNI*. The baselin
 - [x] Baseline regression results and the pandemic, missing-inflation and control-variable sensitivities reviewed.
 - [x] Linear influence sensitivities excluding Ireland, Luxembourg and both jointly executed.
 - [x] Asymmetric regression re-estimated after excluding Ireland, Luxembourg and both jointly; slope-equality tests remain statistically significant.
-- [ ] Exported figures visually inspected and selected output artifacts prepared for publication.
+- [x] Review all fourteen generated PNG figures for numerical alignment, legibility and separation of the outputs; no substantive defect found. [ ] Add the selected figures to GitHub and complete the final publication package.
 - [x] Wild cluster bootstrap inference for the matched-sample denominator-component model completed with 9,999 Rademacher replications across 43 country clusters; see [docs/RESULTS.md](RESULTS.md).
 - [x] Credit-numerator versus GDP-denominator sensitivity investigated; source alignment and the numerator-denominator identity passed the checks recorded in docs/RESULTS.md.
 
@@ -147,7 +147,7 @@ The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched t
 - [x] BIS-implied nominal-GDP denominator compared with linked WDI levels and annual growth.
 - [x] Execute the linked nominal-GDP country-year outlier audit. The Stata 17 run on 13 November 2026 generated both top-20 discrepancy tables, the 43-country summary, the processed country-audit dataset, and all five figures in PNG and GPH formats; the final output-existence checks passed.
 - [x] Visually inspect all five linked nominal-GDP validation figures; labels are legible, exports are separate, and the monochrome styling is consistent.
-- [x] Rerun the corrected audit do-file: the 14 November 2026 local run generated both narrowed top-20 CSVs, the country-audit dataset and all five figure pairs. The regenerated outputs still need review and a commit.
+- [x] Rerun the corrected linked-GDP outlier audit on 14 November 2026. Both focused top-20 CSVs were independently checked for 20 unique country-year records, decreasing absolute discrepancies, correct ranks and arithmetic, and committed to `outputs/tables/`. All five updated PNG/GPH figure pairs were visually reviewed.
 - [x] Re-estimate the baseline and asymmetric regressions across the 43-country unbalanced, 31-country full-period, 31-country common-period, and 43-country common-period samples; all 12 linear and four asymmetric specifications completed.
 - [x] Inspect the 24-row regression CSV: 31-country common-period linear H1 estimate −0.031353, SE 0.007305, p = 0.000170, N = 558 (31 clusters). The asymmetric H1 coefficients, slope tests, confidence intervals, and all other regression samples agree with the exported numerical fields.
 - [x] Confirm linked-GDP level and growth counts for the full 43-country sample and the 31-country full-period sample.
@@ -156,4 +156,4 @@ The linked World Bank current-LCU GDP series (`NY.GDP.MKTP.CN.AD`) was matched t
 - [x] Verify the 43-country common-period sample: 817 matched levels; 815 matched growth observations; growth correlation 0.99744; MAE 0.20060 pp; RMSE 0.63150 pp.
 - [x] Audit the two missing 2006 BIS-implied growth comparisons (BRA and COL); both BIS series start in 2006, and both 2006 GDP levels remain included. The diagnostic exported `outputs/tables/balanced_panel_common_growth_missing.csv` without imputing or altering data.
 - [x] Inspect and commit `outputs/tables/balanced_panel_regression_coefficients.csv`, `outputs/tables/balanced_panel_linked_gdp_validation.csv`, and `outputs/tables/balanced_panel_common_growth_missing.csv`. Verified sample counts, coefficient tests, confidence intervals, and BRA/COL missing-growth rows.
-- [ ] Review and commit the generated figure exports, the narrowed top-20 audit tables and remaining execution logs. See [docs/REPRODUCIBILITY.md](REPRODUCIBILITY.md) and [docs/RESULTS.md](RESULTS.md).
+- [ ] Add the fourteen reviewed figures (and selected editable GPH sources) to GitHub, check final source-vintage metadata and commit suitable terminal execution logs. Do not present the earlier stopped `balanced_panel_sensitivity.log` as a successfully completed run of the current combined script. See [docs/OUTPUT_REVIEW.md](OUTPUT_REVIEW.md).
