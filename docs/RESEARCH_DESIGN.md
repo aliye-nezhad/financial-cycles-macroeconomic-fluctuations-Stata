@@ -58,26 +58,26 @@ These hypotheses concern conditional prediction. They do not imply a causal effe
 
 Let i index countries, t index the predictor year, and h denote the forecast horizon. The baseline is:
 
-\[
+$$
 g_{i,t+h}=\alpha_i+\lambda_{t+h}
 +\beta_h Gap_{i,t}
 +\rho_h g_{i,t}
 +\delta_h g_{i,t-1}
 +\gamma_h \pi_{i,t}
 +\varepsilon_{i,t+h},
-\]
+$$
 
 where:
 
-- \(g_{i,t+h}\) is annual real GDP growth h years after the credit-gap observation;
-- \(Gap_{i,t}\) is the fourth-quarter BIS credit-to-GDP gap in year t;
-- \(g_{i,t}\) is current-year real GDP growth;
-- \(g_{i,t-1}\) is the previous year's real GDP growth;
-- \(\pi_{i,t}\) is current-year CPI inflation;
-- \(\alpha_i\) are country fixed effects;
-- \(\lambda_{t+h}\) are fixed effects for the outcome year.
+- $g_{i,t+h}$ is annual real GDP growth h years after the credit-gap observation;
+- $Gap_{i,t}$ is the fourth-quarter BIS credit-to-GDP gap in year t;
+- $g_{i,t}$ is current-year real GDP growth;
+- $g_{i,t-1}$ is the previous year's real GDP growth;
+- $\pi_{i,t}$ is current-year CPI inflation;
+- $\alpha_i$ are country fixed effects;
+- $\lambda_{t+h}$ are fixed effects for the outcome year.
 
-The primary specification uses h = 1. The h = 2 and h = 3 specifications are secondary horizon extensions. The coefficient \(\beta_h\) is a predictive association: a one-percentage-point increase in the credit gap is associated with a \(\beta_h\)-percentage-point difference in subsequent annual GDP growth, conditional on the included controls and fixed effects.
+The primary specification uses h = 1. The h = 2 and h = 3 specifications are secondary horizon extensions. The coefficient $\beta_h$ is a predictive association: a one-percentage-point increase in the credit gap is associated with a $\beta_h$-percentage-point difference in subsequent annual GDP growth, conditional on the included controls and fixed effects.
 
 Country fixed effects absorb time-invariant country characteristics. Outcome-year fixed effects absorb shocks common to countries in the same outcome year. Standard errors are clustered by country to allow heteroskedasticity and serial correlation within countries. The current sample contains 43 country clusters. Because finite-cluster performance depends on the number and balance of clusters, an optional wild cluster bootstrap diagnostic is provided using David Roodman's user-written `boottest` package, which works after `xtreg, fe` in Stata 15.1 and later; it supplements rather than replaces the baseline clustered inference.
 
@@ -85,19 +85,19 @@ Country fixed effects absorb time-invariant country characteristics. Outcome-yea
 
 Define:
 
-\[
+$$
 Gap^+_{i,t}=\max(Gap_{i,t},0),\qquad
 Gap^-_{i,t}=\min(Gap_{i,t},0).
-\]
+$$
 
 Replace the single gap term with both components:
 
-\[
+$$
 g_{i,t+1}=\alpha_i+\lambda_{t+1}
 +\beta^+ Gap^+_{i,t}
 +\beta^- Gap^-_{i,t}
 +\rho g_{i,t}+\delta g_{i,t-1}+\gamma\pi_{i,t}+\varepsilon_{i,t+1}.
-\]
+$$
 
 The equality of the two slopes is tested directly. A negative gap is not automatically interpreted as a credit contraction; it means the observed credit-to-GDP ratio is below the BIS-estimated trend.
 
