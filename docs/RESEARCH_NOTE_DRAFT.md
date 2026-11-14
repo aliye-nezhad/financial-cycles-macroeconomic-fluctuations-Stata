@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This research-portfolio note reports the completed Stata 17 regressions and four linked-GDP country-period comparisons. The 24-row regression coefficient table, four-sample validation table, and two-row missing-growth audit have been independently inspected and committed. The note is not yet external-ready: the five audited CSV tables are committed and all fourteen figures have been visually reviewed, but the figure files, appropriate execution records and source-vintage summary are not yet assembled into a final release. GitHub Actions does not execute Stata.
+> **Research-portfolio working paper (internally validated).** The empirical specifications, five audited numerical tables and all fourteen figures have been reviewed, and their results have been committed. The latest combined balanced-panel script was successfully executed in Stata 17 on 14 November 2026; the completed log's numerical results and SHA-256 digest are documented in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md). This remains an observational applied research note, not a peer-reviewed causal study, independent third-party reproduction or evaluated real-time forecasting exercise.
 
 ## Abstract
 
@@ -162,11 +162,9 @@ The main entry points are:
 
 The following numerical outputs have been inspected for internal consistency and committed: [balanced-panel regression coefficients](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample linked-GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), and the [two-row missing-growth audit](../outputs/tables/balanced_panel_common_growth_missing.csv). The regression CSV contains 24 coefficient rows with no duplicate model-term combinations or missing numeric fields. Its p-values and 95% confidence intervals are consistent with the reported standard errors and country-cluster degrees of freedom.
 
-Before this note is used externally, the following items remain:
+The five published result tables and fourteen PNG/GPH graph pairs are now committed. The final 14 November 2026 combined sensitivity log ran through its last output assertion and normal log closure without a Stata error. Its reported coefficients, asymmetric equality tests and four linked-GDP comparisons match the committed tables. See [the independent output review](OUTPUT_REVIEW.md) and [the execution-verification record](EXECUTION_VERIFICATION.md).
 
-1. Commit the fourteen reviewed PNG figures (four main, two denominator, three sample-sensitivity and five linked-GDP-audit) and any selected editable GPH companions; the local archive contains them, but the GitHub repository does not.
-2. Retain completed Stata logs and source-vintage metadata while excluding or explicitly labeling the older stopped combined-sensitivity log. To claim that the current combined script is fully replayable end to end, complete one clean run of its latest version; the standalone GDP validation has already completed.
-3. Finalize the research-facing presentation without causal or out-of-sample forecasting claims. See [the output review](OUTPUT_REVIEW.md).
+The note is suitable for a **research portfolio** subject to the interpretive limits discussed above. Optional archival enhancements include publishing a privacy-sanitized full Stata log, preserving the remaining locally generated processed `.dta` data artifacts, and obtaining an independent third-party reproduction from the locked data vintage. These are distinct from the successfully completed local execution and are not prerequisites to showcasing the existing research results.
 
 ## References
 
@@ -177,4 +175,4 @@ Before this note is used externally, the following items remain:
 
 ---
 
-This draft is an internal research-portfolio document. Numerical results, top-20 discrepancy tables and visual figure review are complete. Selected figure uploads, provenance packaging and final combined-script execution verification remain before an unqualified reproducibility claim.
+This research-portfolio note summarizes completed, documented Stata 17 analysis. Five verified CSV outputs and fourteen PNG/GPH figure pairs are published, and a successful final combined sensitivity execution has been verified. The estimates are in-sample conditional associations, not causal effects or externally validated real-time forecasts.
