@@ -388,7 +388,85 @@ jobs:
             exit 1
           fi
 
-          echo "Static repository checks passed. This workflow does not execute Stata or validate numerical estimates."
+          echo "Static checks passed: committed numerical reference tables and source hashes validated; Stata was not executed."
+
+      - name: Validate pinned WDI CSV column interpretation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv
+          import math
+          from pathlib import Path
+
+          sources = {
+              "NY.GDP.MKTP.KD.ZG": Path("data/raw/API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv"),
+              "FP.CPI.TOTL.ZG": Path("data/raw/API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv"),
+          }
+          for indicator, source in sources.items():
+              with source.open(encoding="utf-8-sig", newline="") as stream:
+                  rows = list(csv.reader(stream))
+
+              if not (
+                  len(rows) > 200
+                  and rows[0][:2] == ["Data Source", "World Development Indicators"]
+                  and rows[1] == []
+                  and rows[2][:2] == ["Last Updated Date", "2026-11-11"]
+                  and rows[3] == []
+                  and rows[4][:4] == [
+                      "Country Name", "Country Code", "Indicator Name", "Indicator Code"
+                  ]
+              ):
+                  raise ValueError(f"{source}: unexpected metadata/header layout")
+
+              header = rows[4]
+              if (
+                  len(header) != 71
+                  or header[33] != "1989"
+                  or header[68] != "2024"
+                  or header[69] != "2025"
+                  or header[70] != ""
+                  or any(header[index] != str(index + 1956) for index in range(4, 70))
+              ):
+                  raise ValueError(
+                      f"{source}: year columns shifted; Stata's v34-v69 would be wrong"
+                  )
+
+              countries = {}
+              for line_number, row in enumerate(rows[5:], start=6):
+                  if not row or not any(cell.strip() for cell in row):
+                      continue
+                  if len(row) != len(header):
+                      raise ValueError(f"{source}:{line_number}: field count changed")
+                  name, country, _, code = row[:4]
+                  if not (name and len(country) == 3 and country.isalpha()
+                          and country.isupper() and code == indicator):
+                      raise ValueError(f"{source}:{line_number}: country/indicator mismatch")
+                  if country in countries:
+                      raise ValueError(f"{source}:{line_number}: duplicate {country}")
+                  countries[country] = row
+
+              if len(countries) < 200:
+                  raise ValueError(f"{source}: unexpectedly few country records")
+
+              anchors = {
+                  "USA": ("United States", ("1989", "1990", "2000", "2024")),
+                  "DEU": ("Germany", ("2000", "2024")),
+                  "BRA": ("Brazil", ("2000", "2024")),
+              }
+              for country, (expected_name, years) in anchors.items():
+                  row = countries.get(country)
+                  if not row or row[0] != expected_name:
+                      raise ValueError(f"{source}: missing/changed reference country {country}")
+                  for year in years:
+                      raw = row[header.index(year)].strip()
+                      if not raw:
+                          raise ValueError(f"{source}: missing {country} {year}")
+                      if not math.isfinite(float(raw)):
+                          raise ValueError(f"{source}: non-finite {country} {year}")
+
+              print(f"Verified {source}: {len(countries)} countries, indicator {indicator}, fixed v34-v69 mapping.")
+          PY
 
   windows-bis-download:
     name: Validate Windows BIS and World Bank source acquisition
