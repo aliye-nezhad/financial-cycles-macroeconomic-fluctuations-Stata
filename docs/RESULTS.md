@@ -341,7 +341,6 @@ The first run of the linked-GDP sample validation produced valid count checks an
 | 31 economies, full period | 1,085 | 1,054 | 0.99039 | 0.23247 | 0.73805 | 0.04398% | 2.80148% |
 | 31 economies, common period | 589 | 589 | 0.99098 | 0.22043 | 0.67067 | 0.03398% | 1.29870% |
 | 43 economies, common period (log; export pending) | 817 | 815 | 0.99744 | 0.20060 | 0.63150 | 0.04423% | 1.04359% |
-| 31 economies, common period | 589 | 589 | 0.99098 | 0.22043 | 0.67067 | 0.03398% | 1.29870% |
 
 The linked-GDP validation counts should not be confused with the predictive-regression sample sizes. The validation compares annual growth observations indexed 2006–2024. The H1 regression instead uses credit-gap and control observations dated 2006–2023 to predict GDP growth in 2007–2024, giving 558 observations in the 31-country common-period regression. This 558-observation regression sample is distinct from the 589 linked-GDP validation observations. The 14 November excerpt confirms 558 observations for the linear H1 model. The earlier H1 estimates remain unverified numerically until the newly exported regression table is inspected, especially the asymmetric model.
 
