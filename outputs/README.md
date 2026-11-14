@@ -59,7 +59,7 @@ Running `replication/audit_nominal_gdp_linked.do` after the linked validation cr
 
 The five linked-validation figures have been visually inspected. They are legible, use the project's monochrome style, and are exported as separate files. The full-range scatter retains the high-growth observations rather than hiding them through axis truncation.
 
-The first audit run produced correct rankings and figures, but the two top-20 CSV exports retained the full 73-variable source panel. The audit do-file has since been corrected to export only the relevant country, year, rank and discrepancy fields. Rerun `replication/audit_nominal_gdp_linked.do` to regenerate the two concise CSVs before committing the audit outputs. No observations are deleted, winsorized or adjusted by the audit.
+The first audit run produced correct rankings and figures, but its two top-20 CSV exports retained the full 73-variable source panel. A corrected rerun on 14 November 2026 successfully exported the two focused CSVs containing only the relevant rank, country, year and discrepancy fields, along with the country audit dataset and five PNG/GPH figure pairs. These files are local outputs, not yet committed to GitHub; they need final inspection before inclusion in the repository. The audit does not drop, winsorize or adjust source observations.
 
 ## Balanced-panel and common-period sensitivity
 
@@ -75,10 +75,10 @@ Running `replication/balanced_panel_sensitivity.do` creates:
 
 The standalone `replication/validate_balanced_panel_samples.do` produces the linked-GDP validation CSV, processed dataset, and `logs/balanced_panel_linked_gdp_sensitivity.log` without rerunning the regressions.
 
-Two sample-count distinctions must be preserved. The 31-country common-period linked-GDP validation compares 589 level and 589 calendar-year growth observations from 2006 through 2024. The corresponding H1 regressions use predictor years 2006–2023 and therefore have an expected maximum of 558 observations (31 × 18). The earlier regression output reported 589 for both common-period H1 specifications; those two estimates are provisional. The combined do-file now asserts 558 and must be rerun before those coefficients are reported. The 43-country common-period linked-GDP validation, with 817 expected levels and growth observations, also remains pending.
+Two sample-count distinctions must be preserved. The 31-country common-period linked-GDP validation compares 589 levels and 589 calendar-year growth observations from 2006 through 2024. The corresponding H1 regression uses predictor years 2006–2023 and therefore 558 observations (31 × 18). The 14 November Stata excerpt confirms N=558, 31 clusters and p=0.00017 for that linear model, but omits its coefficient and standard error. The asymmetric sensitivity figure was also exported, but its detailed H1 values were not included in the excerpt. The local combined script then stopped in linked-GDP validation because it incorrectly expected 558 rather than 589 growth observations. The checked-in script already expects 589 for the 31-country common-period validation and 817 for the 43-country counterpart. The latter comparison and the consolidated CSV remain pending.
 
 ## Current repository state
 
-The output directories currently contain placeholders rather than the generated Stata artifacts. The files listed above are expected outputs, not evidence that they are already present in the repository. Generated tables, figures, processed datasets, and logs should be committed only after the relevant Stata run has completed, the output checks have passed, and the figures and numerical tables have been reviewed.
+The GitHub output directories still contain placeholders rather than the generated Stata artifacts. The 14 November local rerun created the three balanced-panel figure pairs, the corrected top-20 outlier CSVs, the full country audit table and five outlier figure pairs, but these are not yet committed and have not been independently inspected here. Do not confuse a successful local export with a reviewed and version-controlled output; commit tables, figures, processed datasets and logs only after validation.
 
 All results describe the specified observational design and must not be presented as causal estimates.
