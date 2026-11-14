@@ -1,4 +1,4 @@
-# Final output review and release checklist
+# Output verification and figure review
 
 **Review date:** 14 November 2026  
 **Scope:** Stata 17 output archive and separately exported top-20 linked-GDP discrepancy tables. This is an inspection of executed outputs and source-code logic, not a fresh independent execution of the entire pipeline.
@@ -47,7 +47,7 @@ No new regression estimation is needed to correct these cosmetic issues.
 
 The two top-20 tables have been inspected and committed alongside the earlier three tables. **All fourteen PNGs and fourteen editable GPH figures are now also committed** under [`outputs/figures/`](../outputs/figures/). The full local Stata execution log and processed `.dta` files have not all been committed; the successful combined run is instead documented by its reviewed log digest and results.
 
-## Release completion record
+## Recorded checks
 
 - [x] Review and commit five numerical/audit output CSVs.
 - [x] Inspect and publish 14 PNG figures and 14 editable Stata GPH files.
@@ -58,4 +58,4 @@ The two top-20 tables have been inspected and committed alongside the earlier th
 
 ### Decision
 
-**Research-portfolio release: GO.** The five audited numerical CSVs, 14 published PNG/GPH figure pairs, and the successful latest combined sensitivity execution substantiate the main results. Freeze specifications rather than adding exploratory regressions. Qualify reproducibility statements: local Stata 17 execution is now verified, but GitHub Actions itself does not run Stata and no independent third-party data-vintage replay has been performed.
+**Assessment:** The five reviewed numerical CSVs, 14 PNG/GPH figure pairs, and the completed combined sensitivity execution support the reported main results. Freeze specifications rather than adding exploratory regressions. Qualify reproducibility statements: local Stata 17 execution is now verified, but GitHub Actions itself does not run Stata and no independent third-party data-vintage replay has been performed.

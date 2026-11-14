@@ -1,7 +1,7 @@
 # Research brief: Credit-to-GDP gaps and subsequent real GDP growth
 
 **Scope:** 43 economies; 1990–2024; quarterly BIS credit-to-GDP gaps matched to annual World Development Indicators (WDI) data.  
-**Status:** Verified in-sample regression and linked-GDP validation results. Internal research-portfolio brief; final visual and supplementary-output review outstanding.
+**Status:** In-sample regressions, linked-GDP validation, and figure checks completed; the final Stata 17 sensitivity execution is separately documented.
 
 ## Question
 

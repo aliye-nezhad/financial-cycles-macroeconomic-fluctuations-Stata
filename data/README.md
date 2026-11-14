@@ -18,7 +18,7 @@ The main analysis uses three public source datasets. The optional denominator di
 | bis_credit_gap_ratio.csv; bis_credit_gap_trend.csv | Bank for International Settlements (BIS) | Supplementary actual ratio and one-sided trend |
 | bis_total_credit_xdc.csv; bis_total_credit_gdp.csv | Bank for International Settlements (BIS) | Supplementary nominal credit stock and credit-to-GDP ratio |
 
-The main-analysis source files can be downloaded locally by replication/download_data.do or through the GitHub Actions workflow in .github/workflows/data-acquisition.yml. That workflow commits the main-analysis archives, extracted WDI CSV members, a retrieval-date note and SHA-256 checksums to the private repository. The supplementary BIS components and nominal-GDP validation series use separate acquisition helpers and are not added to the main-analysis source vintage. Existing local raw archives are not overwritten unless the relevant refresh option is enabled.
+The five main-analysis source files are committed with checksums in `data/raw.sha256`. The optional manual GitHub Actions workflow in `.github/workflows/data-acquisition.yml` saves a separately downloadable candidate snapshot with checksums and retrieval metadata. It does not replace the original inputs in `main`. The supplementary BIS components and nominal-GDP validation series use separate acquisition helpers and are not added to the main-analysis source vintage. Existing local raw archives are not overwritten unless the relevant refresh option is enabled.
 
 ## BIS credit-to-GDP gap
 

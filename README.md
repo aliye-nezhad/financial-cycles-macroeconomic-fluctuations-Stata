@@ -1,6 +1,6 @@
 # Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps
 
-This repository contains a reproducible Stata project examining whether the BIS credit-to-GDP gap predicts subsequent real GDP growth across economies. The empirical design uses an unbalanced annual country panel, country fixed effects, outcome-year fixed effects, and country-clustered standard errors.
+This Stata project examines whether the BIS credit-to-GDP gap is associated with subsequent real GDP growth across economies. The empirical design uses an unbalanced annual country panel, country fixed effects, outcome-year fixed effects, and country-clustered standard errors.
 
 The project is an observational predictive exercise. Its estimates describe conditional associations; they do not identify causal effects of credit supply, monetary policy, or financial shocks.
 
@@ -115,11 +115,19 @@ git clone https://github.com/aliye-nezhad/financial-cycles-macroeconomic-fluctua
 cd financial-cycles-macroeconomic-fluctuations-Stata
 ```
 
-Download the source data:
+The five main-analysis source files are already included in `data/raw/`. Verify their SHA-256 hashes before running Stata:
+
+```bash
+sha256sum --check data/raw.sha256
+```
+
+For Windows PowerShell, the cross-platform hash-verification instructions are in the [reproduction guide](docs/REPRODUCIBILITY.md). If a file is missing, run:
 
 ```stata
 do replication/download_data.do
 ```
+
+The downloader preserves existing sources by default. A replacement download must not be treated as the archived data vintage unless its hash matches the recorded input.
 
 Run the main analysis:
 
@@ -143,19 +151,19 @@ do replication/validate_balanced_panel_samples.do
 
 The inference diagnostic requires a working installation of David Roodman's `boottest` package. It loads the installed Mata source before estimation and, when the denominator-components panel exists, also tests the matched-sample baseline and numerator-denominator model. Run the denominator diagnostic first to enable those additional tests. The denominator diagnostic downloads additional BIS credit and ratio series, checks their alignment with the main gap data, reconstructs the trailing-four-quarter nominal-GDP denominator, and produces a matched-sample component analysis. The linked nominal-GDP validation compares that reconstructed denominator with World Bank linked GDP in current local currency. The follow-up `replication/audit_nominal_gdp_linked.do` reports the largest country-year discrepancies and exports five separately named monochrome figures. The combined `replication/balanced_panel_sensitivity.do` reruns the baseline and asymmetric regressions across four samples and compares linked-GDP validation across the same country-period definitions. The standalone `replication/validate_balanced_panel_samples.do` reruns only the linked-GDP sample comparison when the regression section has already been completed. Both scripts use the 2006–2024 calendar-year window for common-period levels and growth. The 2006 growth rate uses the 2005 GDP level only as its lag input; the observation remains indexed to 2006. See [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for the execution sequence.
 
-The repository also includes a GitHub Actions data-acquisition workflow for the main-analysis sources. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits those source files to the private repository. The supplementary BIS series and both unlinked and linked World Bank nominal-GDP indicators have separate acquisition helpers and are checked in the Windows CI job. The WDI checks verify the requested indicator code, required year columns, archive/CSV checksums, and no-refresh idempotence. The Stata download scripts preserve existing raw archives by default; set their refresh option to 1 only when intentionally retrieving a new vintage. Retrieval dates and checksums are retained with the relevant source files.
+The optional GitHub Actions data-acquisition workflow can be launched manually. It downloads and validates a separate **candidate source-data vintage** as a run artifact; it does not replace or recommit the frozen research inputs in `main`. The supplementary BIS series and both unlinked and linked World Bank nominal-GDP indicators have separate acquisition helpers and are checked in the Windows CI job. The WDI checks verify the requested indicator code, required year columns, archive/CSV checksums, and no-refresh idempotence. The Stata download scripts preserve existing raw archives by default; set their refresh option to 1 only when intentionally retrieving a new vintage. Retrieval dates and checksums are retained with the relevant source files.
 
 See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The concise [research brief](docs/RESEARCH_BRIEF.md) summarizes the confirmed findings and limitations. The longer [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) provides methodological detail. The [output review](docs/OUTPUT_REVIEW.md) documents the figure checks, numerical audits and completed release checks. The [execution record](docs/EXECUTION_VERIFICATION.md) reports the final Stata run and log checksum.
 
-## Output publication and final execution status
+## Outputs and execution evidence
 
 The project contains **five reviewed numerical/audit CSVs**, **14 PNG figures** and **14 editable Stata GPH figures**, all committed to the repository. The figures were inspected for legibility, labeling and consistency with the numerical summaries. The final combined `replication/balanced_panel_sensitivity.do` was run successfully in **Stata 17 on 14 November 2026**: all 12 linear regressions, four asymmetric models and four linked-GDP sample validations completed, all requested files were generated, and no terminal Stata error occurred. The completed Stata log was checked against the published results; its SHA-256 and numerical summaries are recorded in [the execution-verification record](docs/EXECUTION_VERIFICATION.md).
 
 The full output assessment is in [docs/OUTPUT_REVIEW.md](docs/OUTPUT_REVIEW.md). The optional `replication/publish_reviewed_figures.ps1` helper can republish a *new* reviewed graph export from the local computer using an isolated Git worktree; **it is not necessary to rerun it for the current published figures**.
 
-## Current status
+## Selected numerical findings
 
-**Research-portfolio release: ready.** The source-data acquisition and internal audit, 43-economy main regressions, wild cluster bootstrap checks, numerator/denominator diagnostics, balanced and common-period sensitivities, linked-GDP measurement validation and focused outlier audits are complete. The exact five reviewed CSV tables and all 28 figure exports are available in this repository. The Stata results are consistent with the checked-in tables.
+The source-data audit, 43-economy regressions, wild cluster bootstrap checks, credit and GDP component diagnostics, country-period sensitivities, linked-GDP validation, and outlier audits are documented. The exact five reviewed CSV tables and all 28 figure exports are available in this repository. The Stata results are consistent with the checked-in tables.
 
 The full-sample annual real-GDP-growth coefficients for one, two and three years ahead are **−0.02280**, **−0.02901** and **−0.02675** (43 country clusters; N = 1,310, 1,267 and 1,224). All twelve linear credit-gap coefficients across the four sample definitions and three horizons are negative and significant at 1% under conventional country-clustered inference. The asymmetric H1 slope-difference tests reject equality in the two full-period samples, but not in either common 2006–2024 sample at 5% (p = **0.22805** for 31 countries and **0.08793** for all 43). The asymmetry therefore **is not invariant to the time window**.
 
@@ -165,7 +173,7 @@ These estimates are **conditional in-sample associations**. They do not establis
 
 ## Data attribution
 
-BIS statistics are reproduced with attribution to the Bank for International Settlements. World Bank indicators are attributed to the World Bank's World Development Indicators. Data-source terms and retrieval details are documented in the data notes. This repository does not imply endorsement by either institution.
+BIS statistics are attributed to the Bank for International Settlements under the [BIS permitted-use terms](https://data.bis.org/help/legal). World Bank indicators are attributed to World Development Indicators under the [World Bank dataset terms](https://www.worldbank.org/ext/en/legal/terms-conditions/datasets), generally CC BY 4.0 unless indicator metadata specifies otherwise. Source vintages and retrieval details are documented in [data/README.md](data/README.md). Neither provider endorses this work.
 
 ## Author
 

@@ -187,6 +187,41 @@ jobs:
               if (NR != 25 || linear != 12 || asym != 12 || common_h1 != 4) exit 1
             }
           ' outputs/tables/balanced_panel_regression_coefficients.csv
+          # Numerical checks of committed estimates, not a substitute for
+          # executing the Stata do-files.
+          awk -F, '
+            NR == 1 { if ($1 != "sample_name" || $5 != "estimate" || $7 != "p_value") exit 1; next }
+            $2 == "linear" {
+              if ($5 + 0 >= 0 || $7 + 0 >= 0.01) exit 1
+              n_linear++
+              if ($1 == "full43_unbalanced") {
+                target = ($4 == 1 ? -0.0228026485227149 :
+                          $4 == 2 ? -0.0290147027472605 :
+                          $4 == 3 ? -0.0267540018824458 : 999)
+                deviation = ($5 + 0) - target
+                if (deviation < 0) deviation = -deviation
+                if (deviation > 0.00000001) exit 1
+                n_main++
+              }
+            }
+            $2 == "asymmetric" && $3 == "slope_difference" {
+              if ($1 == "balanced31_common") {
+                diff = ($7 + 0) - 0.22804807
+                if (diff < 0) diff = -diff
+                if (diff > 0.0000001) exit 1
+                n_asym31++
+              }
+              if ($1 == "all43_common") {
+                diff = ($7 + 0) - 0.087929346
+                if (diff < 0) diff = -diff
+                if (diff > 0.0000001) exit 1
+                n_asym43++
+              }
+            }
+            END { if (NR != 25 || n_linear != 12 || n_main != 3 ||
+                      n_asym31 != 1 || n_asym43 != 1) exit 1 }
+          ' outputs/tables/balanced_panel_regression_coefficients.csv
+
           awk -F, '
             NR == 1 { if (NF != 16 || $1 != "sample_name") exit 1; next }
             {

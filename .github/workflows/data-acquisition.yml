@@ -2,12 +2,9 @@ name: Acquire source data
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - data/ACQUIRE_DATA
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   acquire:
@@ -81,17 +78,17 @@ jobs:
             echo "The checksum file records the exact files used. Refreshing these files creates a new source-data vintage."
           } > data/DATA_VINTAGE.md
 
-      - name: Commit source data and checksums
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -f data/ACQUIRE_DATA
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A data/
-          if git diff --cached --quiet; then
-            echo "No source-data changes to commit."
-            exit 0
-          fi
-          git commit -m "Add BIS and World Bank source data"
-          git push origin HEAD:main
+      - name: Save candidate data as a workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: candidate-bis-wdi-vintage
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            data/raw/bis_credit_gap.csv
+            data/raw/wb_gdp_growth.zip
+            data/raw/wb_cpi_inflation.zip
+            data/raw/API_NY.GDP.MKTP.KD.ZG*.csv
+            data/raw/API_FP.CPI.TOTL.ZG*.csv
+            data/raw.sha256
+            data/DATA_VINTAGE.md

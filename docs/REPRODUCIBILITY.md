@@ -3,7 +3,7 @@
 ## Requirements
 
 - Licensed Stata 15.1 or later.
-- Internet access is needed only if source files are missing or a new data vintage is requested. The main-analysis source files are retained in the repository; the supplementary nominal-GDP validation data are retrieved by their dedicated script.
+- The five main-analysis source files are retained in the repository and can be verified against `data/raw.sha256`. Internet access is needed only for missing or refreshed inputs and supplementary BIS and World Bank data.
 - A working directory set to the repository root.
 
 The main analysis uses built-in Stata commands only. The optional wild cluster bootstrap diagnostic requires David Roodman's user-written `boottest` package; it is not needed to reproduce the main regressions.
@@ -15,15 +15,35 @@ git clone https://github.com/aliye-nezhad/financial-cycles-macroeconomic-fluctua
 cd financial-cycles-macroeconomic-fluctuations-Stata
 ```
 
-## 2. Download the source data
+## 2. Verify the archived source data
 
-In Stata, run:
+The committed input files are the reference vintage for the archived estimates. On Linux, macOS, or Git Bash, verify them before estimation:
+
+```bash
+sha256sum --check data/raw.sha256
+```
+
+On Windows PowerShell, compare every manifest entry against the corresponding file:
+
+```powershell
+Get-Content data/raw.sha256 | ForEach-Object {
+    if ($_ -notmatch '^([0-9a-fA-F]{64})  (.+)$') {
+        throw "Malformed checksum entry: $_"
+    }
+    $expected = $Matches[1]
+    $source = $Matches[2]
+    $actual = (Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash
+    if ($actual -ne $expected) { throw "Input hash mismatch: $source" }
+}
+```
+
+If any archived input is absent, obtain it using Stata:
 
 ```stata
 do replication/download_data.do
 ```
 
-The script retrieves the BIS credit-gap series and the two World Bank indicators. It preserves existing raw source files by default. To refresh the source vintage, change the refresh setting at the beginning of the download do-file and rerun it.
+The downloader preserves existing files by default. Newly retrieved source files are not the identical archived vintage unless their hashes agree with the manifest. The optional GitHub Actions source-acquisition workflow provides a *candidate* vintage as a downloadable artifact, without committing refreshed files over the archived inputs. To refresh intentionally, retain a separate copy of the original raw files and manifest before changing the `refresh` setting in the do-file.
 
 The download script checks the exact, versioned World Bank CSV member names recorded for this data vintage using Stata's `confirm file` command, rather than wildcard directory discovery. The analysis script repeats these explicit file checks before import. On Windows, it extracts the World Bank ZIP archives with PowerShell's native `Expand-Archive` command, so a separate Java installation is not required. On other platforms, it uses Stata's `unzipfile` command. Existing extracted WDI CSV members are preserved when the source vintage is unchanged; they are replaced only when an intentional data refresh is requested. If an endpoint changes or the provider is unavailable, the script stops with an error rather than creating an empty placeholder.
 
