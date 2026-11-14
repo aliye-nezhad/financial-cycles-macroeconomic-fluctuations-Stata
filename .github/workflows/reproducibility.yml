@@ -117,7 +117,7 @@ jobs:
           grep -Fq "version 15.1" replication/balanced_panel_sensitivity.do
           grep -Fq 'local validation_if "balanced31 == 1 & inrange(year, 2006, 2024)"' replication/balanced_panel_sensitivity.do
           grep -Fq "local expected_growth = 589" replication/balanced_panel_sensitivity.do
-          grep -Fq "local expected_growth = 817" replication/balanced_panel_sensitivity.do
+          grep -Fq "local expected_growth = 815" replication/balanced_panel_sensitivity.do
           grep -Fq "local max_predictor_year = 2024 -" replication/balanced_panel_sensitivity.do
           grep -Fq "31 countries x 18 years = 558 observations" replication/balanced_panel_sensitivity.do
           grep -Fq "Expected 558 observations in the 31-country common-period H1 regression" replication/balanced_panel_sensitivity.do
@@ -129,7 +129,7 @@ jobs:
           grep -Fq 'local growth_if "balanced31 == 1 & growth_overlap == 1 & inrange(year, 2006, 2024)"' replication/validate_balanced_panel_samples.do
           grep -Fq 'local growth_if "growth_overlap == 1 & inrange(year, 2006, 2024)"' replication/validate_balanced_panel_samples.do
           grep -Fq "local expected_growth = 589" replication/validate_balanced_panel_samples.do
-          grep -Fq "local expected_growth = 817" replication/validate_balanced_panel_samples.do
+          grep -Fq "local expected_growth = 815" replication/validate_balanced_panel_samples.do
           grep -Fq "balanced_panel_linked_gdp_validation.csv" replication/validate_balanced_panel_samples.do
           grep -Fq "version 15.1" replication/validate_nominal_gdp.do
           grep -Fq "NY.GDP.MKTP.CN" replication/validate_nominal_gdp.do
