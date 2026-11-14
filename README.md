@@ -4,6 +4,22 @@ This repository contains a reproducible Stata project examining whether the BIS 
 
 The project is an observational predictive exercise. Its estimates describe conditional associations; they do not identify causal effects of credit supply, monetary policy, or financial shocks.
 
+## At a glance
+
+**Sample:** 43 economies, 1990–2024 · **Software:** Stata 17 (scripts require Stata 15.1+) · **Methods:** two-way fixed effects, country-clustered inference, sample-window and measurement diagnostics.
+
+**Main finding:** Higher BIS credit-to-GDP gaps are negatively associated with real GDP growth one to three years later. The linear relationship is negative and conventionally significant in all twelve country-period/horizon comparisons. Evidence that positive gaps have a distinctly stronger association than negative gaps is **not stable across the common-period samples**. These estimates are in-sample associations, not causal effects or verified real-time forecasts.
+
+| Start here | What it contains |
+|---|---|
+| [Research brief](docs/RESEARCH_BRIEF.md) | Concise question, empirical design, findings, limitations and key references |
+| [Stata analysis](replication/run_analysis.do) | Main data construction, panel regressions, and original robustness checks |
+| [Sample sensitivity code](replication/balanced_panel_sensitivity.do) | Twelve linear and four asymmetric sample/period specifications |
+| [Results and tables](docs/RESULTS.md) | Detailed estimates, inference, measurement diagnostics and interpretation |
+| [Published figures](outputs/figures/) and [CSV outputs](outputs/tables/) | Fourteen PNG/GPH pairs and five reviewed numerical/audit tables |
+| [Reproduction guide](docs/REPRODUCIBILITY.md) | Input requirements, execution order and data-vintage handling |
+| [Final execution record](docs/EXECUTION_VERIFICATION.md) | Successful Stata 17 sensitivity run, output checks and log checksum |
+
 ## Research question
 
 Do credit-to-GDP gaps predict subsequent macroeconomic fluctuations across countries, and does the relationship differ between above-trend and below-trend credit conditions?
