@@ -37,8 +37,10 @@ For linked-GDP validation, levels use 1990-2024 or 2006-2024.
 Growth observations are indexed by calendar year. The 2006 growth
 observation uses the 2005 GDP level as its lag input, but remains a
 2006 observation in the common-period comparison. The all-43 common
-sample has 817 level overlaps and 815 matched growth comparisons;
-the two unmatched growth records are exported for inspection.
+sample has 817 level overlaps and 815 matched growth comparisons.
+Brazil and Colombia enter the BIS panel in 2006, so their 2006 growth
+cannot be computed without a 2005 BIS-implied denominator. The two
+unmatched growth records are exported for inspection.
 
 No source observations are permanently deleted, winsorized, interpolated,
 or adjusted. Sample restrictions are applied only within this diagnostic.
