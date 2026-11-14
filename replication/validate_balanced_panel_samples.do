@@ -26,7 +26,9 @@ Growth windows:
     Common-period samples cover 2006-2024. The 2006 annual growth rate
     uses the 2005 GDP level as a lag input; it is still a 2006 observation.
     The all-43 common sample has 817 level overlaps but 815 growth
-    overlaps. The two missing growth comparisons are reported, not filled.
+    overlaps. Brazil and Colombia enter the BIS panel in 2006; their
+    2006 BIS-implied growth lacks a 2005 denominator. Both 2006 levels
+    are retained, and the two missing comparisons are reported, not filled.
 
 The common-period growth comparison is indexed by the year of the annual
 change. The 2006 growth rate uses the 2005 GDP level as its lag input and
