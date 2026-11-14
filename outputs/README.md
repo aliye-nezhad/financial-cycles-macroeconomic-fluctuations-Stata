@@ -59,7 +59,7 @@ Running `replication/audit_nominal_gdp_linked.do` after the linked validation cr
 
 The five linked-validation figures have been visually inspected. They are legible, use the project's monochrome style, and are exported as separate files. The full-range scatter retains the high-growth observations rather than hiding them through axis truncation.
 
-The first audit run produced correct rankings and figures, but its two top-20 CSV exports retained the full 73-variable source panel. A corrected rerun on 14 November 2026 successfully exported the two focused CSVs containing only the relevant rank, country, year and discrepancy fields, along with the country audit dataset and five PNG/GPH figure pairs. These files are local outputs, not yet committed to GitHub; they need final inspection before inclusion in the repository. The audit does not drop, winsorize or adjust source observations.
+The first audit run produced correct rankings and figures, but its two top-20 CSV exports retained the full 73-variable source panel. A corrected rerun on 14 November 2026 successfully exported the two focused top-20 CSVs and five PNG/GPH figure pairs. The two CSVs have now been independently checked for row count, unique country-year keys, rank ordering and discrepancy arithmetic, and committed to GitHub. The reviewed figure files remain local pending publication into `outputs/figures/`. The audit does not drop, winsorize or adjust source observations.
 
 ## Balanced-panel and common-period sensitivity
 
@@ -82,6 +82,6 @@ The standalone linked-GDP validation completed successfully on 14 November. The 
 
 ## Current repository state
 
-The numerical CSV results are now present in GitHub: `balanced_panel_regression_coefficients.csv` (24 rows), `balanced_panel_linked_gdp_validation.csv` (4 rows) and `balanced_panel_common_growth_missing.csv` (2 rows). They have been reviewed for internal consistency. The 14 November local runs also produced the three balanced-panel figure pairs, two narrowed top-20 outlier CSVs, the country audit and five outlier figure pairs. These other outputs remain local and await review. Do not confuse a successful local export with a reviewed and version-controlled output; commit tables, figures, processed datasets and logs only after validation.
+The repository now contains five audited CSV output tables: 24 regression coefficient records, four linked-GDP sample comparisons, two missing-growth observations, and two ranked top-20 outlier tables. The supplied archive contains fourteen legible PNG figures and fourteen editable GPH counterparts (four main, two denominator, three sample-sensitivity and five GDP-audit figures). They have been visually reviewed but are not yet committed. The country-audit table, full logs and processed Stata datasets also remain local. Do not confuse a successful local export with a reviewed and version-controlled output; commit tables, figures, processed datasets and logs only after validation.
 
 All results describe the specified observational design and must not be presented as causal estimates.
