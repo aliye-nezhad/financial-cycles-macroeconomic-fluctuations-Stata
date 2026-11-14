@@ -631,7 +631,7 @@ jobs:
           name: Financial_Cycles_Stata_Code_Sample_PDF
           path: build/Financial_Cycles_Stata_Code_Sample.pdf
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
       - name: Upload self-contained source bundle
         uses: actions/upload-artifact@v4
@@ -639,5 +639,5 @@ jobs:
           name: Financial_Cycles_Stata_Code_Sample_Bundle
           path: build/Financial_Cycles_Stata_Code_Sample_bundle.zip
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
