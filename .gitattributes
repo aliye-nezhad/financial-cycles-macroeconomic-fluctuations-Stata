@@ -11,3 +11,8 @@ outputs/tables/*.csv text eol=lf
 *.png binary
 *.gph binary
 *.zip binary
+
+# Count the Stata analysis code in GitHub's language bar. PowerShell files
+# are supporting source-download/figure-publication utilities, not analysis.
+# Keep their true syntax and functionality intact; exclude only from statistics.
+replication/*.ps1 -linguist-detectable
