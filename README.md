@@ -167,6 +167,10 @@ These estimates are **conditional in-sample associations**. They do not establis
 
 BIS statistics are reproduced with attribution to the Bank for International Settlements. World Bank indicators are attributed to the World Bank's World Development Indicators. Data-source terms and retrieval details are documented in the data notes. This repository does not imply endorsement by either institution.
 
+## Author
+
+Aliye Nezhad
+
 ## License
 
-The MIT License applies to the original code and documentation in this repository. Third-party datasets remain subject to their respective source terms.
+The [MIT License](LICENSE) applies to the original code and documentation in this repository. Third-party datasets remain subject to their respective source terms.
