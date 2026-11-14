@@ -70,9 +70,9 @@ From the BIS `WS_TC` total-credit dataflow (version 2.0), it retrieves the priva
 
 The BIS states that the credit-to-GDP ratio is the outstanding amount of debt at the end of the quarter divided by the sum of nominal GDP over the previous four quarters. The script reconstructs this denominator as:
 
-\[
+$$
 GDP^{4Q}_{i,t}=100\times\frac{Credit_{i,t}}{Credit/GDP_{i,t}}.
-\]
+$$
 
 At Q4, the trailing four-quarter denominator corresponds to calendar-year nominal GDP. This is an implied denominator reconstructed from BIS credit and ratio series, not a separately published BIS GDP series. The script applies the SDMX unit multiplier to the domestic-currency credit stock before computing log changes.
 
