@@ -12,31 +12,31 @@ The baseline model includes country fixed effects, outcome-year fixed effects, c
 
 | Outcome | Credit-gap coefficient | Clustered SE | Observations | Countries |
 |---|---:|---:|---:|---:|
-| Annual GDP growth in \(t+1\) | -0.0228 | 0.0038 | 1,310 | 43 |
-| Annual GDP growth in \(t+2\) | -0.0290 | 0.0036 | 1,267 | 43 |
-| Annual GDP growth in \(t+3\) | -0.0268 | 0.0035 | 1,224 | 43 |
+| Annual GDP growth in $t+1$ | -0.0228 | 0.0038 | 1,310 | 43 |
+| Annual GDP growth in $t+2$ | -0.0290 | 0.0036 | 1,267 | 43 |
+| Annual GDP growth in $t+3$ | -0.0268 | 0.0035 | 1,224 | 43 |
 
-All three coefficients have Stata-reported \(p<0.001\).
+All three coefficients have Stata-reported $p<0.001$.
 
-A 10-percentage-point higher credit gap is associated with approximately 0.228 percentage points lower annual GDP growth in \(t+1\), 0.290 points lower growth in \(t+2\), and 0.268 points lower growth in \(t+3\), conditional on the included controls and fixed effects.
+A 10-percentage-point higher credit gap is associated with approximately 0.228 percentage points lower annual GDP growth in $t+1$, 0.290 points lower growth in $t+2$, and 0.268 points lower growth in $t+3$, conditional on the included controls and fixed effects.
 
-The \(t+2\) and \(t+3\) dependent variables are the annual GDP growth rates in those specific outcome years. They are not cumulative growth over two or three years, and the estimates should not be described as cumulative output losses.
+The $t+2$ and $t+3$ dependent variables are the annual GDP growth rates in those specific outcome years. They are not cumulative growth over two or three years, and the estimates should not be described as cumulative output losses.
 
 ## 2. Asymmetric specification
 
 The asymmetric model replaces the single credit-gap term with:
 
-\[
+$$
 Gap^+_{i,t}=\max(Gap_{i,t},0),\qquad
 Gap^-_{i,t}=\min(Gap_{i,t},0).
-\]
+$$
 
 | Component | Coefficient | Clustered SE | p-value |
 |---|---:|---:|---:|
 | Positive credit-gap component | -0.0514 | 0.0101 | <0.001 |
 | Negative credit-gap component | -0.0021 | 0.0056 | 0.706 |
 
-The test of equal slopes gives \(F(1,42)=14.85\), \(p=0.0004\).
+The test of equal slopes gives $F(1,42)=14.85$, $p=0.0004$.
 
 In this specification, the negative conditional association is concentrated in observations where the credit-to-GDP ratio is above its estimated trend. The below-trend slope is close to zero and statistically indistinguishable from zero. A below-trend gap should not automatically be described as a credit contraction; it means that the observed credit-to-GDP ratio is below the BIS-estimated trend.
 
@@ -61,7 +61,7 @@ The negative baseline association is not driven solely by the fourth-quarter mea
 | Exclude Luxembourg | -0.0231 | 0.0038 | 1,291 | 42 |
 | Exclude both | -0.0204 | 0.0034 | 1,257 | 41 |
 
-The linear negative association remains statistically significant at \(p<0.001\) in all three restricted samples.
+The linear negative association remains statistically significant at $p<0.001$ in all three restricted samples.
 
 ### Asymmetric specification
 
@@ -156,9 +156,9 @@ The supplementary diagnostic completed all ten sections, passed its source-align
 
 Both source-comparison errors are below the pre-specified 0.10-percentage-point tolerance. The accounting identity
 
-\[
+$$
 \Delta\ln(Credit/GDP)=\Delta\ln(Credit)-\Delta\ln(GDP)
-\]
+$$
 
 holds to numerical precision in the common sample.
 
@@ -185,7 +185,7 @@ Both models use 1,268 observations across 43 countries, country fixed effects, o
 | Nominal credit growth | — | — | -0.0380 | 0.006 |
 | Implied nominal GDP growth | — | — | 0.0603 | 0.099 |
 
-Within-sample \(R^2\) is 0.5155 for the matched baseline and 0.4600 for the component model. These values should not be treated as a direct model-performance comparison because the specifications contain different regressors.
+Within-sample $R^2$ is 0.5155 for the matched baseline and 0.4600 for the component model. These values should not be treated as a direct model-performance comparison because the specifications contain different regressors.
 
 The component model indicates a negative conditional association between nominal credit growth and next-year real GDP growth, controlling for implied nominal-GDP growth, lagged real GDP growth, country fixed effects, and outcome-year fixed effects. The implied nominal-GDP-growth coefficient is positive but is not statistically distinguishable from zero at the conventional 5% level.
 
