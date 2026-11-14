@@ -1,4 +1,4 @@
-# Preliminary empirical results
+# Empirical results and measurement validation
 
 **Execution date:** 13 November 2026  
 **Source vintage:** BIS WS_CREDIT_GAP and World Bank WDI files documented in [DATA_AUDIT.md](DATA_AUDIT.md) and [DATA_VINTAGE.md](../data/DATA_VINTAGE.md).  
