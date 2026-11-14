@@ -28,27 +28,27 @@ The main complete-case regression samples contain 1,310 observations for the one
 
 ## Empirical design
 
-For country \(i\), predictor year \(t\), and horizon \(h\), the baseline specification is:
+For country $i$, predictor year $t$, and horizon $h$, the baseline specification is:
 
-\[
+$$
 g_{i,t+h}=\alpha_i+\lambda_{t+h}
 +\beta_h Gap_{i,t}
 +\rho_h g_{i,t}
 +\delta_h g_{i,t-1}
 +\gamma_h \pi_{i,t}
 +\varepsilon_{i,t+h},
-\]
+$$
 
-where \(g\) is annual real GDP growth, \(Gap\) is the Q4 BIS credit-to-GDP gap, and \(\pi\) is CPI inflation. The model includes country fixed effects and fixed effects for the outcome year. Standard errors are clustered by country.
+where $g$ is annual real GDP growth, $Gap$ is the Q4 BIS credit-to-GDP gap, and $\pi$ is CPI inflation. The model includes country fixed effects and fixed effects for the outcome year. Standard errors are clustered by country.
 
 The primary outcome is annual growth in the specific future year, not cumulative growth over the forecast horizon. The one-year-ahead specification is primary; two- and three-year horizons are extensions.
 
 The asymmetric model replaces the single gap term with:
 
-\[
+$$
 Gap^+_{i,t}=\max(Gap_{i,t},0),\qquad
 Gap^-_{i,t}=\min(Gap_{i,t},0).
-\]
+$$
 
 This allows the above-trend and below-trend slopes to differ. The sign and magnitude of the below-trend slope are treated as empirical questions rather than assumed to mirror the above-trend slope.
 
@@ -58,11 +58,11 @@ This allows the above-trend and below-trend slopes to differ. The sign and magni
 
 | Outcome | Credit-gap coefficient | Clustered SE | Observations |
 |---|---:|---:|---:|
-| GDP growth in \(t+1\) | -0.0228 | 0.0038 | 1,310 |
-| GDP growth in \(t+2\) | -0.0290 | 0.0036 | 1,267 |
-| GDP growth in \(t+3\) | -0.0268 | 0.0035 | 1,224 |
+| GDP growth in $t+1$ | -0.0228 | 0.0038 | 1,310 |
+| GDP growth in $t+2$ | -0.0290 | 0.0036 | 1,267 |
+| GDP growth in $t+3$ | -0.0268 | 0.0035 | 1,224 |
 
-All three coefficients are statistically significant at \(p<0.001\) using conventional country-clustered inference. A 10-percentage-point higher credit gap is associated with approximately 0.228 percentage points lower annual GDP growth in the following year, conditional on the included controls and fixed effects. The corresponding associations are 0.290 and 0.268 percentage points at the two- and three-year horizons.
+All three coefficients are statistically significant at $p<0.001$ using conventional country-clustered inference. A 10-percentage-point higher credit gap is associated with approximately 0.228 percentage points lower annual GDP growth in the following year, conditional on the included controls and fixed effects. The corresponding associations are 0.290 and 0.268 percentage points at the two- and three-year horizons.
 
 These are annual growth rates in the respective outcome years, not cumulative output losses.
 
@@ -73,7 +73,7 @@ These are annual growth rates in the respective outcome years, not cumulative ou
 | Positive credit-gap component | -0.0514 | 0.0101 | <0.001 |
 | Negative credit-gap component | -0.0021 | 0.0056 | 0.706 |
 
-The test of equal slopes gives \(F(1,42)=14.85\), \(p=0.0004\). In the full sample, the negative conditional association is concentrated in observations where the credit-to-GDP ratio is above its estimated trend. The below-trend slope is close to zero and statistically indistinguishable from zero.
+The test of equal slopes gives $F(1,42)=14.85$, $p=0.0004$. In the full sample, the negative conditional association is concentrated in observations where the credit-to-GDP ratio is above its estimated trend. The below-trend slope is close to zero and statistically indistinguishable from zero.
 
 ### Specification and country-influence checks
 
