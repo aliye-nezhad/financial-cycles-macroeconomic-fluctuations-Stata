@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This note summarizes the current empirical project for research-portfolio development. It is not yet an external-ready working paper: final export and inspection of the four-sample linked-GDP comparison and its two unmatched growth observations, inspection of the newly regenerated audit tables and regression CSV, and review of the remaining figures are still outstanding. The numerical findings below are drawn from the Stata 17 execution records documented in this repository. GitHub Actions does not execute Stata.
+> **Internal working draft.** This note summarizes the empirical project for research-portfolio development. The four linked-GDP country-period validations completed in Stata 17 on 14 November 2026, including an explicit audit of two unavailable BIS-implied growth observations. The note is not yet external-ready: the generated regression and validation CSVs, regenerated outlier tables, and remaining figures still need inspection and review. GitHub Actions does not execute Stata.
 
 ## Abstract
 
@@ -118,6 +118,19 @@ The median absolute time-varying level deviation after country-specific scale ad
 
 This is a cross-source consistency check, not proof that the two sources are fully independent in their underlying national-accounts inputs.
 
+### Four-sample linked-GDP validation
+
+The complete sample-composition check compares the 43-economy unbalanced sample, 31 economies with complete 1990–2024 BIS Q4 credit-gap coverage, and both country sets over 2006–2024.
+
+| Sample | GDP levels | Matched annual GDP growth | Correlation | Growth MAE (pp) | Growth RMSE (pp) |
+|---|---:|---:|---:|---:|---:|
+| 43 economies, original window | 1,377 | 1,334 | 0.99616 | 0.21985 | 0.72444 |
+| 31 economies, full window | 1,085 | 1,054 | 0.99039 | 0.23247 | 0.73805 |
+| 31 economies, 2006–2024 | 589 | 589 | 0.99098 | 0.22043 | 0.67067 |
+| 43 economies, 2006–2024 | 817 | 815 | 0.99744 | 0.20060 | 0.63150 |
+
+Both **Brazil and Colombia** enter the BIS sample in 2006. Their World Bank linked series report 2006 nominal-GDP growth, but the BIS-implied 2006 growth cannot be calculated without a BIS-implied denominator for 2005. Both countries retain their 2006 level comparisons; only their unavailable growth comparisons are excluded. The script exported the two-row audit as `outputs/tables/balanced_panel_common_growth_missing.csv`. It passed all four observation-count checks and final output-existence checks. The source data were not modified.
+
 ## Interpretation and limitations
 
 The results show a consistent negative conditional predictive association between the BIS credit-to-GDP gap and subsequent annual real GDP growth in the main and linear sample-sensitivity specifications. The full-sample asymmetric model suggests that the relationship is concentrated in above-trend credit observations, but common-period estimates show that this asymmetry is sensitive to the sample window.
@@ -149,10 +162,10 @@ The main entry points are:
 
 Before this note is used externally, the following items remain:
 
-1. Inspect the new regression CSV to verify the 31-country common-period H1 linear and asymmetric coefficients and standard errors. The 14 November standalone validation calculated 817 level matches and 815 growth matches for all 43 economies over 2006–2024 (growth correlation 0.99744, MAE 0.20060 pp, RMSE 0.63150 pp), but its obsolete 817-growth count assertion stopped the export. The committed standalone script now expects 815 and outputs the two unmatched country-years. Run it once to produce and review the consolidated four-sample CSV and missing-growth audit.
-2. The linked-GDP audit was rerun successfully on 14 November 2026. Review and commit its regenerated, narrowed top-20 CSV files and the other audit outputs when available.
-3. Review the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their tables and logs.
-4. Freeze the final source metadata, checksums, tables, figures, and logs. GitHub Actions checks repository structure and source acquisition; it does not run Stata or validate numerical estimates.
+1. Review the generated `outputs/tables/balanced_panel_regression_coefficients.csv` to verify the exact 31-country common-period H1 linear and asymmetric coefficients, standard errors and slope-equality test. The supplied regression excerpt confirms N=558, 31 clusters and p=0.00017 for the linear H1 model but does not contain its coefficient and standard error.
+2. Review `outputs/tables/balanced_panel_linked_gdp_validation.csv` and `outputs/tables/balanced_panel_common_growth_missing.csv` and add those verified outputs to the repository. The standalone validation completed successfully on 14 November; no further numerical rerun is needed.
+3. Review the narrowed top-20 linked-GDP outlier tables and remaining figures, then commit the reviewed tables and plots.
+4. Verify the source-vintage metadata, output files and logs, and finalize the note without making causal claims.
 
 ## References
 
@@ -163,4 +176,4 @@ Before this note is used externally, the following items remain:
 
 ---
 
-This draft is an internal research-portfolio document. It should be updated only after the remaining Stata validation and output-review tasks are completed.
+This draft is an internal research-portfolio document. The remaining work is output inspection and research-facing presentation, not another linked-GDP validation run.
