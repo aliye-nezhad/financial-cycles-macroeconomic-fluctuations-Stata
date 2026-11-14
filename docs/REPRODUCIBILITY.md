@@ -49,6 +49,8 @@ The download script checks the exact, versioned World Bank CSV member names reco
 
 For CSV ingestion, the analysis uses Stata's built-in `insheet` command rather than `import delimited`, avoiding the Java-dependent import path encountered in the current Windows environment. The BIS file is imported with its header row. The World Bank files are imported without variable names; `insheet` skips their blank separator lines, after which the script drops the three remaining metadata/header observations. The script retains the country name, ISO3 code, and 1989-2024 columns (`v34`-`v69`). The 2025 column and trailing empty field in the current WDI download are intentionally excluded. Numeric fields are converted only when Stata has imported them as strings.
 
+**Pinned-input structural validation.** The GitHub Actions repository check now reads both archived World Bank CSV members with a CSV-aware reader and verifies their source/date metadata, exact GDP-growth and CPI-inflation indicator codes, unshifted 1989–2024 columns (Stata `v34` through `v69`), 2025 and trailing-header layout, country-code uniqueness, aligned row widths, and finite values for selected country-years in the United States, Germany and Brazil. Together with the exact `data/raw.sha256` manifest, these checks detect a swapped or structurally shifted archived WDI file **before** relying on the fixed-column Stata import. The check does **not** execute Stata or prove a regenerated coefficient estimate. The original Stata importer and its expected 2026-11-11 WDI vintage remain unchanged; a genuinely different source vintage would require review of the header mapping before the file could be treated as a supported replacement.
+
 ## 3. Run the analysis
 
 ```stata
