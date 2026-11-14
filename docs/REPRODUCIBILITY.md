@@ -251,7 +251,7 @@ The script identifies the 31 economies with nonmissing BIS Q4 credit gaps in eve
 | All 43 economies, unbalanced | 1990–2024 | 1991–2024 | 1,377 | 1,334 |
 | 31 complete-coverage economies | 1990–2024 | 1991–2024 | 1,085 | 1,054 |
 | 31 complete-coverage economies, common period | 2006–2024 | 2006–2024 | 589 | 589 |
-| All 43 economies, common period | 2006–2024 | 2006–2024 | 817 | 817 |
+| All 43 economies, common period | 2006–2024 | 2006–2024 | 817 | 815 |
 
 The level and growth comparisons use separate overlap indicators but the same calendar-year window. For the common-period samples, both cover 2006–2024. The 2006 annual growth rate uses the 2005 GDP level as its lag input; it remains a 2006 growth observation. The 2005 growth observation itself is excluded.
 
@@ -271,7 +271,7 @@ The combined script produces:
 - `outputs/figures/balanced_panel_asymmetry.png` and `.gph`
 - `outputs/logs/balanced_panel_sensitivity.log`
 
-The standalone validation-only script produces the linked-GDP CSV, processed dataset, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`. On 14 November 2026, the local combined-script run computed 589 matched level and 589 growth observations for the 31-country common-period linked-GDP sample but stopped because its local validation block incorrectly expected 558. The checked-in combined and standalone scripts already expect 589 for that sample and 817 for the 43-country common-period sample. After updating the local scripts, run the standalone validation-only script to finish the measurement check without repeating the regressions.
+The standalone validation-only script produces the linked-GDP CSV, processed dataset, the two-row audit `outputs/tables/balanced_panel_common_growth_missing.csv`, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`. The 14 November 2026 standalone run reached all four samples and found 817 matched levels but only 815 matched annual growth observations in the 43-country 2006–2024 sample. The two missing growth comparisons are genuine missing pairs in the processed series, not observations to impute. Both committed runners now assert 815 for that sample and export its two level-matched but growth-unmatched country-year records for inspection. Re-execute the standalone script to finish the output checks without rerunning the regressions.
 
 The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
 
@@ -378,6 +378,7 @@ Record the retrieval date printed in `outputs/logs/denominator_diagnostic.log` a
 | outputs/logs/nominal_gdp_linked_outlier_audit.log | Linked-GDP outlier-audit execution log |
 | outputs/tables/balanced_panel_regression_coefficients.csv | Four-sample linear and asymmetric regression coefficients |
 | outputs/tables/balanced_panel_linked_gdp_validation.csv | Four-sample linked-GDP validation results |
+| outputs/tables/balanced_panel_common_growth_missing.csv | Two level-matched country-years without matched annual growth |
 | data/processed/balanced_panel_linked_gdp_validation.dta | Processed four-sample linked-GDP validation dataset |
 | outputs/logs/balanced_panel_sensitivity.log | Combined regression and linked-GDP sensitivity log |
 | outputs/logs/balanced_panel_linked_gdp_sensitivity.log | Standalone linked-GDP sample-validation log |
