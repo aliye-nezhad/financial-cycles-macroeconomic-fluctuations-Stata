@@ -61,6 +61,7 @@ Source documentation, download instructions, transformations, and attribution re
 │   ├── DATA_AUDIT.md
 │   ├── LITERATURE_NOTES.md
 │   ├── RESEARCH_DESIGN.md
+│   ├── RESEARCH_BRIEF.md
 │   ├── RESEARCH_NOTE_DRAFT.md
 │   ├── RESULTS.md
 │   └── REPRODUCIBILITY.md
@@ -125,7 +126,7 @@ The inference diagnostic requires a working installation of David Roodman's `boo
 
 The repository also includes a GitHub Actions data-acquisition workflow for the main-analysis sources. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits those source files to the private repository. The supplementary BIS series and both unlinked and linked World Bank nominal-GDP indicators have separate acquisition helpers and are checked in the Windows CI job. The WDI checks verify the requested indicator code, required year columns, archive/CSV checksums, and no-refresh idempotence. The Stata download scripts preserve existing raw archives by default; set their refresh option to 1 only when intentionally retrieving a new vintage. Retrieval dates and checksums are retained with the relevant source files.
 
-See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The internal [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) synthesizes the current findings and explicitly lists the remaining validation items; it is not yet intended for external distribution.
+See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The concise [research brief](docs/RESEARCH_BRIEF.md) summarizes the confirmed findings, documented sensitivities and limitations for research review. The longer internal [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) provides more detail. Both remain subject to final figure and supplementary-output review.
 
 ## Current status
 
