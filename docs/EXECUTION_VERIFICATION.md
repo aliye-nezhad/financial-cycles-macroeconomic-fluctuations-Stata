@@ -16,6 +16,20 @@ This digest identifies the verified local execution record without including pri
 
 The completed run supersedes the archived earlier `balanced_panel_sensitivity.log` that stopped at an obsolete sample-count assertion. The successfully executed standalone GDP sample-validation script remains a separate independent check of the four linked-GDP sample definitions.
 
+## Provenance checklist and limits of verification
+
+The original 14 November 2026 Stata log provides a reviewable **completed numerical execution record**. Its evidentiary scope is as follows:
+
+| Verification requirement | Evidence and qualification |
+|---|---|
+| Stata version and environment | **Stata 17**, executed locally in a **Windows** environment. The precise Windows build and Stata update/build were not separately retained in this sanitized record. |
+| Source-data vintage | The main BIS and WDI analysis inputs have a frozen [vintage record](../data/DATA_VINTAGE.md) (retrieved **13 November 2026**, WDI last updated **11 November 2026**) and [five-file SHA-256 manifest](../data/raw.sha256). GitHub Actions verifies all five archived source hashes. It also checks the *specific WDI CSV metadata, indicator codes, fixed 1989–2024 column mapping, country IDs and known-country nonmissing values* before the source files are interpreted by Stata. Supplementary BIS/linked-GDP downloads used by some diagnostics have separate acquisition checks but are **not fully captured by the five-file main-input manifest**. The execution log itself does not include a contemporaneous checksum printout. |
+| Script revision | The current committed `replication/balanced_panel_sensitivity.do` file has Git blob **`c4b151fb160116db15634c1c0879e638dafea487`**. Its latest substantive GitHub commit is [`1991d78019dd`](https://github.com/aliye-nezhad/financial-cycles-macroeconomic-fluctuations-Stata/commit/1991d78019ddbeb03820bfbf2921a0d28955be18), dated 14 November 2026. **The local execution log does not record its Git HEAD or source-file hash**, so the exact local script revision cannot be cryptographically established from that log alone. |
+| Successful run | The complete log contains the final `Balanced-panel and common-period sensitivity completed.` message, successful output-presence checks, and `log close main_log`, with **no fatal terminal Stata return code**. The full log's SHA-256 is recorded above. |
+| Numerical results | The logged **12 linear horizon regressions**, four asymmetric specifications, country-cluster counts and four linked-GDP sample validations match the committed [coefficient table](../outputs/tables/balanced_panel_regression_coefficients.csv) and [GDP-validation table](../outputs/tables/balanced_panel_linked_gdp_validation.csv) at reported precision. The H1–H3 main coefficients and observations are reproduced immediately below. |
+
+**Interpretation:** The existing execution log provides strong evidence of successful local estimation and numerical agreement. It is **not** proof of the precise local Git commit, a runtime hash check of every supplementary input, or independent third-party reproduction. Those stronger provenance claims would require a separately captured local commit/hash snapshot at the time of execution. Do not infer them from a successful GitHub Actions run.
+
 ## Confirmed regression results
 
 All 12 linear horizon regressions completed, across 43-country unbalanced, 31-country full-period, 31-country common-period, and 43-country common-period samples. The log's reported coefficient/SE/observations/cluster counts agree with the [reviewed committed regression CSV](../outputs/tables/balanced_panel_regression_coefficients.csv), at the precision printed in the log.
