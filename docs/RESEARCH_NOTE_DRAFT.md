@@ -1,4 +1,8 @@
-# Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
+# Financial Cycles and Macroeconomic Fluctuations
+
+**Cross-Country Evidence from Credit-to-GDP Gaps**
+
+*Research note*
 
 > **Research-portfolio working paper (internally validated).** The empirical specifications, five audited numerical tables and all fourteen figures have been reviewed, and their results have been committed. The latest combined balanced-panel script was successfully executed in Stata 17 on 14 November 2026; the completed log's numerical results and SHA-256 digest are documented in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md). This remains an observational applied research note, not a peer-reviewed causal study, independent third-party reproduction or evaluated real-time forecasting exercise.
 
