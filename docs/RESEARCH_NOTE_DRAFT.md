@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This note summarizes the current empirical project for research-portfolio development. It is not yet an external-ready working paper: the corrected 43-country common-period linked-GDP validation, regeneration of two narrowed audit tables, and final review of the remaining figures are still outstanding. The numerical findings below are drawn from the Stata 17 execution records documented in this repository. GitHub Actions does not execute Stata.
+> **Internal working draft.** This note summarizes the current empirical project for research-portfolio development. It is not yet an external-ready working paper: the 43-country common-period linked-GDP validation, final inspection of the newly regenerated narrow audit tables and regression CSV, and review of the remaining figures are still outstanding. The numerical findings below are drawn from the Stata 17 execution records documented in this repository. GitHub Actions does not execute Stata.
 
 ## Abstract
 
