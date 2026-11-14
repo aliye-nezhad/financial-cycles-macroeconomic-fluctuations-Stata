@@ -32,6 +32,7 @@ jobs:
 
           for path in \
             README.md \
+            docs/Financial_Cycles_Stata_Code_Sample.tex \
             LICENSE \
             .gitignore \
             .gitattributes \
@@ -558,3 +559,83 @@ jobs:
           }
 
           Write-Host "Windows BIS and World Bank source checks, including linked GDP and downloader idempotence, passed."
+
+  build-code-sample:
+    name: Build complete repository code sample
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Install LaTeX and Pygments
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended python3-pygments zip
+
+      - name: Record the exact source snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          printf '\\newcommand{\\SourceCommit}{\\texttt{%s}}\\n' "$(git rev-parse HEAD)" > build/source_snapshot.tex
+          printf '\\newcommand{\\SourceDate}{%s}\\n' "$(git log -1 --format=%cI)" >> build/source_snapshot.tex
+
+      - name: Compile the complete code sample
+        shell: bash
+        run: |
+          set -euo pipefail
+          latexmk -pdf -shell-escape -interaction=nonstopmode -halt-on-error -outdir=build docs/Financial_Cycles_Stata_Code_Sample.tex
+          test -s build/Financial_Cycles_Stata_Code_Sample.pdf
+
+      - name: Assemble the self-contained source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle="build/Financial_Cycles_Stata_Code_Sample"
+          mkdir -p "$bundle/docs" "$bundle/replication" "$bundle/.github/workflows" "$bundle/data" "$bundle/build"
+          cp docs/Financial_Cycles_Stata_Code_Sample.tex "$bundle/docs/"
+          cp replication/*.do replication/*.ps1 "$bundle/replication/"
+          cp .github/workflows/*.yml "$bundle/.github/workflows/"
+          cp data/raw.sha256 "$bundle/data/"
+          cp build/source_snapshot.tex build/Financial_Cycles_Stata_Code_Sample.pdf "$bundle/build/"
+          cat > "$bundle/README.txt" <<'EOF'
+          Financial Cycles and Macroeconomic Fluctuations
+          Complete repository code sample
+
+          This bundle contains the PDF code sample, its TeX source, every tracked
+          Stata do-file, every PowerShell helper, both GitHub Actions workflows,
+          and the archived main-input SHA-256 manifest.
+
+          The PDF embeds the complete source listings. The TeX file uses
+          \inputminted paths relative to the bundle root. To rebuild it, install
+          LaTeX, minted, Pygments and latexmk, then run from this directory:
+
+          latexmk -pdf -shell-escape -interaction=nonstopmode -halt-on-error -outdir=build docs/Financial_Cycles_Stata_Code_Sample.tex
+
+          The source snapshot is recorded in build/source_snapshot.tex.
+          Stata do-files target Stata 15.1 or later. The optional inference
+          diagnostic requires the user-written boottest package. PowerShell
+          helpers target Windows PowerShell 5.1 or later.
+          EOF
+          (cd build && zip -qr Financial_Cycles_Stata_Code_Sample_bundle.zip Financial_Cycles_Stata_Code_Sample)
+          test -s build/Financial_Cycles_Stata_Code_Sample_bundle.zip
+
+      - name: Upload complete PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: Financial_Cycles_Stata_Code_Sample_PDF
+          path: build/Financial_Cycles_Stata_Code_Sample.pdf
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload self-contained source bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: Financial_Cycles_Stata_Code_Sample_Bundle
+          path: build/Financial_Cycles_Stata_Code_Sample_bundle.zip
+          if-no-files-found: error
+          retention-days: 30
+
