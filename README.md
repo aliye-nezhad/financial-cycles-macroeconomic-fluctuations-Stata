@@ -1,4 +1,6 @@
-# Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps
+# Financial Cycles and Macroeconomic Fluctuations
+
+**Cross-Country Evidence from Credit-to-GDP Gaps**
 
 This Stata project examines whether the BIS credit-to-GDP gap is associated with subsequent real GDP growth across economies. The empirical design uses an unbalanced annual country panel, country fixed effects, outcome-year fixed effects, and country-clustered standard errors.
 
