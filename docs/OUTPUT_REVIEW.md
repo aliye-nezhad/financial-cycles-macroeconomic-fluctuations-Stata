@@ -54,6 +54,38 @@ The two top-20 tables have now been inspected and committed alongside the earlie
 3. **Retain provenance.** Prefer versioning the completed standalone validation log and other clean terminal logs only after checking for machine-specific directories or personal metadata. Do not treat GitHub Actions success as evidence that Stata itself ran in CI.
 4. **Freeze the source vintage and research brief.** Check tracked source hashes and keep the observational, sample-window-sensitive interpretation intact.
 
+## Minimal local completion steps
+
+The reviewed figure publisher has been committed as `replication/publish_reviewed_figures.ps1`. It is deliberately non-destructive: it verifies the fourteen PNGs and editable GPH counterparts, creates a separate temporary Git worktree at the latest `origin/main`, and pushes only the reviewed figure files. It does not modify the local Stata data, logs, or other Git changes. Do not use it until the final combined-script run has completed successfully.
+
+1. **PowerShell (get the latest two scripts, without pulling or overwriting generated results):**
+
+   ```powershell
+   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
+   git fetch origin main
+   git restore --source=origin/main --worktree -- replication/balanced_panel_sensitivity.do replication/publish_reviewed_figures.ps1
+   ```
+
+2. **Stata (one release verification, not additional econometric research):**
+
+   ```stata
+   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
+   do "replication/balanced_panel_sensitivity.do"
+   ```
+
+   The log must end with a completion statement, no Stata error return code, and all expected output files. Do **not** publish the old stopped combined log as a successful execution. If the script fails, retain the full log and report the error instead of proceeding to the publisher.
+
+3. **PowerShell (publish only the reviewed figures):**
+
+   ```powershell
+   cd "C:\Users\ASUS\Desktop\financial-cycles-macroeconomic-fluctuations-Stata"
+   powershell -NoProfile -ExecutionPolicy Bypass -File ".\replication\publish_reviewed_figures.ps1"
+   ```
+
+   This commits 14 PNG and 14 GPH files from the local `outputs/figures/` directory to the private repository. It uses a temporary worktree based on the latest remote branch to avoid overwriting local generated result CSVs and other files.
+
+4. **Provide the clean final execution log for audit:** `outputs/logs/balanced_panel_sensitivity.log`, or paste the terminal completion/error section if uploading the full log is impractical. Optional log publication and source checksum checks can be completed after the figure push.
+
 ### Decision
 
 **Proceed to final packaging without additional exploratory regressions.** The five audited numerical CSVs and current research note support that decision. Mark the repo as fully release-ready only after selected visuals are committed and the updated combined-script execution status is accurately represented. A successful complete replay is recommended if the repository will be advertised as end-to-end reproducible.
