@@ -25,6 +25,8 @@ Growth windows:
     panel begins in 1990 and annual growth requires a preceding level.
     Common-period samples cover 2006-2024. The 2006 annual growth rate
     uses the 2005 GDP level as a lag input; it is still a 2006 observation.
+    The all-43 common sample has 817 level overlaps but 815 growth
+    overlaps. The two missing growth comparisons are reported, not filled.
 
 The common-period growth comparison is indexed by the year of the annual
 change. The 2006 growth rate uses the 2005 GDP level as its lag input and
@@ -172,6 +174,36 @@ if `verified_balanced_count' != 31 {
 ***********************************************************************/
 
 tempfile validation_results
+/***********************************************************************
+Audit the two level-matched observations without matched annual growth
+in the all-43 common period. Do not impute or remove their GDP levels.
+***********************************************************************/
+
+preserve
+keep if inrange(year, 2006, 2024) ///
+    & level_overlap == 1 & growth_overlap != 1
+quietly count
+local missing_common_growth = r(N)
+
+display as text " "
+display as text "All-43 common-period level observations without matched growth:"
+list iso3c year nominal_gdp_growth_implied wb_nominal_gdp_growth, ///
+    noobs abbreviate(24)
+
+if `missing_common_growth' != 2 {
+    display as error ///
+        "Expected exactly 2 level-matched but growth-unmatched observations; found `missing_common_growth'."
+    restore
+    log close validation_log
+    exit 459
+}
+
+keep iso3c year nominal_gdp_growth_implied wb_nominal_gdp_growth
+sort iso3c year
+export delimited using ///
+    "outputs/tables/balanced_panel_common_growth_missing.csv", replace
+restore
+
 tempname validation_post
 
 postfile `validation_post' ///
@@ -222,7 +254,7 @@ foreach sample_name of local sample_names {
         local level_if "level_overlap == 1 & inrange(year, 2006, 2024)"
         local growth_if "growth_overlap == 1 & inrange(year, 2006, 2024)"
         local expected_levels = 817
-        local expected_growth = 817
+        local expected_growth = 815
         local expected_countries = 43
     }
 
@@ -364,6 +396,7 @@ list sample_name level_observations level_countries ///
     p95_abs_level_deviation, noobs abbreviate(24)
 
 foreach output in ///
+    outputs/tables/balanced_panel_common_growth_missing.csv ///
     outputs/tables/balanced_panel_linked_gdp_validation.csv ///
     data/processed/balanced_panel_linked_gdp_validation.dta {
     capture confirm file "`output'"
