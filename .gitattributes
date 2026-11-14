@@ -9,4 +9,5 @@
 outputs/tables/*.csv text eol=lf
 *.dta binary
 *.png binary
+*.gph binary
 *.zip binary
