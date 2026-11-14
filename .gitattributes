@@ -5,6 +5,8 @@
 *.yaml text eol=lf
 *.txt text eol=lf
 *.csv binary
+# Raw CSV archives retain their original bytes; reviewed results display as text.
+outputs/tables/*.csv text eol=lf
 *.dta binary
 *.png binary
 *.zip binary
