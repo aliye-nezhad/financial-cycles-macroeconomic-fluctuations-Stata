@@ -121,6 +121,7 @@ The project will not add FGLS, AR(1), random-effects or dynamic-panel estimators
 5. **Unbalanced coverage.** The effective sample may vary by horizon and specification. In the retrieved vintage, CPI is missing for Argentina in 1994–2017, and observation coverage starts later than 1990 for 12 countries. Observation counts, country counts and year coverage must be reported for every model.
 6. **Inference.** Country clustering is appropriate for within-country dependence, but the effective number of clusters and sample composition must be reported. Robustness of inference should be discussed rather than assumed.
 7. **Outcome scope.** The main outcome is real GDP growth. The title refers to macroeconomic fluctuations broadly, but the empirical analysis does not claim to measure every dimension of macroeconomic volatility.
+8. **In-sample rather than operational forecasting.** The outcome-year fixed effects are estimated with realized observations over the historical sample. The outcome year is known in advance, but its estimated fixed-effect coefficient is not available for an unseen future year. These models therefore document conditional associations with later growth, not a real-time or out-of-sample forecasting exercise.
 
 ## Implementation status and next diagnostics
 
