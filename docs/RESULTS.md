@@ -2,7 +2,7 @@
 
 **Execution date:** 13 November 2026  
 **Source vintage:** BIS WS_CREDIT_GAP and World Bank WDI files documented in [DATA_AUDIT.md](DATA_AUDIT.md) and [DATA_VINTAGE.md](../data/DATA_VINTAGE.md).  
-**Execution record:** User-supplied Stata log from the completed run of `replication/run_analysis.do`.
+**Execution record:** Stata 17 execution log from the completed run of `replication/run_analysis.do`.
 
 This note records the first complete set of empirical estimates. It documents what the current specifications show; it does not claim causal identification or a novel structural mechanism.
 
@@ -92,7 +92,7 @@ Several qualifications remain important:
 ## 6. Wild cluster bootstrap results
 
 **Execution date:** 13 November 2026  
-**Execution record:** User-supplied Stata 17 log from the completed run of `replication/inference_diagnostics.do`.
+**Execution record:** Stata 17 execution log from the completed run of `replication/inference_diagnostics.do`.
 
 The diagnostic completed successfully. All eight tests used 9,999 Rademacher replications, country-level clustering across 43 economies, and the fixed seeds recorded in the do-file. The original baseline and asymmetric models use 1,310 observations; the matched-sample baseline and component model use 1,268 observations.
 
@@ -139,7 +139,7 @@ The Stata scripts export each named graph separately. The four main-analysis PNG
 ## 8. Credit-numerator and GDP-denominator diagnostic
 
 **Execution date:** 13 November 2026  
-**Execution record:** User-supplied Stata log from the completed run of `replication/denominator_diagnostic.do`.
+**Execution record:** Stata 17 execution log from the completed run of `replication/denominator_diagnostic.do`.
 
 The supplementary diagnostic completed all ten sections, passed its source-alignment checks, estimated both matched-sample models, exported two separately named figures, saved the processed panel, and closed its logs.
 
@@ -217,7 +217,7 @@ No further exploration or Stata rerun is required for the **validated portfolio 
 ## 10. Linked nominal-GDP validation using the World Bank linked current-LCU series
 
 **Execution date:** 13 November 2026  
-**Execution record:** User-supplied Stata 17 log from the completed run of `replication/validate_nominal_gdp_linked.do`.  
+**Execution record:** Stata 17 execution log from the completed run of `replication/validate_nominal_gdp_linked.do`.  
 **World Bank vintage:** Indicator `NY.GDP.MKTP.CN.AD`; last updated 11 November 2026; retrieved 13 November 2026.
 
 The validation compares the BIS-implied Q4 nominal-GDP denominator (Q4 credit stock divided by the Q4 credit-to-GDP ratio) with the World Bank's linked annual current-LCU GDP series. The linked WDI series is used because it is designed to reduce historical breaks associated with changes in national-accounts base years, source data, and methodologies.
@@ -315,7 +315,7 @@ A final combined Stata 17 sensitivity run on **14 November 2026** successfully c
 | 31 economies, common period | -0.03135 (0.00731), 558 | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
 | 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-The uploaded `outputs/tables/balanced_panel_regression_coefficients.csv` confirms the exact 31-country common-period H1 estimate of **−0.031353** (clustered SE **0.007305**), based on **558 observations** and **31 country clusters** (p = 0.000170). This resolves the earlier sample-count discrepancy without changing the estimation window. All **12 linear coefficients** are negative and significant at the 1% level. The common-period coefficients are larger in absolute magnitude than the corresponding full-period coefficients. This is evidence of period sensitivity, not causality or automatic superiority of the common-period specification. The 43-economy common-period regression sample is not strictly balanced because Argentina's CPI observations are missing for 2006–2017. The 24-row coefficient export contains no missing fields or duplicate model-term keys; reported p-values and 95% confidence intervals were checked against country-cluster degrees of freedom.
+The committed `outputs/tables/balanced_panel_regression_coefficients.csv` confirms the exact 31-country common-period H1 estimate of **−0.031353** (clustered SE **0.007305**), based on **558 observations** and **31 country clusters** (p = 0.000170). This resolves the earlier sample-count discrepancy without changing the estimation window. All **12 linear coefficients** are negative and significant at the 1% level. The common-period coefficients are larger in absolute magnitude than the corresponding full-period coefficients. This is evidence of period sensitivity, not causality or automatic superiority of the common-period specification. The 43-economy common-period regression sample is not strictly balanced because Argentina's CPI observations are missing for 2006–2017. The 24-row coefficient export contains no missing fields or duplicate model-term keys; reported p-values and 95% confidence intervals were checked against country-cluster degrees of freedom.
 
 #### Asymmetric one-year-ahead regressions
 
@@ -326,7 +326,7 @@ The uploaded `outputs/tables/balanced_panel_regression_coefficients.csv` confirm
 | 31 economies, common period | -0.05075 (0.03043) | -0.01740 (0.02664) | -0.03335 (0.22805) | 558 |
 | 43 economies, common period | -0.05327 (0.00278) | -0.01783 (0.01064) | -0.03544 (0.08793) | 762 |
 
-The uploaded regression CSV confirms all four asymmetric H1 specifications, including the 31-country common-period coefficients and slope-equality test. **In both full-period samples**, the above-trend slope is negative and significant, the below-trend slope is close to zero and insignificant, and equal slopes are rejected at the 5% level. **In both common-period samples**, the above-trend and below-trend component slopes are each negative and individually significant, but the equality test fails to reject equal slopes at 5% (p = 0.22805 for 31 countries; p = 0.08793 for all 43). Consequently, the negative linear credit-gap association is robust across country-period definitions, while the specific asymmetry claim is not robust to the common-window restriction. These are country-clustered conventional tests in the sensitivity models; the main-sample wild bootstrap is documented separately and does not establish bootstrap significance for the common-period differences.
+The committed regression CSV confirms all four asymmetric H1 specifications, including the 31-country common-period coefficients and slope-equality test. **In both full-period samples**, the above-trend slope is negative and significant, the below-trend slope is close to zero and insignificant, and equal slopes are rejected at the 5% level. **In both common-period samples**, the above-trend and below-trend component slopes are each negative and individually significant, but the equality test fails to reject equal slopes at 5% (p = 0.22805 for 31 countries; p = 0.08793 for all 43). Consequently, the negative linear credit-gap association is robust across country-period definitions, while the specific asymmetry claim is not robust to the common-window restriction. These are country-clustered conventional tests in the sensitivity models; the main-sample wild bootstrap is documented separately and does not establish bootstrap significance for the common-period differences.
 
 #### Linked nominal-GDP validation across country-period samples
 
