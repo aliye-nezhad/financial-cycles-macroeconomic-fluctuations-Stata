@@ -61,17 +61,15 @@ The two unavailable 2006 BIS-implied growth observations in the last sample are 
 
 The work contributes a transparent *applied macro-finance research workflow*: source acquisition, country-year panel construction, fixed-effects modeling, asymmetric and sample-window diagnostics, finite-cluster inference, GDP-denominator validation, and country-year discrepancy audits. It is not positioned as a structural or causal identification design.
 
-## Reproducibility and current output status
+## Reproducibility and release status
 
-The complete analysis is written for Stata 15.1 or later and was run in Stata 17. The following reviewed CSV files are committed to the repository:
+The applied macro-finance analysis and its documented sensitivities were executed in **Stata 17**. On 14 November 2026 the latest combined balanced-panel sensitivity script completed its twelve linear models, four asymmetric models, four linked-GDP comparisons, figure exports, dataset export and final output checks. The uploaded terminal log was reviewed directly, and its SHA-256 and selected results are preserved in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md).
 
-- [Balanced-panel regression coefficients: 24 rows](../outputs/tables/balanced_panel_regression_coefficients.csv)
-- [Linked-GDP validation: four country-period samples](../outputs/tables/balanced_panel_linked_gdp_validation.csv)
-- [Two missing-growth country-years](../outputs/tables/balanced_panel_common_growth_missing.csv)
+Five numerical/audit tables are committed: the [24-row coefficient table](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), [two-row missing-growth report](../outputs/tables/balanced_panel_common_growth_missing.csv), and the [top-20 GDP-level](../outputs/tables/nominal_gdp_linked_level_outliers_top20.csv) and [growth-discrepancy](../outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv) tables. All **14 reviewed PNG figures and 14 editable GPH files** are versioned in [`outputs/figures/`](../outputs/figures/).
 
-The full [results and numerical diagnostics](RESULTS.md), [research design](RESEARCH_DESIGN.md), [source data audit](DATA_AUDIT.md), [reproducibility instructions](REPRODUCIBILITY.md), and [long-form research-note draft](RESEARCH_NOTE_DRAFT.md) provide the underlying details.
+The full [results and numerical diagnostics](RESULTS.md), [research design](RESEARCH_DESIGN.md), [data audit](DATA_AUDIT.md), [output-quality review](OUTPUT_REVIEW.md), [reproducibility instructions](REPRODUCIBILITY.md) and [long-form research note](RESEARCH_NOTE_DRAFT.md) provide the underlying detail.
 
-**Still to review before external circulation:** four main-analysis plots, two denominator-component plots, three balanced-panel plots, regenerated top-20 GDP discrepancy tables, final logs and source-vintage metadata. The existing GitHub Actions tests check repository/data-acquisition integrity and exported-table structure; they do not execute Stata or reproduce coefficient estimates from source data.
+The project is **ready as a research-portfolio artifact**. The original local execution log and some processed Stata datasets are not all committed; optional archival work could add these after checking for personal machine paths. GitHub Actions checks source acquisition and static/report structure but does not itself run licensed Stata. An independent fresh-data reproduction, out-of-sample forecast evaluation and causal identification are **not** claimed.
 
 ## Selected sources
 
