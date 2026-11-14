@@ -79,7 +79,13 @@ jobs:
           test -n "$(find data/raw -maxdepth 1 -type f -name 'API_NY.GDP.MKTP.KD.ZG*.csv' -print -quit)"
           test -n "$(find data/raw -maxdepth 1 -type f -name 'API_FP.CPI.TOTL.ZG*.csv' -print -quit)"
 
-          grep -Fq "Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps" README.md
+          # Keep the public-facing project identity aligned across the portfolio files.
+          for doc in README.md docs/RESEARCH_BRIEF.md docs/RESEARCH_NOTE_DRAFT.md; do
+            grep -Fxq "# Financial Cycles and Macroeconomic Fluctuations" "$doc"
+            grep -Fxq "**Cross-Country Evidence from Credit-to-GDP Gaps**" "$doc"
+          done
+          grep -Fxq "**Financial Cycles and Macroeconomic Fluctuations**  " docs/RESEARCH_DESIGN.md
+          grep -Fxq "*Cross-Country Evidence from Credit-to-GDP Gaps*" docs/RESEARCH_DESIGN.md
           grep -Fq "do replication/download_data.do" README.md
           grep -Fq "do replication/run_analysis.do" README.md
           grep -Fq "docs/RESEARCH_DESIGN.md" README.md
