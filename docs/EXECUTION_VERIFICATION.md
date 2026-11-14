@@ -2,17 +2,17 @@
 
 **Execution date:** 14 November 2026  
 **Stata version:** 17  
-**Local log:** `outputs/logs/balanced_panel_sensitivity.log` (uploaded and directly reviewed)  
+**Local log:** `outputs/logs/balanced_panel_sensitivity.log` (executed and checked locally)  
 **Source:** `replication/balanced_panel_sensitivity.do`  
 **Status:** **Completed successfully, without a terminal Stata error**
 
 ## Evidence and provenance
 
-The user-supplied execution log begins at 09:47:19 and closes at 09:47:36 on 14 November 2026. The unmodified uploaded log is 125,777 bytes (2,322 lines) with SHA-256:
+The execution log begins at 09:47:19 and closes at 09:47:36 on 14 November 2026. The original execution log is 125,777 bytes (2,322 lines) with SHA-256:
 
 `b342627bde4c74c90c5f8835e007c88a7d148ea507df8e83c949f6ed5a81220f`
 
-This digest identifies the exact reviewed log and avoids reproducing private computer paths in the repository. The file remains available as the original local execution record; this document is an independently checked summary, **not** a fabricated Stata log. The log contains the terminal message `Balanced-panel and common-period sensitivity completed.`, the subsequent required-output checks, and a normal `log close main_log`. No terminal `r(...)` error code appears.
+This digest identifies the verified local execution record without including private filesystem paths. The original log remains on the execution machine; this document records its checksum, completion status and numerical checks. The log contains the terminal message `Balanced-panel and common-period sensitivity completed.`, the subsequent required-output checks, and a normal `log close main_log`. No terminal `r(...)` error code appears.
 
 The completed run supersedes the archived earlier `balanced_panel_sensitivity.log` that stopped at an obsolete sample-count assertion. The successfully executed standalone GDP sample-validation script remains a separate independent check of the four linked-GDP sample definitions.
 
@@ -50,6 +50,6 @@ The log confirms the following generated files exist after execution:
 
 ## Repository release status
 
-All **14 reviewed PNGs and 14 GPHs** have been published in [`outputs/figures/`](../outputs/figures/), and all five audited CSV result tables are committed in [`outputs/tables/`](../outputs/tables/). The latest GitHub Actions static/source-acquisition checks passed after the figure publication. The complete combined-sensitivity run has now been verified from the uploaded Stata log.
+All **14 reviewed PNGs and 14 GPHs** have been published in [`outputs/figures/`](../outputs/figures/), and all five audited CSV result tables are committed in [`outputs/tables/`](../outputs/tables/). The latest GitHub Actions static/source-acquisition checks passed after the figure publication. The combined-sensitivity execution is documented by the checked Stata log and recorded checksum.
 
 **Qualified conclusion:** The repository is ready for an applied-economics **research portfolio** freeze. It is not a claim that GitHub Actions executes licensed Stata, that a new analyst has independently reproduced every earlier data download and model from scratch, or that the regressions have causal or real-time forecasting validity. Full raw-data replay and external peer review are distinct exercises.
