@@ -46,6 +46,7 @@ jobs:
             docs/RESEARCH_DESIGN.md \
             docs/RESEARCH_BRIEF.md \
             docs/OUTPUT_REVIEW.md \
+            docs/EXECUTION_VERIFICATION.md \
             docs/LITERATURE_NOTES.md \
             docs/REPRODUCIBILITY.md \
             docs/RESEARCH_NOTE_DRAFT.md \
@@ -86,6 +87,9 @@ jobs:
           grep -Fq "docs/REPRODUCIBILITY.md" README.md
           grep -Fq "docs/RESEARCH_BRIEF.md" README.md
           grep -Fq "docs/OUTPUT_REVIEW.md" README.md
+          grep -Fq "docs/EXECUTION_VERIFICATION.md" README.md
+          grep -Fq "Balanced-panel and common-period sensitivity" docs/EXECUTION_VERIFICATION.md
+          grep -Fq "b342627bde4c74c90c5f8835e007c88a7d148ea507df8e83c949f6ed5a81220f" docs/EXECUTION_VERIFICATION.md
           grep -Fq "docs/RESEARCH_NOTE_DRAFT.md" README.md
           grep -Fq "docs/RESULTS.md" README.md
           grep -Fq "replication/inference_diagnostics.do" README.md
@@ -128,6 +132,29 @@ jobs:
           grep -Fq "worktree" replication/publish_reviewed_figures.ps1
           grep -Fq "origin/main" replication/publish_reviewed_figures.ps1
           grep -Fq "PngOnly" replication/publish_reviewed_figures.ps1
+
+          # All fourteen reviewed Stata plots must be committed in both
+          # presentation (PNG) and editable (GPH) formats.
+          test "$(find outputs/figures -maxdepth 1 -type f -name '*.png' | wc -l)" -eq 14
+          test "$(find outputs/figures -maxdepth 1 -type f -name '*.gph' | wc -l)" -eq 14
+          for fig in \
+            asymmetric_gap_coefficients \
+            balanced_panel_asymmetry \
+            balanced_panel_h1_coefficients \
+            bal_panel_horizon_coef \
+            credit_gap_gdp_scatter \
+            fe_horizon_coefficients \
+            mean_credit_gap_by_year \
+            nominal_gdp_validation_country_growth_mae \
+            nominal_gdp_validation_country_level_deviation \
+            nominal_gdp_validation_median_growth_difference \
+            nominal_gdp_validation_p95_growth_difference \
+            nominal_gdp_validation_scatter \
+            ratio_component_coefficients \
+            ratio_component_growth; do
+            test -s "outputs/figures/${fig}.png"
+            test -s "outputs/figures/${fig}.gph"
+          done
           grep -Fq 'local validation_if "balanced31 == 1 & inrange(year, 2006, 2024)"' replication/balanced_panel_sensitivity.do
           grep -Fq "local expected_growth = 589" replication/balanced_panel_sensitivity.do
           grep -Fq "local expected_growth = 815" replication/balanced_panel_sensitivity.do
