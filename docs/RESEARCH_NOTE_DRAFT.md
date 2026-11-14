@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This note summarizes the empirical project for research-portfolio development. The four linked-GDP country-period validations completed in Stata 17 on 14 November 2026, including an explicit audit of two unavailable BIS-implied growth observations. The note is not yet external-ready: the generated regression and validation CSVs, regenerated outlier tables, and remaining figures still need inspection and review. GitHub Actions does not execute Stata.
+> **Internal working draft.** This research-portfolio note reports the completed Stata 17 regressions and four linked-GDP country-period comparisons. The 24-row regression coefficient table, four-sample validation table, and two-row missing-growth audit have been independently inspected and committed. The note is not yet external-ready: the regenerated outlier tables, remaining figures, final logs and source-vintage metadata still require review. GitHub Actions does not execute Stata.
 
 ## Abstract
 
@@ -93,12 +93,12 @@ The regression sensitivity estimates the baseline model across four samples: the
 |---|---:|---:|---:|
 | 43 economies, unbalanced | -0.02280 (0.00376), 1,310 | -0.02901 (0.00357), 1,267 | -0.02675 (0.00348), 1,224 |
 | 31 economies, full period | -0.01950 (0.00412), 1,054 | -0.02658 (0.00408), 1,023 | -0.02454 (0.00404), 992 |
-| 31 economies, common period | N=558; p=0.00017; coefficient/SE not in log excerpt | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
+| 31 economies, common period | -0.03135 (0.00731), 558 | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
 | 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-The 14 November Stata excerpt now confirms 558 observations, 31 country clusters and p = 0.00017 for the 31-country common-period H1 regression, resolving its sample-count inconsistency. The excerpt omits the coefficient and standard error, so those values should be copied from the newly exported regression CSV before this table is finalized. The other 11 previously reported linear estimates are negative and significant at 1%. The count-consistent common-period estimates are larger in absolute value than the full-period estimates, indicating sensitivity to the period covered.
+The uploaded 24-row regression CSV verifies the exact 31-country common-period H1 coefficient **−0.031353** (SE **0.007305**; p = **0.000170**; 558 observations and 31 countries). All 12 linear credit-gap coefficients are negative and statistically significant at 1%. The coefficients in the common-window specifications are larger in absolute value than those in the corresponding full-window specifications, indicating sensitivity to the time period covered.
 
-The asymmetric results are less stable. The full-period samples reproduce the original pattern of a negative and significant positive-gap slope, a near-zero negative-gap slope, and rejection of equal slopes. The 14 November run exported the asymmetric sensitivity figure, but the pasted excerpt does not give the 31-country common-period H1 coefficients or slope test. Retain these as unverified until the generated regression CSV is inspected. In the 43-country common-period sample, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. The asymmetry should not be presented as invariant to sample period.
+The asymmetric models make the conclusion more qualified. In both full-period samples, the positive credit-gap component is negative and significant, the negative-gap component is approximately zero and insignificant, and the slopes differ significantly. In both common-period samples, **both slopes are individually negative and significant**, but their equality tests fail to reject at 5%. The slope-difference p-values are **0.22805** for the 31-country common sample and **0.08793** for the 43-country common sample. The asymmetry is therefore sensitive to the observation window, even though the linear association remains negative across all samples. This is a predictive pattern, not causal identification.
 
 ## Measurement diagnostics
 
@@ -160,12 +160,13 @@ The main entry points are:
 - replication/audit_nominal_gdp_linked.do — country-year discrepancy audit.
 - replication/balanced_panel_sensitivity.do — regression and linked-GDP sample sensitivity.
 
+The following numerical outputs have been inspected for internal consistency and committed: [balanced-panel regression coefficients](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample linked-GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), and the [two-row missing-growth audit](../outputs/tables/balanced_panel_common_growth_missing.csv). The regression CSV contains 24 coefficient rows with no duplicate model-term combinations or missing numeric fields. Its p-values and 95% confidence intervals are consistent with the reported standard errors and country-cluster degrees of freedom.
+
 Before this note is used externally, the following items remain:
 
-1. Review the generated `outputs/tables/balanced_panel_regression_coefficients.csv` to verify the exact 31-country common-period H1 linear and asymmetric coefficients, standard errors and slope-equality test. The supplied regression excerpt confirms N=558, 31 clusters and p=0.00017 for the linear H1 model but does not contain its coefficient and standard error.
-2. Review `outputs/tables/balanced_panel_linked_gdp_validation.csv` and `outputs/tables/balanced_panel_common_growth_missing.csv` and add those verified outputs to the repository. The standalone validation completed successfully on 14 November; no further numerical rerun is needed.
-3. Review the narrowed top-20 linked-GDP outlier tables and remaining figures, then commit the reviewed tables and plots.
-4. Verify the source-vintage metadata, output files and logs, and finalize the note without making causal claims.
+1. Review and commit the regenerated focused top-20 linked-GDP discrepancy tables and the other relevant audit outputs.
+2. Visually inspect the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their corresponding numerical results.
+3. Review and version the final Stata execution logs, figure exports, and source-vintage metadata; finalize the note for research-facing use without making causal claims.
 
 ## References
 
@@ -176,4 +177,4 @@ Before this note is used externally, the following items remain:
 
 ---
 
-This draft is an internal research-portfolio document. The remaining work is output inspection and research-facing presentation, not another linked-GDP validation run.
+This draft is an internal research-portfolio document. Numerical regression and linked-GDP validation checks are complete; figure, log, and remaining supplementary-output review is pending.
