@@ -44,6 +44,7 @@ jobs:
             data/raw/wb_cpi_inflation.zip \
             docs/DATA_AUDIT.md \
             docs/RESEARCH_DESIGN.md \
+            docs/RESEARCH_BRIEF.md \
             docs/LITERATURE_NOTES.md \
             docs/REPRODUCIBILITY.md \
             docs/RESEARCH_NOTE_DRAFT.md \
@@ -79,6 +80,7 @@ jobs:
           grep -Fq "docs/RESEARCH_DESIGN.md" README.md
           grep -Fq "docs/LITERATURE_NOTES.md" README.md
           grep -Fq "docs/REPRODUCIBILITY.md" README.md
+          grep -Fq "docs/RESEARCH_BRIEF.md" README.md
           grep -Fq "docs/RESEARCH_NOTE_DRAFT.md" README.md
           grep -Fq "docs/RESULTS.md" README.md
           grep -Fq "replication/inference_diagnostics.do" README.md
@@ -183,6 +185,9 @@ jobs:
           grep -Fq "local expected_growth = 815" replication/validate_balanced_panel_samples.do
           grep -Fq "Brazil (BRA) and Colombia (COL)" docs/RESULTS.md
           grep -Fq "balanced_panel_common_growth_missing.csv" docs/REPRODUCIBILITY.md
+          grep -Fq "not an operational real-time forecasting exercise" docs/RESEARCH_BRIEF.md
+          grep -Fq "0.22805" docs/RESEARCH_BRIEF.md
+          grep -Fq "0.08793" docs/RESEARCH_BRIEF.md
           grep -Fq "balanced_panel_common_growth_missing.csv" replication/validate_balanced_panel_samples.do
           grep -Fq "Expected exactly 2 level-matched but growth-unmatched observations" replication/validate_balanced_panel_samples.do
           grep -Fq "balanced_panel_linked_gdp_validation.csv" replication/validate_balanced_panel_samples.do
