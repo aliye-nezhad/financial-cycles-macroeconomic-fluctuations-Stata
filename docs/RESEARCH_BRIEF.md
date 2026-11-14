@@ -63,7 +63,7 @@ The work contributes a transparent *applied macro-finance research workflow*: so
 
 ## Reproducibility and release status
 
-The applied macro-finance analysis and its documented sensitivities were executed in **Stata 17**. On 14 November 2026 the latest combined balanced-panel sensitivity script completed its twelve linear models, four asymmetric models, four linked-GDP comparisons, figure exports, dataset export and final output checks. The uploaded terminal log was reviewed directly, and its SHA-256 and selected results are preserved in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md).
+The applied macro-finance analysis and its documented sensitivities were executed in **Stata 17**. On 14 November 2026 the latest combined balanced-panel sensitivity script completed its twelve linear models, four asymmetric models, four linked-GDP comparisons, figure exports, dataset export and final output checks. The completed execution log was checked against the result tables, and its SHA-256 and selected results are preserved in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md).
 
 Five numerical/audit tables are committed: the [24-row coefficient table](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), [two-row missing-growth report](../outputs/tables/balanced_panel_common_growth_missing.csv), and the [top-20 GDP-level](../outputs/tables/nominal_gdp_linked_level_outliers_top20.csv) and [growth-discrepancy](../outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv) tables. All **14 reviewed PNG figures and 14 editable GPH files** are versioned in [`outputs/figures/`](../outputs/figures/).
 
