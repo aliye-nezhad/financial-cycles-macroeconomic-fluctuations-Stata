@@ -27,7 +27,7 @@ where \(g\) is annual real GDP growth, \(Gap\) is the BIS credit-to-GDP gap, \(\
 
 An asymmetric specification separates positive and negative credit gaps. A robustness specification uses the annual mean of the four quarterly gap observations rather than the fourth-quarter observation.
 
-These are predictive regressions, not causal designs. The BIS gap is an indicator of the financial cycle and potential excessive credit accumulation; it is not an exogenous monetary-policy shock.
+These are in-sample predictive regressions, not causal designs or out-of-sample forecasting tests. Outcome-year fixed effects are estimated using realized observations; their fitted coefficients are not available for an unseen future forecast year. The BIS gap is an indicator of the financial cycle and potential excessive credit accumulation; it is not an exogenous monetary-policy shock.
 
 ## Data
 
