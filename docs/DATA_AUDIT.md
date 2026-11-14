@@ -1,4 +1,4 @@
-# Preliminary data audit
+# Data audit and sample verification
 
 **Audit date:** 13 November 2026  
 **Source vintage:** World Bank WDI files last updated 11 November 2026; BIS series downloaded 13 November 2026. Exact file hashes are stored in data/raw.sha256.
