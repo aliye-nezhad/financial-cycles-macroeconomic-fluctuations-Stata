@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This note summarizes the current empirical project for research-portfolio development. It is not yet an external-ready working paper: the 43-country common-period linked-GDP validation, final inspection of the newly regenerated narrow audit tables and regression CSV, and review of the remaining figures are still outstanding. The numerical findings below are drawn from the Stata 17 execution records documented in this repository. GitHub Actions does not execute Stata.
+> **Internal working draft.** This note summarizes the current empirical project for research-portfolio development. It is not yet an external-ready working paper: final export and inspection of the four-sample linked-GDP comparison and its two unmatched growth observations, inspection of the newly regenerated audit tables and regression CSV, and review of the remaining figures are still outstanding. The numerical findings below are drawn from the Stata 17 execution records documented in this repository. GitHub Actions does not execute Stata.
 
 ## Abstract
 
@@ -149,7 +149,7 @@ The main entry points are:
 
 Before this note is used externally, the following items remain:
 
-1. Inspect the new regression CSV to verify the 31-country common-period H1 linear and asymmetric coefficients and standard errors. Run the committed validation-only script with expected linked-GDP growth counts of 589 and 817; review the consolidated four-sample output.
+1. Inspect the new regression CSV to verify the 31-country common-period H1 linear and asymmetric coefficients and standard errors. The 14 November standalone validation calculated 817 level matches and 815 growth matches for all 43 economies over 2006–2024 (growth correlation 0.99744, MAE 0.20060 pp, RMSE 0.63150 pp), but its obsolete 817-growth count assertion stopped the export. The committed standalone script now expects 815 and outputs the two unmatched country-years. Run it once to produce and review the consolidated four-sample CSV and missing-growth audit.
 2. The linked-GDP audit was rerun successfully on 14 November 2026. Review and commit its regenerated, narrowed top-20 CSV files and the other audit outputs when available.
 3. Review the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their tables and logs.
 4. Freeze the final source metadata, checksums, tables, figures, and logs. GitHub Actions checks repository structure and source acquisition; it does not run Stata or validate numerical estimates.
