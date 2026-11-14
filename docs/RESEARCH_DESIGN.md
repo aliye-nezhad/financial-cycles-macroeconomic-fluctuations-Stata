@@ -1,8 +1,9 @@
 # Research design
 
-## Working title
+## Project title
 
-**Financial Cycles and Macroeconomic Fluctuations: Cross-Country Evidence from Credit-to-GDP Gaps**
+**Financial Cycles and Macroeconomic Fluctuations**  
+*Cross-Country Evidence from Credit-to-GDP Gaps*
 
 ## Research question
 
