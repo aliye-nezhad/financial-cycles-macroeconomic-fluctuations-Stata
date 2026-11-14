@@ -1,6 +1,6 @@
 # Credit-to-GDP Gaps and Subsequent Real GDP Growth: Cross-Country Evidence
 
-> **Internal working draft.** This research-portfolio note reports the completed Stata 17 regressions and four linked-GDP country-period comparisons. The 24-row regression coefficient table, four-sample validation table, and two-row missing-growth audit have been independently inspected and committed. The note is not yet external-ready: the regenerated outlier tables, remaining figures, final logs and source-vintage metadata still require review. GitHub Actions does not execute Stata.
+> **Internal working draft.** This research-portfolio note reports the completed Stata 17 regressions and four linked-GDP country-period comparisons. The 24-row regression coefficient table, four-sample validation table, and two-row missing-growth audit have been independently inspected and committed. The note is not yet external-ready: the five audited CSV tables are committed and all fourteen figures have been visually reviewed, but the figure files, appropriate execution records and source-vintage summary are not yet assembled into a final release. GitHub Actions does not execute Stata.
 
 ## Abstract
 
@@ -164,9 +164,9 @@ The following numerical outputs have been inspected for internal consistency and
 
 Before this note is used externally, the following items remain:
 
-1. Review and commit the regenerated focused top-20 linked-GDP discrepancy tables and the other relevant audit outputs.
-2. Visually inspect the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their corresponding numerical results.
-3. Review and version the final Stata execution logs, figure exports, and source-vintage metadata; finalize the note for research-facing use without making causal claims.
+1. Commit the fourteen reviewed PNG figures (four main, two denominator, three sample-sensitivity and five linked-GDP-audit) and any selected editable GPH companions; the local archive contains them, but the GitHub repository does not.
+2. Retain completed Stata logs and source-vintage metadata while excluding or explicitly labeling the older stopped combined-sensitivity log. To claim that the current combined script is fully replayable end to end, complete one clean run of its latest version; the standalone GDP validation has already completed.
+3. Finalize the research-facing presentation without causal or out-of-sample forecasting claims. See [the output review](OUTPUT_REVIEW.md).
 
 ## References
 
@@ -177,4 +177,4 @@ Before this note is used externally, the following items remain:
 
 ---
 
-This draft is an internal research-portfolio document. Numerical regression and linked-GDP validation checks are complete; figure, log, and remaining supplementary-output review is pending.
+This draft is an internal research-portfolio document. Numerical results, top-20 discrepancy tables and visual figure review are complete. Selected figure uploads, provenance packaging and final combined-script execution verification remain before an unqualified reproducibility claim.
