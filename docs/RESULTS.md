@@ -134,7 +134,7 @@ The analysis exports four distinct figures, each to its own PNG and editable Sta
 
 The first two figures provide descriptive context. Figures 3 and 4 communicate the adjusted estimates and asymmetry that are central to the empirical analysis. The figures do not establish causality.
 
-The active Stata Graph window shows one graph at a time. This is a display behavior, not evidence that the exported files overwrite one another. The do-file explicitly exports and saves each named graph separately and checks for all eight figure files at the end of execution. Open the PNG files in separate image windows to compare them simultaneously. The exported PNGs still require visual inspection before being treated as final presentation outputs.
+The Stata scripts export each named graph separately. The four main-analysis PNG/GPH pairs were visually inspected and published, together with two denominator-component, three balanced-panel and five GDP-validation/audit pairs. All 14 PNG and 14 editable GPH files are versioned in [outputs/figures](../outputs/figures/). They are legible and do not show a substantive inconsistency with the reviewed tables. Some optional axis-label refinements are recorded in [the output review](OUTPUT_REVIEW.md).
 
 ## 8. Credit-numerator and GDP-denominator diagnostic
 
@@ -204,16 +204,15 @@ The run generated:
 - `outputs/logs/denominator_diagnostic.log`
 - `data/processed/denominator_components_panel.dta`
 
-The execution log confirms separate exports and both graph names in memory. It does not establish that the figures are visually publication-ready. The component-model bootstrap tests have now been completed; their results are reported in Section 6.
+The execution log confirms separate exports and both graph names in memory. Both denominator-component PNG/GPH pairs have since been visually inspected and committed. The component-model bootstrap tests are reported in Section 6.
 
-## 9. Remaining empirical and presentation work
+## 9. Research-portfolio release status
 
-1. **Review the completed regression sensitivity outputs.** The 14 November run confirmed the 31-country common-period linear H1 sample count of 558 observations (31 clusters; p = 0.00017). Inspect the newly exported `outputs/tables/balanced_panel_regression_coefficients.csv` to recover its exact coefficient and standard error and verify the corresponding asymmetric H1 model. These fields were not present in the supplied excerpt.
-2. **Review and version the regenerated audit outputs.** The focused top-20 discrepancy CSVs, country audit, and five figure pairs were regenerated on 14 November and await inspection before committing.
-3. **Inspect the remaining figures.** Four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures require visual review against their numerical tables.
-4. **Freeze and package the results.** Verify final outputs, source metadata and checksums, then update the internal research note and commit only reviewed tables, plots and logs.
+The tested empirical specifications and numerical findings are **frozen for the research portfolio**. Five reviewed CSV outputs, including the 24 regression rows and the two top-20 linked-GDP discrepancy tables, are committed in [`outputs/tables/`](../outputs/tables/). All 14 PNG and 14 GPH figure pairs are committed in [`outputs/figures/`](../outputs/figures/).
 
-The stand-alone balanced-panel linked-GDP validation successfully completed all four sample checks and exports on 14 November 2026. Brazil and Colombia lack BIS-implied annual growth in 2006 because their BIS series start that year; both 2006 GDP levels are retained. No additional Stata estimation or GDP validation run is needed unless the source data or specifications change. All regression results remain conditional predictive associations rather than causal estimates.
+On **14 November 2026**, Stata 17 successfully completed the latest combined `replication/balanced_panel_sensitivity.do`: 12 linear regressions, four asymmetric H1 specifications, four linked nominal-GDP sample comparisons, all required exports, and normal log closure. The 2,322-line execution log was directly inspected for completeness and terminal errors, and its numerical results match the versioned CSV files. The unmodified log's SHA-256 and results are documented in [EXECUTION_VERIFICATION.md](EXECUTION_VERIFICATION.md), without publishing local machine paths. The prior stopped combined log is superseded. The standalone validation-only script also completed successfully.
+
+No further exploration or Stata rerun is required for the **validated portfolio results**. Optional archival work would preserve a privacy-sanitized complete log, some processed `.dta` datasets, and additional source-vintage records. Neither successful local execution nor GitHub Actions static/data-acquisition checks should be described as an independent third-party raw-data reproduction. The findings remain conditional in-sample predictive associations, not causal effects or tested real-time forecasts.
 
 ## 10. Linked nominal-GDP validation using the World Bank linked current-LCU series
 
@@ -275,7 +274,7 @@ The comparison provides strong cross-source evidence that the BIS-implied denomi
 
 This is not proof that the two sources are fully independent in their underlying national-accounts inputs. Nor does it establish that the component regressions identify an economic transmission mechanism. The component estimates remain conditional predictive associations. The comparison validates a measurement construction; it does not establish causality.
 
-The linked-GDP outlier audit in `replication/audit_nominal_gdp_linked.do` ran successfully on 13 November 2026 and was rerun on 14 November with focused top-20 discrepancy CSV exports. The latter run regenerated the two narrowed tables, 43-country summary, processed audit dataset, and five PNG/GPH figure pairs. The original five PNGs were visually checked; the regenerated outputs still need review before committing. No observations were removed, winsorized, or adjusted.
+The linked-GDP outlier audit in `replication/audit_nominal_gdp_linked.do` completed in Stata 17 on 13 November 2026 and was rerun on 14 November with focused top-20 discrepancy CSV exports. The narrowed level and growth outlier tables have now been independently checked for correct rankings, signed differences, nonmissing values and unique country-year keys, then committed. The five linked-GDP validation/audit PNG and GPH figure pairs have been visually inspected and published. No observations were removed, winsorized, or adjusted.
 
 The audit confirms that the pooled validation statistics are strong, but the upper tail is not evenly distributed across country-years. The largest absolute annual-growth differences are:
 
@@ -305,7 +304,7 @@ The audit identifies where source-level investigation should focus, but it does 
 
 ### 10.6 Balanced-panel and common-period sensitivity
 
-A Stata 17 sensitivity run on 13 November 2026 completed all 12 baseline horizon regressions and all four asymmetric one-year-ahead regressions across four sample definitions. The linear models retain country fixed effects, outcome-year fixed effects, current and lagged real GDP growth, CPI inflation, and country-clustered standard errors. The future outcome remains within 2024.
+A final combined Stata 17 sensitivity run on **14 November 2026** successfully completed all 12 baseline horizon regressions and all four asymmetric one-year-ahead regressions across four sample definitions, and subsequently completed all four linked-GDP validation samples and required exports. The linear models retain country fixed effects, outcome-year fixed effects, current and lagged real GDP growth, CPI inflation, and country-clustered standard errors. The future outcome remains within 2024.
 
 #### Linear predictive regressions
 
@@ -348,4 +347,4 @@ The high correlations and low average growth discrepancies persist across countr
 
 **Different sample-count conventions must not be confused.** The 31-country common-period H1 predictive regression uses predictor years 2006–2023, with 558 complete-case observations, to predict real growth in 2007–2024. The linked-GDP validation instead compares annual nominal-GDP growth indexed 2006–2024 and therefore includes 589 matched observations across the same 31 countries.
 
-The audited numerical outputs are now committed to this repository: [24-row regression coefficients](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample linked-GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), and [two-row BRA/COL missing-growth audit](../outputs/tables/balanced_panel_common_growth_missing.csv). The Stata 17 log confirms the validation script completed successfully, while independent numeric checks confirm regression row uniqueness, consistency of p-values and confidence intervals, sample-count agreement, and the two missing-growth records. GitHub Actions does not independently execute Stata. The numerical validation is complete; other generated figures, detailed logs and outlier-audit outputs still require separate inspection. All estimates remain observational predictive associations, not causal effects.
+All five audited numerical outputs are committed to this repository: [24-row regression coefficients](../outputs/tables/balanced_panel_regression_coefficients.csv), [four-sample linked-GDP validation](../outputs/tables/balanced_panel_linked_gdp_validation.csv), [two-row BRA/COL missing-growth audit](../outputs/tables/balanced_panel_common_growth_missing.csv), [20 largest level deviations](../outputs/tables/nominal_gdp_linked_level_outliers_top20.csv), and [20 largest growth differences](../outputs/tables/nominal_gdp_linked_growth_outliers_top20.csv). All 28 figure files are also published. Both the standalone GDP validation and latest combined sensitivity script finished successfully in Stata 17; [the execution record](EXECUTION_VERIFICATION.md) documents the combined log digest and checks. Country-clustered p-values and confidence intervals were checked for internal consistency. GitHub Actions does not run Stata. All estimates remain observational in-sample predictive associations, not causal effects or evidence of out-of-sample forecast accuracy.
