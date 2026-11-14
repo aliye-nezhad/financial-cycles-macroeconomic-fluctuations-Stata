@@ -278,9 +278,9 @@ The standalone validation-only script was **successfully executed on 14 November
 - `outputs/tables/balanced_panel_common_growth_missing.csv`, documenting BRA 2006 and COL 2006.
 - `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`, the successful execution record.
 
-The exported files exist on the local Stata machine and have not yet been uploaded or committed to GitHub. The user-supplied execution transcript confirms their creation and successful output-existence checks. The combined `replication/balanced_panel_sensitivity.do` has the same corrected count assertion and audit logic but does not need to be rerun solely to repeat this completed standalone validation.
+The four-sample CSV and two-row missing-growth audit have since been checked for internal consistency and committed to `outputs/tables/`, together with the 24-row regression coefficient CSV. The processed `.dta` table and completed execution log remain on the local Stata machine. The Stata 17 execution record confirms their creation and the successful output-existence checks. The combined `replication/balanced_panel_sensitivity.do` has the same corrected count assertion and audit logic but does not need to be rerun solely to repeat this completed standalone validation.
 
-The GitHub Actions workflow checks that the scripts and their sample-window conditions are present. It does not execute Stata or validate numerical results. The successful 14 November log confirms output production, but the CSV values still require review before being committed as final repository artifacts.
+The GitHub Actions workflow checks source acquisition, script structure and committed result-file structure. It does not execute Stata or independently recompute coefficients from the underlying panel. The uploaded 24-row regression CSV has also been checked separately for observation counts, duplicate model-term keys, country-cluster p-values and confidence intervals.
 
 ## 9. Data integrity
 
