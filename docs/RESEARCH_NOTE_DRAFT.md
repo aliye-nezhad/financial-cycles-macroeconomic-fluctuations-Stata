@@ -93,12 +93,12 @@ The regression sensitivity estimates the baseline model across four samples: the
 |---|---:|---:|---:|
 | 43 economies, unbalanced | -0.02280 (0.00376), 1,310 | -0.02901 (0.00357), 1,267 | -0.02675 (0.00348), 1,224 |
 | 31 economies, full period | -0.01950 (0.00412), 1,054 | -0.02658 (0.00408), 1,023 | -0.02454 (0.00404), 992 |
-| 31 economies, common period | Pending re-execution (expected N=558) | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
+| 31 economies, common period | N=558; p=0.00017; coefficient/SE not in log excerpt | -0.04057 (0.00515), 527 | -0.03874 (0.00732), 496 |
 | 43 economies, common period | -0.03381 (0.00610), 762 | -0.04139 (0.00562), 719 | -0.03883 (0.00659), 676 |
 
-The 11 count-consistent linear estimates are negative and statistically significant at the 1% level. The 31-country common-period H1 estimate is withheld: the earlier output reports 589 observations, but the committed predictor-year filter (2006–2023) permits at most 558 observations. The coefficient and standard error from that earlier run are provisional pending re-execution. The count-consistent common-period estimates are larger in absolute value than the full-period estimates, indicating sensitivity to the period covered.
+The 14 November Stata excerpt now confirms 558 observations, 31 country clusters and p = 0.00017 for the 31-country common-period H1 regression, resolving its sample-count inconsistency. The excerpt omits the coefficient and standard error, so those values should be copied from the newly exported regression CSV before this table is finalized. The other 11 previously reported linear estimates are negative and significant at 1%. The count-consistent common-period estimates are larger in absolute value than the full-period estimates, indicating sensitivity to the period covered.
 
-The asymmetric results are less stable. The full-period samples reproduce the original pattern of a negative and significant positive-gap slope, a near-zero negative-gap slope, and rejection of equal slopes. The 31-country common-period asymmetric H1 estimates are withheld for the same observation-count discrepancy; the updated do-file now asserts 558 observations for both common-period H1 models. In the 43-country common-period sample, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. The asymmetry should therefore not be presented as invariant to sample period.
+The asymmetric results are less stable. The full-period samples reproduce the original pattern of a negative and significant positive-gap slope, a near-zero negative-gap slope, and rejection of equal slopes. The 14 November run exported the asymmetric sensitivity figure, but the pasted excerpt does not give the 31-country common-period H1 coefficients or slope test. Retain these as unverified until the generated regression CSV is inspected. In the 43-country common-period sample, both component slopes are negative and individually significant, but the equality test does not reject equal slopes at 5%. The asymmetry should not be presented as invariant to sample period.
 
 ## Measurement diagnostics
 
@@ -149,8 +149,8 @@ The main entry points are:
 
 Before this note is used externally, the following items remain:
 
-1. Execute the corrected balanced-panel script to re-estimate the 31-country common-period H1 linear and asymmetric regressions at N=558, complete the 43-country 2006–2024 linked-GDP validation, and inspect the consolidated four-sample output.
-2. Rerun the linked-GDP audit so that the two top-20 CSV files reflect the revised, focused export fields.
+1. Inspect the new regression CSV to verify the 31-country common-period H1 linear and asymmetric coefficients and standard errors. Run the committed validation-only script with expected linked-GDP growth counts of 589 and 817; review the consolidated four-sample output.
+2. The linked-GDP audit was rerun successfully on 14 November 2026. Review and commit its regenerated, narrowed top-20 CSV files and the other audit outputs when available.
 3. Review the four main-analysis figures, two denominator-diagnostic figures, and three balanced-panel figures against their tables and logs.
 4. Freeze the final source metadata, checksums, tables, figures, and logs. GitHub Actions checks repository structure and source acquisition; it does not run Stata or validate numerical estimates.
 
