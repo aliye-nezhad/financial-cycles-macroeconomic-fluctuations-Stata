@@ -60,6 +60,7 @@ Source documentation, download instructions, transformations, and attribution re
 ├── docs/
 │   ├── DATA_AUDIT.md
 │   ├── LITERATURE_NOTES.md
+│   ├── OUTPUT_REVIEW.md
 │   ├── RESEARCH_DESIGN.md
 │   ├── RESEARCH_BRIEF.md
 │   ├── RESEARCH_NOTE_DRAFT.md
@@ -126,7 +127,7 @@ The inference diagnostic requires a working installation of David Roodman's `boo
 
 The repository also includes a GitHub Actions data-acquisition workflow for the main-analysis sources. It can be run manually from the Actions tab or triggered by adding the data/ACQUIRE_DATA marker file. The workflow downloads, validates, checksums and commits those source files to the private repository. The supplementary BIS series and both unlinked and linked World Bank nominal-GDP indicators have separate acquisition helpers and are checked in the Windows CI job. The WDI checks verify the requested indicator code, required year columns, archive/CSV checksums, and no-refresh idempotence. The Stata download scripts preserve existing raw archives by default; set their refresh option to 1 only when intentionally retrieving a new vintage. Retrieval dates and checksums are retained with the relevant source files.
 
-See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The concise [research brief](docs/RESEARCH_BRIEF.md) summarizes the confirmed findings, documented sensitivities and limitations for research review. The longer internal [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) provides more detail. Both remain subject to final figure and supplementary-output review.
+See [docs/LITERATURE_NOTES.md](docs/LITERATURE_NOTES.md) for the focused annotated literature review, [docs/RESEARCH_DESIGN.md](docs/RESEARCH_DESIGN.md) for the hypotheses and specifications, [docs/DATA_AUDIT.md](docs/DATA_AUDIT.md) for the actual source-data coverage and expected sample counts, and [docs/REPRODUCIBILITY.md](docs/REPRODUCIBILITY.md) for execution instructions. The concise [research brief](docs/RESEARCH_BRIEF.md) summarizes the confirmed findings and limitations. The longer [research-note draft](docs/RESEARCH_NOTE_DRAFT.md) provides methodological detail. The [output review](docs/OUTPUT_REVIEW.md) documents inspection of the fourteen generated PNGs, the two top-20 outlier tables, execution logs, and the remaining release conditions.
 
 ## Current status
 
@@ -136,7 +137,7 @@ The main analysis generated its four figures separately, along with the expected
 
 The standalone linked-GDP validation also completed successfully on 14 November 2026. The reviewed [four-sample validation table](outputs/tables/balanced_panel_linked_gdp_validation.csv) and [two-row missing-growth audit](outputs/tables/balanced_panel_common_growth_missing.csv) are committed. In the 43-country common 2006–2024 period, 817 nominal-GDP levels and 815 annual growth observations matched (growth correlation 0.99744, MAE 0.20060 percentage points, RMSE 0.63150 percentage points). Brazil and Colombia lack BIS-implied nominal-GDP growth for 2006 because their BIS series begin that year; both 2006 levels are retained and no growth observations are imputed. The uploaded Stata 17 log confirms that all assertions and export checks passed. Further reruns are not required for these validated outputs under the current source vintage.
 
-The remaining work is visual inspection and selective commit of the generated figures, the regenerated top-20 country-year outlier tables, and the relevant execution logs and source-vintage metadata. See [docs/RESULTS.md](docs/RESULTS.md) and the [internal research note](docs/RESEARCH_NOTE_DRAFT.md) for detailed findings.
+The output archive has now been reviewed: fourteen PNG figures and their editable GPH files are legible, and the two focused top-20 linked-GDP outlier CSVs have been checked and committed alongside the three earlier numerical CSVs. All five audited CSV tables are versioned under `outputs/tables/`. The figures and most logs remain local; the archived combined sensitivity log is an obsolete stopped run, while the standalone GDP validation log completes successfully. Before calling the repository fully release-ready, add the selected reviewed figures, retain suitable completed logs and source-vintage records, and obtain one clean full execution of the latest combined sensitivity script if claiming that combined entry point has been reproduced end to end. See [docs/OUTPUT_REVIEW.md](docs/OUTPUT_REVIEW.md).
 
 All estimates are conditional predictive associations. They do not identify causal effects of credit supply, leverage, monetary policy or financial shocks. GitHub Actions validates repository structure and source-file integrity and tests the supplementary BIS and World Bank nominal-GDP downloaders on Windows. It does not execute Stata or verify numerical estimates.
 
