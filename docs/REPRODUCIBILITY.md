@@ -257,7 +257,7 @@ The level and growth comparisons use separate overlap indicators but the same ca
 
 These validation counts are distinct from the predictive-regression sample sizes. For example, the 31-country H1 regression uses predictor years 2006–2023 to predict outcomes in 2007–2024, so it contains 558 regression observations; the linked-GDP validation separately compares 19 calendar-year growth observations from 2006 through 2024 for each country.
 
-A separate audit of the balanced-panel regression output found that the earlier 31-country common-period H1 linear and asymmetric estimates were reported with 589 observations. This conflicts with the 2006–2023 predictor window, which permits at most 558 observations (31 × 18). The combined do-file now asserts 558 for both H1 specifications. Treat the earlier coefficients as provisional until that script is rerun. This regression-count issue does not invalidate the 589 level and growth observations in the linked-GDP validation, which use calendar years 2006–2024.
+A count audit previously found that the 31-country common-period H1 linear and asymmetric estimates were reported with 589 observations, inconsistent with the 2006–2023 predictor window (31 × 18 = 558). The 14 November Stata excerpt now confirms 558 observations, 31 country clusters and p = 0.00017 for the linear H1 model. Its coefficient and standard error, and the asymmetric H1 details, are omitted from the supplied excerpt and must be verified in `outputs/tables/balanced_panel_regression_coefficients.csv`. The 589 level and growth observations in the separate linked-GDP validation are correct because that comparison covers calendar years 2006–2024.
 
 Within each sample, the script recomputes country-specific median level scales and reports the distribution of absolute scale-adjusted level deviations. It also reports the correlation, mean signed growth difference, MAE, RMSE, median absolute growth difference, 95th percentile, and maximum absolute growth difference. No observations are deleted, winsorized, interpolated, or adjusted.
 
@@ -271,7 +271,7 @@ The combined script produces:
 - `outputs/figures/balanced_panel_asymmetry.png` and `.gph`
 - `outputs/logs/balanced_panel_sensitivity.log`
 
-The standalone validation-only script produces the linked-GDP CSV, processed dataset, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`.
+The standalone validation-only script produces the linked-GDP CSV, processed dataset, and `outputs/logs/balanced_panel_linked_gdp_sensitivity.log`. On 14 November 2026, the local combined-script run computed 589 matched level and 589 growth observations for the 31-country common-period linked-GDP sample but stopped because its local validation block incorrectly expected 558. The checked-in combined and standalone scripts already expect 589 for that sample and 817 for the 43-country common-period sample. After updating the local scripts, run the standalone validation-only script to finish the measurement check without repeating the regressions.
 
 The GitHub Actions workflow checks that the script and its sample-window conditions are present. It does not execute Stata or validate the numerical results; the log and output table must be inspected after running the script locally.
 
