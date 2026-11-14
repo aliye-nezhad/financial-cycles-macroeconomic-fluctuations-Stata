@@ -580,8 +580,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build
-          printf '\\newcommand{\\SourceCommit}{\\texttt{%s}}\n' "$(git rev-parse HEAD)" > build/source_snapshot.tex
-          printf '\\newcommand{\\SourceDate}{%s}\n' "$(git log -1 --format=%cI)" >> build/source_snapshot.tex
+          cat > build/source_snapshot.tex <<EOF
+          \newcommand{\SourceCommit}{\texttt{$(git rev-parse HEAD)}}
+          \newcommand{\SourceDate}{$(git log -1 --format=%cI)}
+          EOF
 
       - name: Compile the complete code sample
         shell: bash
