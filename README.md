@@ -66,45 +66,92 @@ Source documentation, download instructions, transformations, and attribution re
 ## Repository structure
 
 ```text
+├── docs/
+│   ├── DATA_AUDIT.md
+│   ├── EXECUTION_VERIFICATION.md
+│   ├── Financial_Cycles_Stata_Code_Sample.tex
+│   ├── LITERATURE_NOTES.md
+│   ├── OUTPUT_REVIEW.md
+│   ├── REPRODUCIBILITY.md
+│   ├── RESEARCH_BRIEF.md
+│   ├── RESEARCH_DESIGN.md
+│   ├── RESEARCH_NOTE_DRAFT.md
+│   └── RESULTS.md
 ├── .github/workflows/
 │   ├── data-acquisition.yml
 │   └── reproducibility.yml
 ├── data/
-│   ├── raw/
 │   ├── processed/
+│   │   └── .gitkeep
+│   ├── raw/
+│   │   ├── .gitkeep
+│   │   ├── API_FP.CPI.TOTL.ZG_DS2_EN_csv_v2_79094.csv
+│   │   ├── API_NY.GDP.MKTP.KD.ZG_DS2_EN_csv_v2_78346.csv
+│   │   ├── bis_credit_gap.csv
+│   │   ├── wb_cpi_inflation.zip
+│   │   └── wb_gdp_growth.zip
 │   ├── DATA_VINTAGE.md
 │   ├── raw.sha256
 │   └── README.md
-├── docs/
-│   ├── DATA_AUDIT.md
-│   ├── Financial_Cycles_Stata_Code_Sample.tex
-│   ├── LITERATURE_NOTES.md
-│   ├── EXECUTION_VERIFICATION.md
-│   ├── OUTPUT_REVIEW.md
-│   ├── RESEARCH_DESIGN.md
-│   ├── RESEARCH_BRIEF.md
-│   ├── RESEARCH_NOTE_DRAFT.md
-│   ├── RESULTS.md
-│   └── REPRODUCIBILITY.md
+├── replication/
+│   ├── audit_nominal_gdp_linked.do
+│   ├── balanced_panel_sensitivity.do
+│   ├── denominator_diagnostic.do
+│   ├── download_data.do
+│   ├── download_denominator_sources.ps1
+│   ├── download_linked_nominal_gdp.ps1
+│   ├── download_nominal_gdp.ps1
+│   ├── inference_diagnostics.do
+│   ├── publish_reviewed_figures.ps1
+│   ├── run_analysis.do
+│   ├── validate_balanced_panel_samples.do
+│   ├── validate_nominal_gdp_linked.do
+│   └── validate_nominal_gdp.do
 ├── outputs/
 │   ├── figures/
+│   │   ├── .gitkeep
+│   │   ├── asymmetric_gap_coefficients.gph
+│   │   ├── asymmetric_gap_coefficients.png
+│   │   ├── bal_panel_horizon_coef.gph
+│   │   ├── bal_panel_horizon_coef.png
+│   │   ├── balanced_panel_asymmetry.gph
+│   │   ├── balanced_panel_asymmetry.png
+│   │   ├── balanced_panel_h1_coefficients.gph
+│   │   ├── balanced_panel_h1_coefficients.png
+│   │   ├── credit_gap_gdp_scatter.gph
+│   │   ├── credit_gap_gdp_scatter.png
+│   │   ├── fe_horizon_coefficients.gph
+│   │   ├── fe_horizon_coefficients.png
+│   │   ├── mean_credit_gap_by_year.gph
+│   │   ├── mean_credit_gap_by_year.png
+│   │   ├── nominal_gdp_validation_country_growth_mae.gph
+│   │   ├── nominal_gdp_validation_country_growth_mae.png
+│   │   ├── nominal_gdp_validation_country_level_deviation.gph
+│   │   ├── nominal_gdp_validation_country_level_deviation.png
+│   │   ├── nominal_gdp_validation_median_growth_difference.gph
+│   │   ├── nominal_gdp_validation_median_growth_difference.png
+│   │   ├── nominal_gdp_validation_p95_growth_difference.gph
+│   │   ├── nominal_gdp_validation_p95_growth_difference.png
+│   │   ├── nominal_gdp_validation_scatter.gph
+│   │   ├── nominal_gdp_validation_scatter.png
+│   │   ├── ratio_component_coefficients.gph
+│   │   ├── ratio_component_coefficients.png
+│   │   ├── ratio_component_growth.gph
+│   │   └── ratio_component_growth.png
 │   ├── logs/
+│   │   └── .gitkeep
 │   ├── tables/
+│   │   ├── .gitkeep
+│   │   ├── balanced_panel_common_growth_missing.csv
+│   │   ├── balanced_panel_linked_gdp_validation.csv
+│   │   ├── balanced_panel_regression_coefficients.csv
+│   │   ├── nominal_gdp_linked_growth_outliers_top20.csv
+│   │   └── nominal_gdp_linked_level_outliers_top20.csv
 │   └── README.md
-└── replication/
-    ├── balanced_panel_sensitivity.do
-    ├── audit_nominal_gdp_linked.do
-    ├── denominator_diagnostic.do
-    ├── download_denominator_sources.ps1
-    ├── download_data.do
-    ├── download_nominal_gdp.ps1
-    ├── download_linked_nominal_gdp.ps1
-    ├── inference_diagnostics.do
-    ├── publish_reviewed_figures.ps1
-    ├── run_analysis.do
-    ├── validate_balanced_panel_samples.do
-    ├── validate_nominal_gdp.do
-    └── validate_nominal_gdp_linked.do
+├── .gitattributes
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
 ## Reproducing the project
