@@ -73,7 +73,7 @@ Five numerical/audit tables are committed: the [24-row coefficient table](../out
 
 The full [results and numerical diagnostics](RESULTS.md), [research design](RESEARCH_DESIGN.md), [data audit](DATA_AUDIT.md), [output-quality review](OUTPUT_REVIEW.md), [reproducibility instructions](REPRODUCIBILITY.md) and [long-form research note](RESEARCH_NOTE_DRAFT.md) provide the underlying detail.
 
-The project is **ready as a research-portfolio artifact**. The original local execution log and some processed Stata datasets are not all committed; optional archival work could add these after checking for personal machine paths. GitHub Actions checks source acquisition and static/report structure but does not itself run licensed Stata. An independent fresh-data reproduction, out-of-sample forecast evaluation and causal identification are **not** claimed.
+An independent fresh-data reproduction, out-of-sample forecast evaluation and causal identification are **not** claimed.
 
 ## Selected sources
 
